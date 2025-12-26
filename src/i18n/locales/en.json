@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "reset": "Reset",
+    "next": "Next",
+    "prev": "Previous",
+    "level": "Level",
+    "of": "of"
+  },
+  "home": {
+    "badge": "Interactive Git Learning",
+    "title": "GitMaster",
+    "subtitle": "Visual",
+    "description": "Master Git through interactive visualization. Watch branches grow, commits form, and merges happen in real-time. Learn by doing, not reading.",
+    "startButton": "Start Learning",
+    "syllabusButton": "View Syllabus",
+    "stats": {
+      "levels": "5 Levels",
+      "commands": "20+ Commands",
+      "cli": "Real CLI"
+    },
+    "features": {
+      "title": "Learn Git Visually",
+      "subtitle": "No more memorizing commands. See how Git actually works under the hood.",
+      "commits": {
+        "title": "Visual Commits",
+        "description": "See your commits come alive as nodes on an interactive graph"
+      },
+      "branches": {
+        "title": "Branch Mastery",
+        "description": "Create and navigate branches with beautiful visualizations"
+      },
+      "merges": {
+        "title": "Merge Magic",
+        "description": "Watch merges happen in real-time with animated pathways"
+      },
+      "terminal": {
+        "title": "Real Commands",
+        "description": "Practice actual Git commands in a safe sandbox environment"
+      }
+    },
+    "cta": {
+      "title": "Ready to Master Git?",
+      "description": "Start your journey from commits to complex merges. Become a Git expert in no time.",
+      "button": "Begin Your Journey"
+    },
+    "footer": "Built with ❤️ for developers who want to truly understand Git"
+  },
+  "learn": {
+    "levelComplete": "🎉 Level Complete!",
+    "levelCompleteDesc": "You've mastered \"{{title}}\"",
+    "nextLevel": "Next Level",
+    "resetBtn": "Reset",
+    "resetTitle": "Repository Reset",
+    "resetDesc": "Start fresh with this level",
+    "checkedOut": "Checked out",
+    "headAt": "HEAD is now at {{hash}}",
+    "tabs": {
+      "terminal": "Terminal",
+      "files": "Files"
+    }
+  },
+  "sidebar": {
+    "levels": "Levels",
+    "goal": "Goal",
+    "hints": "Hints",
+    "commands": "Commands"
+  },
+  "levels": {
+    "level-1": {
+      "title": "First Snapshot",
+      "subtitle": "Genesis",
+      "description": "Git saves snapshots of your project, not just changes. Each commit is a complete picture of all your files at that moment.",
+      "goal": "Initialize a repository and make your first commit.",
+      "hints": [
+        "Run \"git init\" to create a new repository",
+        "Modify a file to see it change status",
+        "Use \"git add .\" to stage all changes",
+        "Run \"git commit -m message\" to save"
+      ]
+    },
+    "level-2": {
+      "title": "Time Traveler",
+      "subtitle": "Genesis",
+      "description": "Git lets you travel through time! Use checkout to visit any commit and see your project as it was.",
+      "goal": "Create 2 commits, then checkout the first one (detached HEAD).",
+      "hints": [
+        "Make a change and commit it",
+        "Run \"git log\" to see commit history",
+        "Use \"git checkout <hash>\" with the first commit's hash",
+        "Notice HEAD is now \"detached\""
+      ]
+    },
+    "level-3": {
+      "title": "Branching Timeline",
+      "subtitle": "Multiverse",
+      "description": "Branches are lightweight pointers to commits. They let you work on features without affecting the main code.",
+      "goal": "Create a new branch called \"feature\" and make a commit on it.",
+      "hints": [
+        "Use \"git branch feature\" to create a branch",
+        "Run \"git checkout feature\" to switch to it",
+        "Or use \"git checkout -b feature\" for both steps",
+        "Make a commit on the new branch"
+      ]
+    },
+    "level-4": {
+      "title": "Merging Paths",
+      "subtitle": "Multiverse",
+      "description": "Merge brings changes from one branch into another. Fast-forward is simple, but sometimes you need a merge commit.",
+      "goal": "Merge your feature branch back into main.",
+      "hints": [
+        "First, checkout main: \"git checkout main\"",
+        "Then merge: \"git merge feature\"",
+        "Watch the graph update!",
+        "Notice if it's a fast-forward or merge commit"
+      ]
+    },
+    "level-5": {
+      "title": "Soft Landing",
+      "subtitle": "Regret & Rewrite",
+      "description": "Made a mistake? Reset lets you undo commits. Soft keeps changes, hard throws them away.",
+      "goal": "Make a commit, then reset it with --soft to keep your changes.",
+      "hints": [
+        "Make a change and commit it",
+        "Run \"git reset --soft HEAD~1\"",
+        "Your changes are still in the working directory!",
+        "Try \"git status\" to see"
+      ]
+    }
+  },
+  "phases": {
+    "1": "Genesis",
+    "2": "Multiverse",
+    "3": "Regret & Rewrite",
+    "4": "The Ensemble"
+  }
+}

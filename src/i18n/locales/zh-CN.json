@@ -1,0 +1,141 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "reset": "重置",
+    "next": "下一步",
+    "prev": "上一步",
+    "level": "关卡",
+    "of": "/"
+  },
+  "home": {
+    "badge": "交互式 Git 学习",
+    "title": "GitMaster",
+    "subtitle": "Visual",
+    "description": "通过交互式可视化掌握 Git。实时观察分支生长、提交形成和合并发生。在实践中学习，而非阅读。",
+    "startButton": "开始学习",
+    "syllabusButton": "查看大纲",
+    "stats": {
+      "levels": "5 个关卡",
+      "commands": "20+ 命令",
+      "cli": "真实 CLI"
+    },
+    "features": {
+      "title": "可视化学习 Git",
+      "subtitle": "不再死记命令。直观了解 Git 的底层原理。",
+      "commits": {
+        "title": "可视化提交",
+        "description": "看着你的提交在交互式图表上变成节点"
+      },
+      "branches": {
+        "title": "分支大师",
+        "description": "通过精美的可视化创建和导航分支"
+      },
+      "merges": {
+        "title": "合并魔法",
+        "description": "实时观看合并过程中的动态路径变化"
+      },
+      "terminal": {
+        "title": "真实命令",
+        "description": "在安全的沙盒环境中练习真实的 Git 命令"
+      }
+    },
+    "cta": {
+      "title": "准备好掌握 Git 了吗？",
+      "description": "从提交到复杂合并，开启你的学习之旅。很快成为 Git 专家。",
+      "button": "开始旅程"
+    },
+    "footer": "为真正想理解 Git 的开发者用 ❤️ 打造"
+  },
+  "learn": {
+    "levelComplete": "🎉 关卡完成！",
+    "levelCompleteDesc": "你已掌握「{{title}}」",
+    "nextLevel": "下一关",
+    "resetBtn": "重置",
+    "resetTitle": "仓库已重置",
+    "resetDesc": "从头开始这个关卡",
+    "checkedOut": "已切换",
+    "headAt": "HEAD 现在位于 {{hash}}",
+    "tabs": {
+      "terminal": "终端",
+      "files": "文件"
+    }
+  },
+  "sidebar": {
+    "levels": "关卡列表",
+    "goal": "目标",
+    "hints": "提示",
+    "commands": "命令"
+  },
+  "levels": {
+    "level-1": {
+      "title": "第一次快照",
+      "subtitle": "创世纪",
+      "description": "Git 保存的是项目的快照，而不仅仅是变更。每次提交都是那一刻所有文件的完整记录。",
+      "goal": "初始化一个仓库并进行第一次提交。",
+      "hints": [
+        "运行 \"git init\" 创建新仓库",
+        "修改一个文件来查看状态变化",
+        "使用 \"git add .\" 暂存所有更改",
+        "运行 \"git commit -m 消息\" 保存"
+      ]
+    },
+    "level-2": {
+      "title": "时间旅行者",
+      "subtitle": "创世纪",
+      "description": "Git 让你穿越时间！使用 checkout 访问任意提交，查看项目的历史状态。",
+      "goal": "创建 2 次提交，然后 checkout 到第一次提交（分离 HEAD）。",
+      "hints": [
+        "进行一次更改并提交",
+        "运行 \"git log\" 查看提交历史",
+        "使用 \"git checkout <hash>\" 加上第一个提交的哈希",
+        "注意 HEAD 现在是「分离」状态"
+      ]
+    },
+    "level-3": {
+      "title": "分裂的时间线",
+      "subtitle": "平行宇宙",
+      "description": "分支是指向提交的轻量级指针。它们让你在不影响主代码的情况下开发新功能。",
+      "goal": "创建一个名为 \"feature\" 的新分支并在上面提交。",
+      "hints": [
+        "使用 \"git branch feature\" 创建分支",
+        "运行 \"git checkout feature\" 切换到该分支",
+        "或使用 \"git checkout -b feature\" 一步完成",
+        "在新分支上进行一次提交"
+      ]
+    },
+    "level-4": {
+      "title": "殊途同归",
+      "subtitle": "平行宇宙",
+      "description": "合并将一个分支的更改并入另一个分支。快进合并很简单，但有时需要创建合并提交。",
+      "goal": "将你的 feature 分支合并回 main。",
+      "hints": [
+        "首先，切换到 main：\"git checkout main\"",
+        "然后合并：\"git merge feature\"",
+        "观察图表的更新！",
+        "注意是快进合并还是合并提交"
+      ]
+    },
+    "level-5": {
+      "title": "软着陆与硬着陆",
+      "subtitle": "后悔药",
+      "description": "犯了错误？Reset 让你撤销提交。Soft 保留更改，hard 则丢弃它们。",
+      "goal": "进行一次提交，然后用 --soft 重置以保留更改。",
+      "hints": [
+        "进行一次更改并提交",
+        "运行 \"git reset --soft HEAD~1\"",
+        "你的更改仍在工作目录中！",
+        "试试 \"git status\" 查看"
+      ]
+    }
+  },
+  "phases": {
+    "1": "创世纪",
+    "2": "平行宇宙",
+    "3": "后悔药",
+    "4": "团队协作"
+  }
+}
