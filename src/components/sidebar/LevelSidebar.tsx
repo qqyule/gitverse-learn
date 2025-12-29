@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import {
@@ -14,6 +14,7 @@ import { Level, levels } from '@/data/levels'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
+import { staggerChildren } from '@/lib/animations'
 
 interface LevelSidebarProps {
 	currentLevel: Level
@@ -31,6 +32,13 @@ export function LevelSidebar({
 	const gitState = useGitStore()
 	const { t, i18n } = useTranslation()
 	const completedLevels = useProgressStore((state) => state.completedLevels)
+	const listRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		if (listRef.current) {
+			staggerChildren(listRef.current.querySelectorAll('.level-btn'))
+		}
+	}, [])
 
 	/**
 	 * 获取关卡的翻译文本
@@ -192,7 +200,11 @@ export function LevelSidebar({
 			</div>
 
 			{/* Level List */}
-			<div className="flex-1 overflow-y-auto p-4" data-tour="level-list">
+			<div
+				ref={listRef}
+				className="flex-1 overflow-y-auto p-4"
+				data-tour="level-list"
+			>
 				<h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
 					{t('sidebar.levels')}
 				</h4>
@@ -219,8 +231,9 @@ export function LevelSidebar({
 											key={level.id}
 											disabled={isLocked}
 											onClick={() => !isLocked && onLevelSelect(level)}
+											style={{ opacity: 0 }} // Initial state
 											className={cn(
-												'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
+												'level-btn w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
 												isActive
 													? 'bg-primary/20 text-primary'
 													: isLocked

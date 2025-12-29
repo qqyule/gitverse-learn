@@ -14,6 +14,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSwitch } from '@/components/ui/language-switch'
 import { loadLevelState, saveLevelState } from '@/lib/storage'
 import { useProgressStore } from '@/store/progressStore'
+import { PageTransition } from '@/components/layout/PageTransition'
 import {
 	Menu,
 	X,
@@ -183,7 +184,7 @@ export default function LearnPage() {
 	}, [currentIndex, completedLevels, navigate, toast, t])
 
 	return (
-		<div className="flex h-screen w-full bg-background overflow-hidden">
+		<PageTransition className="flex h-screen w-full bg-background overflow-hidden">
 			{/* Sidebar */}
 			<AnimatePresence mode="wait">
 				{sidebarOpen && (
@@ -345,6 +346,6 @@ export default function LearnPage() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</PageTransition>
 	)
 }

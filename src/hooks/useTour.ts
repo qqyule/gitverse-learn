@@ -99,10 +99,7 @@ export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 			onDestroyed: () => {
 				setIsActive(false)
 				markTourCompleted()
-			},
-			onCloseClick: () => {
-				setIsActive(false)
-				markTourCompleted()
+				setFirstVisit(false)
 			},
 			steps: generateSteps(),
 		})

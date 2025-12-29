@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FileText, FilePlus, FileEdit, Trash2 } from 'lucide-react'
 import { useGitStore } from '@/store/gitStore'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
+import { staggerChildren } from '@/lib/animations'
 
 interface FileDeckProps {
 	className?: string
@@ -12,6 +13,13 @@ interface FileDeckProps {
 
 export function FileDeck({ className, onFileClick }: FileDeckProps) {
 	const { workingDirectory, stagingArea, add, modifyFile } = useGitStore()
+	const listRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		if (listRef.current) {
+			staggerChildren(listRef.current.children)
+		}
+	}, [workingDirectory]) // Re-animate when files change
 
 	const { t } = useTranslation()
 
@@ -72,13 +80,11 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 				)}
 			</div>
 
-			<div className="grid gap-2">
-				{files.map(([path, file], index) => (
-					<motion.div
+			<div ref={listRef} className="grid gap-2">
+				{files.map(([path, file]) => (
+					<div
 						key={path}
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ delay: index * 0.05 }}
+						style={{ opacity: 0 }} // Initial state for animejs
 						onClick={() => {
 							if (file.status === 'unmodified') {
 								modifyFile(path)
@@ -110,7 +116,7 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 								{t('file.stage')}
 							</button>
 						)}
-					</motion.div>
+					</div>
 				))}
 			</div>
 

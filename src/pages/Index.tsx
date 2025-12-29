@@ -12,6 +12,7 @@ import {
 	Terminal,
 	Zap,
 } from 'lucide-react'
+import { PageTransition } from '@/components/layout/PageTransition'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSwitch } from '@/components/ui/language-switch'
@@ -48,7 +49,7 @@ export default function Index() {
 	}
 
 	return (
-		<div className="min-h-screen bg-background overflow-hidden">
+		<PageTransition className="min-h-screen bg-background overflow-hidden">
 			{/* Header with theme/language toggle */}
 			<header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-end gap-2 p-4">
 				<LanguageSwitch />
@@ -276,6 +277,6 @@ export default function Index() {
 					<p>{t('home.footer')}</p>
 				</div>
 			</footer>
-		</div>
+		</PageTransition>
 	)
 }
