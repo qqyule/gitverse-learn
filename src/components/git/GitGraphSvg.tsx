@@ -149,7 +149,7 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 									<g>
 										{node.branches.slice(0, 2).map((branchName, i) => {
 											const branch = branches[branchName]
-											const yOffset = node.isHead ? 38 + i * 26 : 34 + i * 26
+											const yOffset = node.isHead ? 45 + i * 40 : 40 + i * 40
 
 											return (
 												<motion.g
@@ -159,24 +159,32 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 													transition={{ delay: 0.2 + i * 0.1 }}
 												>
 													<rect
-														x={node.x - 35}
-														y={node.y + yOffset - 12}
-														width={70}
-														height={22}
+														x={node.x - 60}
+														y={node.y + yOffset - 17}
+														width={120}
+														height={34}
 														rx={6}
-														fill="hsl(217, 33%, 17%)"
+														fill="hsl(var(--secondary))"
 														stroke={branch?.color || node.color}
 														strokeWidth={1.5}
 													/>
 													<text
 														x={node.x}
-														y={node.y + yOffset + 4}
+														y={node.y + yOffset - 4}
 														textAnchor="middle"
-														className="text-[12px] font-medium fill-foreground"
+														className="text-[12px] font-bold fill-foreground"
 													>
-														{branchName.length > 10
-															? branchName.slice(0, 9) + '…'
+														{branchName.length > 15
+															? branchName.slice(0, 14) + '…'
 															: branchName}
+													</text>
+													<text
+														x={node.x}
+														y={node.y + yOffset + 10}
+														textAnchor="middle"
+														className="text-[10px] font-mono fill-muted-foreground"
+													>
+														{node.id.slice(0, 7)}
 													</text>
 												</motion.g>
 											)
