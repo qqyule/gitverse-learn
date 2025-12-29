@@ -70,6 +70,13 @@
     "hints": "Hints",
     "commands": "Commands"
   },
+  "file": {
+    "stage": "Stage",
+    "stageAll": "Stage All",
+    "workingDirectory": "Working Directory",
+    "stagingArea": "Staging Area",
+    "noFiles": "No files in working directory"
+  },
   "levels": {
     "level-1": {
       "title": "First Snapshot",

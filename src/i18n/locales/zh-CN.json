@@ -70,6 +70,13 @@
     "hints": "提示",
     "commands": "命令"
   },
+  "file": {
+    "stage": "暂存",
+    "stageAll": "全部暂存",
+    "workingDirectory": "工作区",
+    "stagingArea": "暂存区",
+    "noFiles": "工作区为空"
+  },
   "levels": {
     "level-1": {
       "title": "第一次快照",

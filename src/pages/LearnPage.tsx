@@ -34,6 +34,7 @@ export default function LearnPage() {
 	const [sidebarOpen, setSidebarOpen] = useState(true)
 	const [terminalExpanded, setTerminalExpanded] = useState(true)
 	const [showSuccess, setShowSuccess] = useState(false)
+	const [terminalInput, setTerminalInput] = useState('')
 
 	const gitState = useGitStore()
 	const { init, resetState } = gitState
@@ -125,6 +126,7 @@ export default function LearnPage() {
 						<LevelSidebar
 							currentLevel={currentLevel}
 							onLevelSelect={handleLevelSelect}
+							onCommandClick={(cmd) => setTerminalInput(cmd)}
 							className="w-80 h-full"
 						/>
 					</motion.div>
@@ -229,33 +231,30 @@ export default function LearnPage() {
 				</div>
 
 				{/* Bottom Panel */}
-				<div className="border-t border-border bg-card/50">
-					<Tabs defaultValue="terminal" className="w-full">
-						<div className="flex items-center justify-between px-4 py-2 border-b border-border">
-							<TabsList className="bg-secondary/50">
-								<TabsTrigger value="terminal" className="gap-2">
-									<TerminalSquare className="w-4 h-4" />
-									{t('learn.tabs.terminal')}
-								</TabsTrigger>
-								<TabsTrigger value="files" className="gap-2">
-									<FolderOpen className="w-4 h-4" />
-									{t('learn.tabs.files')}
-								</TabsTrigger>
-							</TabsList>
+				<div className="border-t border-border bg-card/50 flex h-64">
+					{/* Terminal Section (70%) */}
+					<div className="flex-[0.7] border-r border-border flex flex-col min-w-0">
+						<Terminal
+							className="border-0 rounded-none h-full flex-1"
+							isExpanded={terminalExpanded}
+							onToggle={() => setTerminalExpanded(!terminalExpanded)}
+							externalInput={terminalInput}
+							onInputChange={setTerminalInput}
+						/>
+					</div>
+
+					{/* Files Section (30%) */}
+					<div className="flex-[0.3] flex flex-col min-w-0 bg-card">
+						<div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
+							<FolderOpen className="w-4 h-4 text-primary" />
+							<span className="text-sm font-medium">
+								{t('learn.tabs.files')}
+							</span>
 						</div>
-
-						<TabsContent value="terminal" className="m-0">
-							<Terminal
-								className="border-0 rounded-none"
-								isExpanded={terminalExpanded}
-								onToggle={() => setTerminalExpanded(!terminalExpanded)}
-							/>
-						</TabsContent>
-
-						<TabsContent value="files" className="m-0 p-4 h-64 overflow-y-auto">
+						<div className="flex-1 overflow-y-auto p-4">
 							<FileDeck />
-						</TabsContent>
-					</Tabs>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

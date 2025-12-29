@@ -5,274 +5,301 @@
 /* GitMaster Visual - Dark-first Design System */
 
 @layer base {
-  :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+	:root {
+		--background: 222 47% 11%;
+		--foreground: 210 40% 98%;
 
-    --card: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
+		--card: 222 47% 14%;
+		--card-foreground: 210 40% 98%;
 
-    --popover: 222 47% 12%;
-    --popover-foreground: 210 40% 98%;
+		--popover: 222 47% 12%;
+		--popover-foreground: 210 40% 98%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 222 47% 11%;
+		--primary: 199 89% 48%;
+		--primary-foreground: 222 47% 11%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
+		--secondary: 217 33% 17%;
+		--secondary-foreground: 210 40% 98%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+		--muted: 217 33% 17%;
+		--muted-foreground: 215 20% 65%;
 
-    --accent: 172 66% 50%;
-    --accent-foreground: 222 47% 11%;
+		--accent: 172 66% 50%;
+		--accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 210 40% 98%;
 
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
+		--success: 142 76% 36%;
+		--success-foreground: 210 40% 98%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
+		--warning: 38 92% 50%;
+		--warning-foreground: 222 47% 11%;
 
-    --border: 217 33% 22%;
-    --input: 217 33% 17%;
-    --ring: 199 89% 48%;
+		--border: 217 33% 22%;
+		--input: 217 33% 17%;
+		--ring: 199 89% 48%;
 
-    --radius: 0.75rem;
+		--radius: 0.75rem;
 
-    /* Git Graph Colors */
-    --git-main: 199 89% 48%;
-    --git-feature: 280 68% 60%;
-    --git-hotfix: 0 84% 60%;
-    --git-develop: 142 76% 36%;
-    --git-release: 38 92% 50%;
-    --git-node: 199 89% 48%;
-    --git-edge: 215 20% 45%;
-    --git-head: 172 66% 50%;
-    --git-staged: 142 76% 36%;
-    --git-modified: 38 92% 50%;
+		/* Git Graph Colors */
+		--git-main: 199 89% 48%;
+		--git-feature: 280 68% 60%;
+		--git-hotfix: 0 84% 60%;
+		--git-develop: 142 76% 36%;
+		--git-release: 38 92% 50%;
+		--git-node: 199 89% 48%;
+		--git-edge: 215 20% 45%;
+		--git-head: 172 66% 50%;
+		--git-staged: 142 76% 36%;
+		--git-modified: 38 92% 50%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(199 89% 48%), hsl(172 66% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 14%));
-    --gradient-glow: radial-gradient(ellipse at center, hsl(199 89% 48% / 0.15), transparent 70%);
-    --gradient-card: linear-gradient(180deg, hsl(222 47% 16%), hsl(222 47% 12%));
+		/* Gradients */
+		--gradient-primary: linear-gradient(
+			135deg,
+			hsl(199 89% 48%),
+			hsl(172 66% 50%)
+		);
+		--gradient-hero: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 14%));
+		--gradient-glow: radial-gradient(
+			ellipse at center,
+			hsl(199 89% 48% / 0.15),
+			transparent 70%
+		);
+		--gradient-card: linear-gradient(
+			180deg,
+			hsl(222 47% 16%),
+			hsl(222 47% 12%)
+		);
 
-    /* Shadows */
-    --shadow-glow: 0 0 30px hsl(199 89% 48% / 0.3);
-    --shadow-node: 0 4px 20px hsl(199 89% 48% / 0.4);
-    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.4);
+		/* Shadows */
+		--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.3);
+		--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.4);
+		--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.4);
 
-    /* Sidebar */
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 199 89% 48%;
-  }
+		/* Sidebar */
+		--sidebar-background: 222 47% 8%;
+		--sidebar-foreground: 210 40% 98%;
+		--sidebar-primary: 199 89% 48%;
+		--sidebar-primary-foreground: 222 47% 11%;
+		--sidebar-accent: 217 33% 17%;
+		--sidebar-accent-foreground: 210 40% 98%;
+		--sidebar-border: 217 33% 17%;
+		--sidebar-ring: 199 89% 48%;
+	}
 
-  .light {
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+	.light {
+		--background: 210 40% 98%;
+		--foreground: 222 47% 11%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+		--card: 0 0% 100%;
+		--card-foreground: 222 47% 11%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 222 47% 11%;
 
-    --primary: 199 89% 38%;
-    --primary-foreground: 210 40% 98%;
+		--primary: 199 89% 38%;
+		--primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+		--secondary: 210 40% 96%;
+		--secondary-foreground: 222 47% 11%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+		--muted: 210 40% 96%;
+		--muted-foreground: 215 16% 47%;
 
-    --accent: 172 66% 40%;
-    --accent-foreground: 210 40% 98%;
+		--accent: 172 66% 40%;
+		--accent-foreground: 210 40% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 210 40% 98%;
 
-    --success: 142 76% 36%;
-    --success-foreground: 210 40% 98%;
+		--success: 142 76% 36%;
+		--success-foreground: 210 40% 98%;
 
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
+		--warning: 38 92% 50%;
+		--warning-foreground: 222 47% 11%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 199 89% 38%;
+		--border: 214 32% 91%;
+		--input: 214 32% 91%;
+		--ring: 199 89% 38%;
 
-    --git-main: 199 89% 38%;
-    --git-feature: 280 68% 50%;
-    --git-node: 199 89% 38%;
-    --git-edge: 215 20% 65%;
-    --git-head: 172 66% 40%;
+		--git-main: 199 89% 38%;
+		--git-feature: 280 68% 50%;
+		--git-node: 199 89% 38%;
+		--git-edge: 215 20% 65%;
+		--git-head: 172 66% 40%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(199 89% 38%), hsl(172 66% 40%));
-    --gradient-hero: linear-gradient(135deg, hsl(210 40% 98%), hsl(210 40% 96%));
-    --gradient-glow: radial-gradient(ellipse at center, hsl(199 89% 48% / 0.1), transparent 70%);
+		--gradient-primary: linear-gradient(
+			135deg,
+			hsl(199 89% 38%),
+			hsl(172 66% 40%)
+		);
+		--gradient-hero: linear-gradient(
+			135deg,
+			hsl(210 40% 98%),
+			hsl(210 40% 96%)
+		);
+		--gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
+		--gradient-glow: radial-gradient(
+			ellipse at center,
+			hsl(199 89% 48% / 0.1),
+			transparent 70%
+		);
 
-    --shadow-glow: 0 0 30px hsl(199 89% 48% / 0.2);
-    --shadow-node: 0 4px 20px hsl(199 89% 48% / 0.3);
-    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.1);
+		--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.2);
+		--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.3);
+		--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.1);
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 199 89% 38%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 199 89% 38%;
-  }
+		--sidebar-background: 0 0% 98%;
+		--sidebar-foreground: 222 47% 11%;
+		--sidebar-primary: 199 89% 38%;
+		--sidebar-primary-foreground: 210 40% 98%;
+		--sidebar-accent: 210 40% 96%;
+		--sidebar-accent-foreground: 222 47% 11%;
+		--sidebar-border: 214 32% 91%;
+		--sidebar-ring: 199 89% 38%;
+	}
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+	* {
+		@apply border-border;
+	}
 
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  }
+	body {
+		@apply bg-background text-foreground antialiased;
+		font-family: 'Inter', system-ui, -apple-system, sans-serif;
+	}
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+	/* Custom scrollbar */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
 
-  ::-webkit-scrollbar-track {
-    @apply bg-secondary;
-  }
+	::-webkit-scrollbar-track {
+		@apply bg-secondary;
+	}
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
-  }
+	::-webkit-scrollbar-thumb {
+		@apply bg-muted-foreground/30 rounded-full;
+	}
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
-  }
+	::-webkit-scrollbar-thumb:hover {
+		@apply bg-muted-foreground/50;
+	}
 }
 
 @layer components {
-  .git-node {
-    @apply cursor-pointer transition-all duration-200;
-    filter: drop-shadow(var(--shadow-node));
-  }
+	.git-node {
+		@apply cursor-pointer transition-all duration-200;
+		filter: drop-shadow(var(--shadow-node));
+	}
 
-  .git-node:hover {
-    filter: drop-shadow(0 0 20px hsl(var(--git-node) / 0.6));
-    transform: scale(1.1);
-  }
+	.git-node:hover {
+		filter: drop-shadow(0 0 20px hsl(var(--git-node) / 0.6));
+		transform: scale(1.1);
+	}
 
-  .git-edge {
-    stroke: hsl(var(--git-edge));
-    stroke-width: 2.5;
-    fill: none;
-    stroke-linecap: round;
-  }
+	.git-edge {
+		stroke: hsl(var(--git-edge));
+		stroke-width: 2.5;
+		fill: none;
+		stroke-linecap: round;
+	}
 
-  .git-head-badge {
-    @apply px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider;
-    background: hsl(var(--git-head));
-    color: hsl(var(--background));
-    box-shadow: var(--shadow-glow);
-  }
+	.git-head-badge {
+		@apply px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider;
+		background: hsl(var(--git-head));
+		color: hsl(var(--background));
+		box-shadow: var(--shadow-glow);
+	}
 
-  .git-branch-badge {
-    @apply px-2 py-0.5 rounded-md text-xs font-semibold;
-    background: hsl(var(--secondary));
-    border: 1px solid hsl(var(--border));
-  }
+	.git-branch-badge {
+		@apply px-2 py-0.5 rounded-md text-xs font-semibold;
+		background: hsl(var(--secondary));
+		border: 1px solid hsl(var(--border));
+	}
 
-  .terminal-input {
-    @apply font-mono text-sm bg-transparent border-none outline-none w-full;
-    caret-color: hsl(var(--primary));
-  }
+	.terminal-input {
+		@apply font-mono text-sm bg-transparent border-none outline-none w-full;
+		caret-color: hsl(var(--primary));
+	}
 
-  .terminal-prompt {
-    @apply font-mono text-primary font-semibold;
-  }
+	.terminal-prompt {
+		@apply font-mono text-primary font-semibold;
+	}
 
-  .file-card {
-    @apply p-3 rounded-lg border transition-all duration-200 cursor-pointer;
-    background: var(--gradient-card);
-  }
+	.file-card {
+		@apply p-3 rounded-lg border transition-all duration-200 cursor-pointer;
+		background: var(--gradient-card);
+	}
 
-  .file-card:hover {
-    @apply border-primary/50;
-    box-shadow: var(--shadow-glow);
-  }
+	.file-card:hover {
+		@apply border-primary/50;
+		box-shadow: var(--shadow-glow);
+	}
 
-  .level-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
-    background: hsl(var(--primary) / 0.15);
-    color: hsl(var(--primary));
-    border: 1px solid hsl(var(--primary) / 0.3);
-  }
+	.level-badge {
+		@apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
+		background: hsl(var(--primary) / 0.15);
+		color: hsl(var(--primary));
+		border: 1px solid hsl(var(--primary) / 0.3);
+	}
 
-  .glow-text {
-    text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
-  }
+	.glow-text {
+		text-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+	}
 
-  .gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+	.gradient-text {
+		background: var(--gradient-primary);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
 }
 
 @layer utilities {
-  .animate-pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
+	.animate-pulse-glow {
+		animation: pulse-glow 2s ease-in-out infinite;
+	}
 
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
+	.animate-float {
+		animation: float 3s ease-in-out infinite;
+	}
 
-  .animate-slide-up {
-    animation: slide-up 0.5s ease-out;
-  }
+	.animate-slide-up {
+		animation: slide-up 0.5s ease-out;
+	}
 
-  @keyframes pulse-glow {
-    0%, 100% {
-      filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.4));
-    }
-    50% {
-      filter: drop-shadow(0 0 25px hsl(var(--primary) / 0.7));
-    }
-  }
+	@keyframes pulse-glow {
+		0%,
+		100% {
+			filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.4));
+		}
+		50% {
+			filter: drop-shadow(0 0 25px hsl(var(--primary) / 0.7));
+		}
+	}
 
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
+	@keyframes float {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-10px);
+		}
+	}
 
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+	@keyframes slide-up {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
