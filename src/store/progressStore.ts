@@ -26,7 +26,7 @@ export const useProgressStore = create<ProgressState>()(
 			},
 		}),
 		{
-			name: 'gitverse-progress',
+			name: 'gitmaster-progress',
 		}
 	)
 )

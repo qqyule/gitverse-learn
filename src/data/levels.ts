@@ -1,3 +1,5 @@
+import type { GitStore } from '@/types/git'
+
 export interface Level {
 	id: string
 	phase: number
@@ -8,7 +10,7 @@ export interface Level {
 	goal: string
 	hints: string[]
 	commands: string[]
-	validation: (state: any) => boolean
+	validation: (state: GitStore) => boolean
 	setup?: () => void
 }
 

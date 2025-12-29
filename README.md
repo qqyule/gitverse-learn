@@ -1,73 +1,127 @@
-# Welcome to your Lovable project
+# GitMaster - 交互式 Git 学习平台
 
-## Project info
+> **本项目由阿里云 ESA 提供加速、计算和保护**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+<div align="center">
+  <img src="https://img.alicdn.com/imgextra/i3/O1CN01H1UU3i1Cti9lYtFrs_!!6000000000139-2-tps-7534-844.png" alt="Logo" width="600" />
+</div>
 
-## How can I edit this code?
+> **探索 Git 的宇宙，从新手到大师的进阶之旅**
 
-There are several ways of editing your application.
+<div align="center">
+  <!-- 替换为实际 Logo -->
+  <h1>GitMaster</h1>
+</div>
 
-**Use Lovable**
+## � 项目简介 (Project Overview)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+**GitMaster** 是一款沉浸式的交互式 Git 学习应用，旨在通过可视化的方式帮助开发者掌握 Git 版本控制系统。通过"游戏化关卡 + 实时终端模拟 + 动态可视化图谱"的模式，让抽象的 Git 概念变得直观易懂。
 
-Changes made via Lovable will be committed automatically to this repo.
+本项目结合了现代前端技术栈，打造了流畅、美观且高效的学习体验，适合所有希望深入理解 Git 工作原理的开发者。
 
-**Use your preferred IDE**
+## ✨ 核心功能 (Key Features)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **🎮 游戏化闯关**: 包含 Genesis (创世纪)、Multiverse (平行宇宙) 等四大篇章，循序渐进掌握 Git 核心概念。
+- **💻 真实终端模拟**: 内置仿真终端，支持 Git 常用命令的实时输入与反馈。
+- **🌳 动态可视化图谱**: 实时渲染 Commit、Branch 和 Merge 操作，所见即所得。
+- **🌍 多语言支持**: 完美支持中文（简体）与英文无缝切换。
+- **🌗 沉浸式设计**: 专为开发者打造的暗黑模式与流畅动画体验。
+- **✨ 智能引导**: 集成 Driver.js 提供新手引导与交互式教程。
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 🛠 技术栈 (Tech Stack)
 
-Follow these steps:
+本项目采用现代化的 SPA 架构开发，整合了前沿的前端技术：
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+- **Core Framework**:
+
+  - [Vite](https://vitejs.dev/) - 极速构建工具
+  - [React 18](https://react.dev/) - UI 核心库
+  - [TypeScript](https://www.typescriptlang.org/) - 类型安全保证
+
+- **UI & Experience**:
+
+  - [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+  - [Shadcn UI](https://ui.shadcn.com/) - 高质量组件库 (基于 Radix UI)
+  - [Framer Motion](https://www.framer.com/motion/) - 强大的动画库
+  - [Anime.js](https://animejs.com/) - 复杂动画处理
+  - [Lucide React](https://lucide.dev/) - 精美图标集
+  - [Sonner](https://sonner.emilkowal.ski/) - 优雅的 Toast 组件
+
+- **State & Logic**:
+
+  - [Zustand](https://github.com/pmndrs/zustand) + Immer - 轻量级状态管理
+  - [React Query](https://tanstack.com/query/latest) - 异步数据管理
+  - [React Router](https://reactrouter.com/) - 路由管理
+  - [React Hook Form](https://react-hook-form.com/) + Zod - 表单与验证
+
+- **Visualization & Interaction**:
+
+  - [D3.js](https://d3js.org/) - 数据驱动文档 (可视化核心)
+  - [Recharts](https://recharts.org/) - 基于 React 的图表库
+  - [Driver.js](https://driverjs.com/) - 漫游引导库
+
+- **Internationalization**:
+
+  - [i18next](https://www.i18next.com/) - 国际化标准解决方案
+
+- **Testing**:
+  - [Vitest](https://vitest.dev/) - 下一代测试框架
+  - [React Testing Library](https://testing-library.com/) - 组件测试
+
+## 🚀 快速开始 (Getting Started)
+
+### 1. 环境准备
+
+确保您的环境已安装 Node.js (推荐 v18+) 和 pnpm。
+
+### 2. 安装依赖
+
+```bash
+# 克隆项目
 git clone <YOUR_GIT_URL>
+cd gitmaster
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# 安装依赖
+pnpm install
 ```
 
-**Edit a file directly in GitHub**
+### 3. 启动开发
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+pnpm dev
+```
 
-**Use GitHub Codespaces**
+现在访问 [http://localhost:5173](http://localhost:5173) 即可开启学习之旅。
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 📦 部署 (Deployment)
 
-## What technologies are used for this project?
+本项目支持部署到所有现代静态托管平台（Vercel, Netlify, Github Pages, ESA Pages 等）。
 
-This project is built with:
+1. **构建项目**:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+   ```bash
+   pnpm build
+   ```
 
-## How can I deploy this project?
+   构建产物将输出到 `dist` 目录。
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+2. **部署**:
+   - 将 `dist` 目录内容发布到您的静态 Web 服务器即可。
 
-## Can I connect a custom domain to my Lovable project?
+## 🤝 贡献说明
 
-Yes, you can!
+欢迎提交 Issue 和 Pull Request 帮助改进项目！提交前请确保通过 lint 和 type check：
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```bash
+pnpm lint
+pnpm typecheck
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📄 参赛声明
+
+本项目承诺所用代码及设计均为原创，并未侵犯任何第三方权益。
+本项目由阿里云 ESA 提供加速、计算和保护。
+
+## 📜 许可证 (License)
+
+MIT License

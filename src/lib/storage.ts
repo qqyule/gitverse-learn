@@ -1,6 +1,6 @@
 import { GitStore } from '@/types/git'
 
-const STORAGE_PREFIX = 'gitverse-level-'
+const STORAGE_PREFIX = 'gitmaster-level-'
 
 export const saveLevelState = (levelId: string, state: Partial<GitStore>) => {
 	try {

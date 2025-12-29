@@ -265,7 +265,7 @@ export const useGitStore = create<GitStore>()(
 					}
 					current = current.parents[0]
 						? state.commits[current.parents[0]]
-						: (undefined as any)
+						: (undefined as unknown as GitCommit)
 				}
 
 				if (canFastForward) {
@@ -415,7 +415,7 @@ export const useGitStore = create<GitStore>()(
 						const message = gitArgs
 							.slice(1)
 							.join(' ')
-							.replace(/^[\"']|[\"']$/g, '')
+							.replace(/^["']|["']$/g, '')
 						get().commit(message)
 					} else {
 						set((s) => {
@@ -449,11 +449,12 @@ export const useGitStore = create<GitStore>()(
 						get().merge(gitArgs[0])
 					}
 					break
-				case 'reset':
+				case 'reset': {
 					const mode = gitArgs.includes('--hard') ? 'hard' : 'soft'
 					get().reset(mode)
 					break
-				case 'log':
+				}
+				case 'log': {
 					const logs = get().log()
 					set((s) => {
 						s.lastOutput = logs
@@ -466,7 +467,8 @@ export const useGitStore = create<GitStore>()(
 							.join('\n\n')
 					})
 					break
-				case 'status':
+				}
+				case 'status': {
 					const status = get().status()
 					set((s) => {
 						let output = `On branch ${get().HEAD.ref}\n`
@@ -495,6 +497,7 @@ export const useGitStore = create<GitStore>()(
 						s.lastOutput = output
 					})
 					break
+				}
 				case 'tag':
 					if (gitArgs[0]) {
 						// 创建新标签
