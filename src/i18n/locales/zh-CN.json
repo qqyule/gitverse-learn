@@ -10,7 +10,8 @@
     "prev": "上一步",
     "level": "关卡",
     "of": "/",
-    "locked": "已锁定"
+    "locked": "已锁定",
+    "close": "关闭"
   },
   "home": {
     "badge": "交互式 Git 学习",

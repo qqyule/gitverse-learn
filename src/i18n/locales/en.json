@@ -10,7 +10,8 @@
     "prev": "Previous",
     "level": "Level",
     "of": "of",
-    "locked": "Locked"
+    "locked": "Locked",
+    "close": "Close"
   },
   "home": {
     "badge": "Interactive Git Learning",

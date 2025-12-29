@@ -16,10 +16,12 @@ import { PageTransition } from '@/components/layout/PageTransition'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSwitch } from '@/components/ui/language-switch'
+import { SyllabusModal } from '@/components/home/SyllabusModal'
 
 export default function Index() {
 	const navigate = useNavigate()
 	const { t } = useTranslation()
+	const [showSyllabus, setShowSyllabus] = React.useState(false)
 
 	const features = [
 		{
@@ -154,6 +156,7 @@ export default function Index() {
 								variant="outline"
 								size="lg"
 								className="gap-2 px-8 py-6 text-lg"
+								onClick={() => setShowSyllabus(true)}
 							>
 								<BookOpen className="w-5 h-5" />
 								{t('home.syllabusButton')}
@@ -277,6 +280,11 @@ export default function Index() {
 					<p>{t('home.footer')}</p>
 				</div>
 			</footer>
+
+			<SyllabusModal
+				isOpen={showSyllabus}
+				onClose={() => setShowSyllabus(false)}
+			/>
 		</PageTransition>
 	)
 }
