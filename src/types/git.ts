@@ -61,7 +61,7 @@ export interface GitActions {
 	status: () => { staged: string[]; modified: string[]; untracked: string[] }
 	executeCommand: (command: string) => string
 	resetState: () => void
-	loadScenario: (scenario: GitState) => void
+	loadScenario: (scenario: Partial<GitState>) => void
 	getCurrentBranch: () => string | null
 	getHeadCommit: () => GitCommit | null
 }

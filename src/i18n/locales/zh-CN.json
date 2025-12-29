@@ -9,7 +9,9 @@
     "next": "下一步",
     "prev": "上一步",
     "level": "关卡",
-    "of": "/"
+    "of": "/",
+    "locked": "已锁定",
+    "close": "关闭"
   },
   "home": {
     "badge": "交互式 Git 学习",
@@ -19,7 +21,7 @@
     "startButton": "开始学习",
     "syllabusButton": "查看大纲",
     "stats": {
-      "levels": "5 个关卡",
+      "levels": "12 个关卡",
       "commands": "20+ 命令",
       "cli": "真实 CLI"
     },
@@ -59,6 +61,7 @@
     "resetDesc": "从头开始这个关卡",
     "checkedOut": "已切换",
     "headAt": "HEAD 现在位于 {{hash}}",
+    "levelLocked": "请先完成前面的关卡",
     "tabs": {
       "terminal": "终端",
       "files": "文件"
@@ -103,6 +106,18 @@
       ]
     },
     "level-3": {
+      "title": "状态报告",
+      "subtitle": "创世纪",
+      "description": "提交之前，先查看更改了什么。Git status 显示工作区和暂存区的状态。",
+      "goal": "使用 git status 查看修改的文件，然后用 git log 查看提交历史。",
+      "hints": [
+        "修改工作区中的文件",
+        "运行 \"git status\" 查看更改",
+        "使用 \"git add .\" 暂存后再次查看状态",
+        "提交后，运行 \"git log\" 查看历史"
+      ]
+    },
+    "level-4": {
       "title": "分裂的时间线",
       "subtitle": "平行宇宙",
       "description": "分支是指向提交的轻量级指针。它们让你在不影响主代码的情况下开发新功能。",
@@ -114,28 +129,101 @@
         "在新分支上进行一次提交"
       ]
     },
-    "level-4": {
-      "title": "殊途同归",
+    "level-5": {
+      "title": "多重影分身",
       "subtitle": "平行宇宙",
-      "description": "合并将一个分支的更改并入另一个分支。快进合并很简单，但有时需要创建合并提交。",
-      "goal": "将你的 feature 分支合并回 main。",
+      "description": "真实项目通常有多个分支：功能分支、修复分支、实验分支。每个分支都是独立的开发线。",
+      "goal": "创建两个分支：\"feature-a\" 和 \"feature-b\"，并在每个分支上提交。",
       "hints": [
-        "首先，切换到 main：\"git checkout main\"",
-        "然后合并：\"git merge feature\"",
-        "观察图表的更新！",
-        "注意是快进合并还是合并提交"
+        "创建第一个分支：\"git checkout -b feature-a\"",
+        "在 feature-a 上提交",
+        "回到 main：\"git checkout main\"",
+        "创建第二个分支：\"git checkout -b feature-b\"",
+        "在 feature-b 上提交"
       ]
     },
-    "level-5": {
-      "title": "软着陆与硬着陆",
+    "level-6": {
+      "title": "殊途同归",
+      "subtitle": "平行宇宙",
+      "description": "合并将一个分支的更改并入另一个分支。当一个分支直接领先时，Git 执行「快进」合并。",
+      "goal": "使用快进合并将 feature-a 合并到 main。",
+      "hints": [
+        "首先，切换到 main：\"git checkout main\"",
+        "然后合并：\"git merge feature-a\"",
+        "观察图表的更新！",
+        "注意 main 现在指向与 feature-a 相同的提交"
+      ]
+    },
+    "level-7": {
+      "title": "时空交汇",
+      "subtitle": "平行宇宙",
+      "description": "当分支有分叉时，Git 会创建一个有两个父节点的合并提交。这叫做三方合并。",
+      "goal": "将 feature-b 合并到 main，创建一个合并提交。",
+      "hints": [
+        "确保你在 main 上：\"git checkout main\"",
+        "合并 feature-b：\"git merge feature-b\"",
+        "将创建一个合并提交",
+        "注意提交在图中有两条父线"
+      ]
+    },
+    "level-8": {
+      "title": "软着陆",
       "subtitle": "后悔药",
-      "description": "犯了错误？Reset 让你撤销提交。Soft 保留更改，hard 则丢弃它们。",
+      "description": "提交太早了？Reset --soft 撤销提交但保留所有更改在暂存区。",
       "goal": "进行一次提交，然后用 --soft 重置以保留更改。",
       "hints": [
         "进行一次更改并提交",
         "运行 \"git reset --soft HEAD~1\"",
-        "你的更改仍在工作目录中！",
-        "试试 \"git status\" 查看"
+        "你的更改仍在暂存区！",
+        "试试 \"git status\" 验证"
+      ]
+    },
+    "level-9": {
+      "title": "硬着陆",
+      "subtitle": "后悔药",
+      "description": "有时你想完全丢弃更改。Reset --hard 会丢弃所有内容并恢复到之前的状态。",
+      "goal": "进行一次提交，然后用 --hard 重置以丢弃所有更改。",
+      "hints": [
+        "进行一次更改并提交",
+        "运行 \"git reset --hard HEAD~1\"",
+        "你的更改完全消失了！",
+        "在真实项目中请谨慎使用"
+      ]
+    },
+    "level-10": {
+      "title": "选择性失忆",
+      "subtitle": "后悔药",
+      "description": "你也可以使用不带 --soft 或 --hard 的 reset。默认的 --mixed 模式会取消暂存但保留工作区的更改。",
+      "goal": "提交一个更改，然后使用 git reset HEAD~1（mixed 模式）。",
+      "hints": [
+        "进行一次更改并提交",
+        "运行 \"git reset HEAD~1\"（不带 --soft 或 --hard）",
+        "查看状态：更改在工作区但未暂存",
+        "这是 reset 的默认行为"
+      ]
+    },
+    "level-11": {
+      "title": "里程碑",
+      "subtitle": "团队协作",
+      "description": "标签标记历史中的重要点，比如发布版本。与分支不同，标签永远不会移动——它们始终指向同一个提交。",
+      "goal": "在当前提交上创建一个名为 \"v1.0\" 的标签。",
+      "hints": [
+        "确保你至少有一个提交",
+        "运行 \"git tag v1.0\" 创建标签",
+        "标签就像永久的书签",
+        "使用 \"git tag\" 列出所有标签"
+      ]
+    },
+    "level-12": {
+      "title": "旅程继续",
+      "subtitle": "团队协作",
+      "description": "恭喜！你已经学会了 Git 的核心概念。Git 的真正威力来自与远程仓库的协作。",
+      "goal": "创建一个名为 \"next-chapter\" 的新分支，象征你将继续学习。",
+      "hints": [
+        "你已掌握：init, add, commit, log, status",
+        "你已掌握：branch, checkout, merge",
+        "你已掌握：reset (soft, hard, mixed)",
+        "创建 \"next-chapter\" 分支完成你的旅程！"
       ]
     }
   },
@@ -144,5 +232,44 @@
     "2": "平行宇宙",
     "3": "后悔药",
     "4": "团队协作"
+  },
+  "tour": {
+    "welcome": {
+      "title": "欢迎来到 GitMaster！👋",
+      "description": "让我们快速了解一下这个交互式 Git 学习平台吧。"
+    },
+    "steps": {
+      "sidebarHeader": {
+        "title": "课程信息",
+        "description": "这里显示课程品牌和当前学习模式。"
+      },
+      "levelInfo": {
+        "title": "关卡详情",
+        "description": "这个区域展示当前关卡的标题、描述、目标和操作提示。"
+      },
+      "levelList": {
+        "title": "关卡导航",
+        "description": "浏览所有可用的关卡。已完成的关卡显示 ✓ 标记，锁定的关卡需要先完成前置关卡。"
+      },
+      "gitGraph": {
+        "title": "Git 可视化",
+        "description": "观察你的 Git 仓库动态变化！提交显示为节点，分支显示为彩色线条，合并将它们连接起来。"
+      },
+      "terminal": {
+        "title": "Git 终端",
+        "description": "在这里输入 Git 命令进行练习。试试 'git init' 来初始化仓库吧！"
+      },
+      "files": {
+        "title": "文件浏览器",
+        "description": "查看和管理工作区中的文件。在这里暂存文件并跟踪更改。"
+      }
+    },
+    "buttons": {
+      "next": "下一步",
+      "prev": "上一步",
+      "skip": "跳过引导",
+      "done": "知道了！",
+      "restart": "重新引导"
+    }
   }
 }

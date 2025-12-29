@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import {
@@ -8,15 +8,20 @@ import {
 	CheckCircle2,
 	Circle,
 	ChevronRight,
+	Lock,
+	X,
 } from 'lucide-react'
 import { Level, levels } from '@/data/levels'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
+import { useProgressStore } from '@/store/progressStore'
+import { staggerChildren } from '@/lib/animations'
 
 interface LevelSidebarProps {
 	currentLevel: Level
 	onLevelSelect: (level: Level) => void
 	onCommandClick?: (command: string) => void
+	onClose?: () => void
 	className?: string
 }
 
@@ -24,10 +29,19 @@ export function LevelSidebar({
 	currentLevel,
 	onLevelSelect,
 	onCommandClick,
+	onClose,
 	className,
 }: LevelSidebarProps) {
 	const gitState = useGitStore()
 	const { t, i18n } = useTranslation()
+	const completedLevels = useProgressStore((state) => state.completedLevels)
+	const listRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		if (listRef.current) {
+			staggerChildren(listRef.current.querySelectorAll('.level-btn'))
+		}
+	}, [])
 
 	/**
 	 * 获取关卡的翻译文本
@@ -86,13 +100,32 @@ export function LevelSidebar({
 			)}
 		>
 			{/* Header */}
-			<div className="p-4 border-b border-sidebar-border">
-				<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
-				<p className="text-xs text-muted-foreground mt-1">{t('home.badge')}</p>
+			<div
+				className="p-4 border-b border-sidebar-border flex items-center justify-between"
+				data-tour="sidebar-header"
+			>
+				<div>
+					<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
+					<p className="text-xs text-muted-foreground mt-1">
+						{t('home.badge')}
+					</p>
+				</div>
+				{onClose && (
+					<button
+						onClick={onClose}
+						className="md:hidden p-2 hover:bg-muted/50 rounded-full transition-colors"
+						aria-label="Close sidebar"
+					>
+						<X className="w-5 h-5 text-muted-foreground" />
+					</button>
+				)}
 			</div>
 
 			{/* Current Level Info */}
-			<div className="p-4 border-b border-sidebar-border space-y-4">
+			<div
+				className="p-4 border-b border-sidebar-border space-y-4"
+				data-tour="level-info"
+			>
 				<div className="space-y-2">
 					<div className="level-badge">
 						<BookOpen className="w-3.5 h-3.5" />
@@ -183,7 +216,11 @@ export function LevelSidebar({
 			</div>
 
 			{/* Level List */}
-			<div className="flex-1 overflow-y-auto p-4">
+			<div
+				ref={listRef}
+				className="flex-1 overflow-y-auto p-4"
+				data-tour="level-list"
+			>
 				<h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
 					{t('sidebar.levels')}
 				</h4>
@@ -196,20 +233,33 @@ export function LevelSidebar({
 							<div className="space-y-1">
 								{phaseLevels.map((level) => {
 									const isActive = level.id === currentLevel.id
-									const isCompleted = level.validation(gitState)
+									// Check persistence store first, fall back to current validation for immediate feedback
+									const isCompleted =
+										completedLevels.includes(level.id) ||
+										level.validation(gitState)
+
+									const index = levels.findIndex((l) => l.id === level.id)
+									const isLocked =
+										index > 0 && !completedLevels.includes(levels[index - 1].id)
 
 									return (
 										<button
 											key={level.id}
-											onClick={() => onLevelSelect(level)}
+											disabled={isLocked}
+											onClick={() => !isLocked && onLevelSelect(level)}
+											style={{ opacity: 0 }} // Initial state
 											className={cn(
-												'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
+												'level-btn w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
 												isActive
 													? 'bg-primary/20 text-primary'
+													: isLocked
+													? 'opacity-50 cursor-not-allowed text-muted-foreground'
 													: 'hover:bg-secondary/50 text-foreground'
 											)}
 										>
-											{isCompleted ? (
+											{isLocked ? (
+												<Lock className="w-4 h-4 text-muted-foreground" />
+											) : isCompleted ? (
 												<CheckCircle2 className="w-4 h-4 text-success" />
 											) : (
 												<Circle className="w-4 h-4 text-muted-foreground" />

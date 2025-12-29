@@ -117,39 +117,12 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 									opacity={0.3}
 								/>
 
-								{/* HEAD indicator */}
-								{node.isHead && (
-									<motion.g
-										initial={{ y: -10, opacity: 0 }}
-										animate={{ y: 0, opacity: 1 }}
-										transition={{ delay: 0.3 }}
-									>
-										<rect
-											x={node.x - 25}
-											y={node.y - 45}
-											width={50}
-											height={22}
-											rx={11}
-											fill="hsl(172, 66%, 50%)"
-											filter="url(#shadow)"
-										/>
-										<text
-											x={node.x}
-											y={node.y - 30}
-											textAnchor="middle"
-											className="text-[12px] font-bold fill-background uppercase tracking-wider"
-										>
-											HEAD
-										</text>
-									</motion.g>
-								)}
-
 								{/* Branch labels */}
 								{node.branches.length > 0 && (
 									<g>
 										{node.branches.slice(0, 2).map((branchName, i) => {
 											const branch = branches[branchName]
-											const yOffset = node.isHead ? 38 + i * 26 : 34 + i * 26
+											const yOffset = node.isHead ? 45 + i * 40 : 40 + i * 40
 
 											return (
 												<motion.g
@@ -159,24 +132,32 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 													transition={{ delay: 0.2 + i * 0.1 }}
 												>
 													<rect
-														x={node.x - 35}
-														y={node.y + yOffset - 12}
-														width={70}
-														height={22}
+														x={node.x - 60}
+														y={node.y + yOffset - 17}
+														width={120}
+														height={34}
 														rx={6}
-														fill="hsl(217, 33%, 17%)"
+														fill="hsl(var(--secondary))"
 														stroke={branch?.color || node.color}
 														strokeWidth={1.5}
 													/>
 													<text
 														x={node.x}
-														y={node.y + yOffset + 4}
+														y={node.y + yOffset - 4}
 														textAnchor="middle"
-														className="text-[12px] font-medium fill-foreground"
+														className="text-[12px] font-bold fill-foreground"
 													>
-														{branchName.length > 10
-															? branchName.slice(0, 9) + '…'
+														{branchName.length > 15
+															? branchName.slice(0, 14) + '…'
 															: branchName}
+													</text>
+													<text
+														x={node.x}
+														y={node.y + yOffset + 10}
+														textAnchor="middle"
+														className="text-[10px] font-mono fill-muted-foreground"
+													>
+														{node.id.slice(0, 7)}
 													</text>
 												</motion.g>
 											)
@@ -192,6 +173,48 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 						))}
 					</AnimatePresence>
 				</g>
+
+				{/* HEAD indicator - Rendered separately for smooth animation between nodes */}
+				<AnimatePresence>
+					{layout.nodes
+						.filter((n) => n.isHead)
+						.map((headNode) => (
+							<motion.g
+								key="HEAD"
+								initial={false}
+								animate={{ x: headNode.x, y: headNode.y }}
+								transition={{
+									type: 'spring',
+									stiffness: 500,
+									damping: 30,
+								}}
+							>
+								<motion.g
+									initial={{ y: -10, opacity: 0 }}
+									animate={{ y: 0, opacity: 1 }}
+									exit={{ y: -10, opacity: 0 }}
+								>
+									<rect
+										x={-25}
+										y={-45}
+										width={50}
+										height={22}
+										rx={11}
+										fill="hsl(172, 66%, 50%)"
+										filter="url(#shadow)"
+									/>
+									<text
+										x={0}
+										y={-30}
+										textAnchor="middle"
+										className="text-[12px] font-bold fill-background uppercase tracking-wider"
+									>
+										HEAD
+									</text>
+								</motion.g>
+							</motion.g>
+						))}
+				</AnimatePresence>
 			</svg>
 		</div>
 	)

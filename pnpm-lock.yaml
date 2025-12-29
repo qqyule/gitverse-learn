@@ -98,6 +98,9 @@ importers:
       '@types/d3':
         specifier: ^7.4.3
         version: 7.4.3
+      animejs:
+        specifier: ^3.2.1
+        version: 3.2.1
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -113,6 +116,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      driver.js:
+        specifier: ^1.4.0
+        version: 1.4.0
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@18.3.1)
@@ -192,6 +198,9 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.1
         version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@types/animejs':
+        specifier: ^3.1.7
+        version: 3.1.7
       '@types/node':
         specifier: ^22.16.5
         version: 22.19.3
@@ -1769,6 +1778,9 @@ packages:
       '@types/react-dom':
         optional: true
 
+  '@types/animejs@3.1.7':
+    resolution: {integrity: sha512-kFSyjM+fLo3oE9noWEtUvF82ttN8fTrKohiEMIrSzEzEjnsCmtO0rBCUQBlSPEb2w8vfN+v4/Zo0tK21Bgmq4g==}
+
   '@types/aria-query@5.0.4':
     resolution: {integrity: sha512-rfT93uj5s0PRL7EzccGMs3brplhcrghnDoV26NqKhCAS1hVo+WdNsPvE/yb6ilfr5hi2MEk6d5EWJTKdxg8jVw==}
 
@@ -2012,6 +2024,9 @@ packages:
 
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
+
+  animejs@3.2.1:
+    resolution: {integrity: sha512-sWno3ugFryK5nhiDm/2BKeFCpZv7vzerWUcUPyAZLDhMek3+S/p418ldZJbJXo5ZUOpfm2kP2XRO4NJcULMy9A==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -2342,6 +2357,9 @@ packages:
 
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
+
+  driver.js@1.4.0:
+    resolution: {integrity: sha512-Gm64jm6PmcU+si21sQhBrTAM1JvUrR0QhNmjkprNLxohOBzul9+pNHXgQaT9lW84gwg9GMLB3NZGuGolsz5uew==}
 
   electron-to-chromium@1.5.267:
     resolution: {integrity: sha512-0Drusm6MVRXSOJpGbaSVgcQsuB4hEkMpHXaVstcPmhu5LIedxs1xNK/nIxmQIU/RPC0+1/o0AVZfBTkTNJOdUw==}
@@ -4718,6 +4736,8 @@ snapshots:
       '@types/react': 18.3.27
       '@types/react-dom': 18.3.7(@types/react@18.3.27)
 
+  '@types/animejs@3.1.7': {}
+
   '@types/aria-query@5.0.4': {}
 
   '@types/chai@5.2.3':
@@ -5032,6 +5052,8 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
+
+  animejs@3.2.1: {}
 
   ansi-regex@5.0.1: {}
 
@@ -5371,6 +5393,8 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.28.4
       csstype: 3.2.3
+
+  driver.js@1.4.0: {}
 
   electron-to-chromium@1.5.267: {}
 
