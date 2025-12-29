@@ -12,6 +12,33 @@ export interface Level {
 	setup?: () => void
 }
 
+const isAncestor = (
+	commits: Record<string, any>,
+	ancestorHash: string,
+	descendantHash: string
+): boolean => {
+	let current = commits[descendantHash]
+	// DFS or simple parent traversal (linear history for now, but handling multiple parents is safer)
+	const queue = [current]
+	const visited = new Set<string>()
+
+	while (queue.length > 0) {
+		const commit = queue.shift()
+		if (!commit) continue
+		if (visited.has(commit.hash)) continue
+		visited.add(commit.hash)
+
+		if (commit.hash === ancestorHash) return true
+
+		commit.parents.forEach((parentHash: string) => {
+			if (commits[parentHash]) {
+				queue.push(commits[parentHash])
+			}
+		})
+	}
+	return false
+}
+
 export const levels: Level[] = [
 	{
 		id: 'level-1',
@@ -73,10 +100,19 @@ export const levels: Level[] = [
 		],
 		commands: ['git branch', 'git checkout -b'],
 		validation: (state) => {
+			const featureBranch = state.branches['feature']
+			const mainBranch = state.branches['main']
+			if (!featureBranch || !mainBranch) return false
+
+			// Feature branch must be ahead of main (main is ancestor of feature)
+			// And they must not point to the same commit
 			return (
-				state.branches['feature'] !== undefined &&
-				state.branches['feature'].headCommitHash !==
-					state.branches['main']?.headCommitHash
+				featureBranch.headCommitHash !== mainBranch.headCommitHash &&
+				isAncestor(
+					state.commits,
+					mainBranch.headCommitHash,
+					featureBranch.headCommitHash
+				)
 			)
 		},
 	},
@@ -123,7 +159,9 @@ export const levels: Level[] = [
 		],
 		commands: ['git reset --soft', 'git reset --hard'],
 		validation: (state) => {
-			return state.commandHistory.includes('git reset --soft HEAD~1')
+			return state.commandHistory.some((cmd: string) =>
+				cmd.includes('git reset --soft')
+			)
 		},
 	},
 ]
