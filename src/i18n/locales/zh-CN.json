@@ -231,5 +231,44 @@
     "2": "平行宇宙",
     "3": "后悔药",
     "4": "团队协作"
+  },
+  "tour": {
+    "welcome": {
+      "title": "欢迎来到 GitMaster！👋",
+      "description": "让我们快速了解一下这个交互式 Git 学习平台吧。"
+    },
+    "steps": {
+      "sidebarHeader": {
+        "title": "课程信息",
+        "description": "这里显示课程品牌和当前学习模式。"
+      },
+      "levelInfo": {
+        "title": "关卡详情",
+        "description": "这个区域展示当前关卡的标题、描述、目标和操作提示。"
+      },
+      "levelList": {
+        "title": "关卡导航",
+        "description": "浏览所有可用的关卡。已完成的关卡显示 ✓ 标记，锁定的关卡需要先完成前置关卡。"
+      },
+      "gitGraph": {
+        "title": "Git 可视化",
+        "description": "观察你的 Git 仓库动态变化！提交显示为节点，分支显示为彩色线条，合并将它们连接起来。"
+      },
+      "terminal": {
+        "title": "Git 终端",
+        "description": "在这里输入 Git 命令进行练习。试试 'git init' 来初始化仓库吧！"
+      },
+      "files": {
+        "title": "文件浏览器",
+        "description": "查看和管理工作区中的文件。在这里暂存文件并跟踪更改。"
+      }
+    },
+    "buttons": {
+      "next": "下一步",
+      "prev": "上一步",
+      "skip": "跳过引导",
+      "done": "知道了！",
+      "restart": "重新引导"
+    }
   }
 }

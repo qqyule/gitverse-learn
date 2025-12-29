@@ -89,13 +89,19 @@ export function LevelSidebar({
 			)}
 		>
 			{/* Header */}
-			<div className="p-4 border-b border-sidebar-border">
+			<div
+				className="p-4 border-b border-sidebar-border"
+				data-tour="sidebar-header"
+			>
 				<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
 				<p className="text-xs text-muted-foreground mt-1">{t('home.badge')}</p>
 			</div>
 
 			{/* Current Level Info */}
-			<div className="p-4 border-b border-sidebar-border space-y-4">
+			<div
+				className="p-4 border-b border-sidebar-border space-y-4"
+				data-tour="level-info"
+			>
 				<div className="space-y-2">
 					<div className="level-badge">
 						<BookOpen className="w-3.5 h-3.5" />
@@ -186,7 +192,7 @@ export function LevelSidebar({
 			</div>
 
 			{/* Level List */}
-			<div className="flex-1 overflow-y-auto p-4">
+			<div className="flex-1 overflow-y-auto p-4" data-tour="level-list">
 				<h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
 					{t('sidebar.levels')}
 				</h4>

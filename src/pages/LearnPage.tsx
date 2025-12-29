@@ -23,9 +23,11 @@ import {
 	ChevronLeft,
 	TerminalSquare,
 	FolderOpen,
+	HelpCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
+import { useTour, restartTour } from '@/hooks/useTour'
 
 export default function LearnPage() {
 	const { levelId } = useParams<{ levelId: string }>()
@@ -41,6 +43,10 @@ export default function LearnPage() {
 	const gitState = useGitStore()
 	const { init, resetState, loadScenario } = gitState
 	const { markLevelCompleted, completedLevels } = useProgressStore()
+	const { startTour, isActive: isTourActive } = useTour({
+		autoStart: true,
+		autoStartDelay: 1000,
+	})
 
 	const currentLevel = getLevelById(levelId || 'level-1') || levels[0]
 	const currentIndex = levels.findIndex((l) => l.id === currentLevel.id)
@@ -258,12 +264,23 @@ export default function LearnPage() {
 							{t('learn.resetBtn')}
 						</Button>
 						<LanguageSwitch />
+						<Button
+							variant="ghost"
+							size="icon"
+							onClick={() => {
+								restartTour()
+								startTour()
+							}}
+							title={t('tour.buttons.restart')}
+						>
+							<HelpCircle className="w-4 h-4" />
+						</Button>
 						<ThemeToggle />
 					</div>
 				</header>
 
 				{/* Graph Area */}
-				<div className="flex-1 relative overflow-hidden">
+				<div className="flex-1 relative overflow-hidden" data-tour="git-graph">
 					<div
 						className="absolute inset-0"
 						style={{
@@ -298,7 +315,10 @@ export default function LearnPage() {
 				{/* Bottom Panel */}
 				<div className="border-t border-border bg-card/50 flex h-64">
 					{/* Terminal Section (70%) */}
-					<div className="flex-[0.7] border-r border-border flex flex-col min-w-0">
+					<div
+						className="flex-[0.7] border-r border-border flex flex-col min-w-0"
+						data-tour="terminal"
+					>
 						<Terminal
 							className="border-0 rounded-none h-full flex-1"
 							isExpanded={terminalExpanded}
@@ -309,7 +329,10 @@ export default function LearnPage() {
 					</div>
 
 					{/* Files Section (30%) */}
-					<div className="flex-[0.3] flex flex-col min-w-0 bg-card">
+					<div
+						className="flex-[0.3] flex flex-col min-w-0 bg-card"
+						data-tour="files"
+					>
 						<div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
 							<FolderOpen className="w-4 h-4 text-primary" />
 							<span className="text-sm font-medium">

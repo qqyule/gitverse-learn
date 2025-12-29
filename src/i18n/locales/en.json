@@ -231,5 +231,44 @@
     "2": "Multiverse",
     "3": "Regret & Rewrite",
     "4": "The Ensemble"
+  },
+  "tour": {
+    "welcome": {
+      "title": "Welcome to GitMaster! 👋",
+      "description": "Let's take a quick tour to help you get started with interactive Git learning."
+    },
+    "steps": {
+      "sidebarHeader": {
+        "title": "Course Information",
+        "description": "Here you can see the course branding and current learning mode."
+      },
+      "levelInfo": {
+        "title": "Level Details",
+        "description": "This section shows the current level's title, description, goals, and helpful hints to guide you."
+      },
+      "levelList": {
+        "title": "Level Navigator",
+        "description": "Browse all available levels. Completed levels show a checkmark ✓. Locked levels require completing previous ones first."
+      },
+      "gitGraph": {
+        "title": "Git Visualization",
+        "description": "Watch your Git repository come to life! Commits appear as nodes, branches as colored lines, and merges connect them."
+      },
+      "terminal": {
+        "title": "Git Terminal",
+        "description": "Type Git commands here to practice. Try 'git init' to initialize a repository!"
+      },
+      "files": {
+        "title": "File Explorer",
+        "description": "View and manage files in your working directory. Stage files for commit and track changes here."
+      }
+    },
+    "buttons": {
+      "next": "Next",
+      "prev": "Previous",
+      "skip": "Skip Tour",
+      "done": "Got it!",
+      "restart": "Restart Tour"
+    }
   }
 }

@@ -303,3 +303,61 @@
 		}
 	}
 }
+
+/* Driver.js Custom Styling */
+.driver-popover.gitmaster-tour-popover {
+	@apply bg-card border-border text-foreground rounded-xl p-6;
+	background: var(--gradient-card);
+	border-width: 1px;
+	box-shadow: var(--shadow-card), 0 0 20px rgba(0, 0, 0, 0.4);
+	max-width: 350px;
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-title {
+	@apply font-bold text-lg mb-2;
+	color: hsl(var(--foreground));
+	font-family: 'Inter', sans-serif;
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-description {
+	@apply text-sm leading-relaxed mb-6;
+	color: hsl(var(--muted-foreground));
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-progress-text {
+	@apply text-xs font-medium;
+	color: hsl(var(--primary) / 0.8);
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-arrow {
+	border-color: hsl(var(--border));
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-next-btn,
+.driver-popover.gitmaster-tour-popover .driver-popover-prev-btn {
+	@apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 border-none shadow-none;
+	text-shadow: none;
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-next-btn {
+	@apply bg-primary text-primary-foreground hover:opacity-90;
+	background: var(--gradient-primary) !important;
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-prev-btn {
+	@apply bg-secondary text-secondary-foreground hover:bg-secondary/80 mr-2;
+}
+
+.driver-popover.gitmaster-tour-popover .driver-popover-close-btn {
+	@apply text-muted-foreground hover:text-foreground transition-colors;
+}
+
+.driver-stage-no-animation {
+	transition: none !important;
+}
+
+/* Light mode adjustments */
+.light .driver-popover.gitmaster-tour-popover {
+	box-shadow: var(--shadow-card), 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
