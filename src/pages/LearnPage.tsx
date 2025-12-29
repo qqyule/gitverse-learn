@@ -125,12 +125,28 @@ export default function LearnPage() {
 		if (levelId) {
 			const savedState = loadLevelState(levelId)
 			if (savedState) {
+				// 加载当前关卡已保存的状态
 				loadScenario(savedState)
+			} else if (currentIndex > 0) {
+				// 无保存状态时，尝试继承前一关卡的状态
+				const prevLevelId = levels[currentIndex - 1].id
+				const prevState = loadLevelState(prevLevelId)
+				if (prevState) {
+					// 继承前一关卡的 Git 状态，但清空命令历史
+					loadScenario({
+						...prevState,
+						commandHistory: [],
+						lastOutput: '',
+					})
+				} else {
+					resetState()
+				}
 			} else {
+				// 第一关或无前置关卡
 				resetState()
 			}
 		}
-	}, [levelId, resetState, loadScenario])
+	}, [levelId, currentIndex, resetState, loadScenario])
 
 	// Save state changes
 	useEffect(() => {
