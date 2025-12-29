@@ -9,6 +9,7 @@ import {
 	Circle,
 	ChevronRight,
 	Lock,
+	X,
 } from 'lucide-react'
 import { Level, levels } from '@/data/levels'
 import { cn } from '@/lib/utils'
@@ -20,6 +21,7 @@ interface LevelSidebarProps {
 	currentLevel: Level
 	onLevelSelect: (level: Level) => void
 	onCommandClick?: (command: string) => void
+	onClose?: () => void
 	className?: string
 }
 
@@ -27,6 +29,7 @@ export function LevelSidebar({
 	currentLevel,
 	onLevelSelect,
 	onCommandClick,
+	onClose,
 	className,
 }: LevelSidebarProps) {
 	const gitState = useGitStore()
@@ -98,11 +101,24 @@ export function LevelSidebar({
 		>
 			{/* Header */}
 			<div
-				className="p-4 border-b border-sidebar-border"
+				className="p-4 border-b border-sidebar-border flex items-center justify-between"
 				data-tour="sidebar-header"
 			>
-				<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
-				<p className="text-xs text-muted-foreground mt-1">{t('home.badge')}</p>
+				<div>
+					<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
+					<p className="text-xs text-muted-foreground mt-1">
+						{t('home.badge')}
+					</p>
+				</div>
+				{onClose && (
+					<button
+						onClick={onClose}
+						className="md:hidden p-2 hover:bg-muted/50 rounded-full transition-colors"
+						aria-label="Close sidebar"
+					>
+						<X className="w-5 h-5 text-muted-foreground" />
+					</button>
+				)}
 			</div>
 
 			{/* Current Level Info */}

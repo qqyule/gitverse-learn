@@ -40,6 +40,9 @@ export default function LearnPage() {
 	const [terminalExpanded, setTerminalExpanded] = useState(true)
 	const [showSuccess, setShowSuccess] = useState(false)
 	const [terminalInput, setTerminalInput] = useState('')
+	const [activeMobileTab, setActiveMobileTab] = useState<'terminal' | 'files'>(
+		'terminal'
+	)
 
 	const gitState = useGitStore()
 	const { init, resetState, loadScenario } = gitState
@@ -53,6 +56,23 @@ export default function LearnPage() {
 	const currentIndex = levels.findIndex((l) => l.id === currentLevel.id)
 	const hasNext = currentIndex < levels.length - 1
 	const hasPrev = currentIndex > 0
+
+	// Handle initial sidebar state based on screen size
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth < 768) {
+				setSidebarOpen(false)
+			} else {
+				setSidebarOpen(true)
+			}
+		}
+
+		// Set initial state
+		handleResize()
+
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
 
 	/**
 	 * 获取当前关卡的翻译标题
@@ -94,6 +114,9 @@ export default function LearnPage() {
 
 	const handleLevelSelect = (level: Level) => {
 		navigate(`/learn/${level.id}`)
+		if (window.innerWidth < 768) {
+			setSidebarOpen(false)
+		}
 	}
 
 	const handleNextLevel = () => {
@@ -184,21 +207,38 @@ export default function LearnPage() {
 	}, [currentIndex, completedLevels, navigate, toast, t])
 
 	return (
-		<PageTransition className="flex h-screen w-full bg-background overflow-hidden">
+		<PageTransition className="flex h-screen w-full bg-background overflow-hidden relative">
+			{/* Mobile Sidebar Overlay */}
+			<AnimatePresence>
+				{sidebarOpen && window.innerWidth < 768 && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						className="absolute inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
+						onClick={() => setSidebarOpen(false)}
+					/>
+				)}
+			</AnimatePresence>
+
 			{/* Sidebar */}
 			<AnimatePresence mode="wait">
 				{sidebarOpen && (
 					<motion.div
-						initial={{ width: 0, opacity: 0 }}
-						animate={{ width: 320, opacity: 1 }}
-						exit={{ width: 0, opacity: 0 }}
+						initial={{ width: 0, opacity: 0, x: -320 }}
+						animate={{ width: 320, opacity: 1, x: 0 }}
+						exit={{ width: 0, opacity: 0, x: -320 }}
 						transition={{ duration: 0.2 }}
-						className="flex-shrink-0"
+						className={cn(
+							'flex-shrink-0 h-full border-r border-border bg-sidebar z-50',
+							'absolute md:static top-0 left-0 shadow-xl md:shadow-none'
+						)}
 					>
 						<LevelSidebar
 							currentLevel={currentLevel}
 							onLevelSelect={handleLevelSelect}
 							onCommandClick={(cmd) => setTerminalInput(cmd)}
+							onClose={() => setSidebarOpen(false)}
 							className="w-80 h-full"
 						/>
 					</motion.div>
@@ -206,9 +246,9 @@ export default function LearnPage() {
 			</AnimatePresence>
 
 			{/* Main Content */}
-			<div className="flex-1 flex flex-col min-w-0">
+			<div className="flex-1 flex flex-col min-w-0 h-full relative z-0">
 				{/* Top Bar */}
-				<header className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/50">
+				<header className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-card/50">
 					<div className="flex items-center gap-3">
 						<Button
 							variant="ghost"
@@ -228,18 +268,23 @@ export default function LearnPage() {
 								size="icon"
 								onClick={handlePrevLevel}
 								disabled={!hasPrev}
+								className="hidden sm:flex"
 							>
 								<ChevronLeft className="w-4 h-4" />
 							</Button>
-							<span className="text-sm font-medium text-muted-foreground">
-								{t('common.level')} {currentIndex + 1} {t('common.of')}{' '}
-								{levels.length}
+							<span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+								{t('common.level')} {currentIndex + 1}
+								<span className="hidden sm:inline">
+									{' '}
+									{t('common.of')} {levels.length}
+								</span>
 							</span>
 							<Button
 								variant="ghost"
 								size="icon"
 								onClick={handleNextLevel}
 								disabled={!hasNext}
+								className="hidden sm:flex"
 							>
 								<ChevronRight className="w-4 h-4" />
 							</Button>
@@ -253,18 +298,35 @@ export default function LearnPage() {
 								animate={{ scale: 1 }}
 								className="flex items-center gap-2"
 							>
-								<Button onClick={handleNextLevel} className="gap-2">
+								<Button onClick={handleNextLevel} className="gap-2" size="sm">
 									<PartyPopper className="w-4 h-4" />
-									{t('learn.nextLevel')}
-									<ChevronRight className="w-4 h-4" />
+									<span className="hidden sm:inline">
+										{t('learn.nextLevel')}
+									</span>
+									<ChevronRight className="w-4 h-4 sm:hidden" />
 								</Button>
 							</motion.div>
 						)}
-						<Button variant="outline" size="sm" onClick={handleReset}>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={handleReset}
+							className="hidden sm:flex"
+						>
 							<RotateCcw className="w-4 h-4 mr-2" />
 							{t('learn.resetBtn')}
 						</Button>
-						<LanguageSwitch />
+						<Button
+							variant="outline"
+							size="icon"
+							onClick={handleReset}
+							className="sm:hidden"
+						>
+							<RotateCcw className="w-4 h-4" />
+						</Button>
+						<div className="hidden sm:block">
+							<LanguageSwitch />
+						</div>
 						<Button
 							variant="ghost"
 							size="icon"
@@ -273,6 +335,7 @@ export default function LearnPage() {
 								startTour()
 							}}
 							title={t('tour.buttons.restart')}
+							className="hidden sm:flex"
 						>
 							<HelpCircle className="w-4 h-4" />
 						</Button>
@@ -313,11 +376,44 @@ export default function LearnPage() {
 					</AnimatePresence>
 				</div>
 
+				{/* Mobile Tab Switcher */}
+				<div className="md:hidden flex border-t border-border bg-card">
+					<button
+						className={cn(
+							'flex-1 py-2 text-sm font-medium border-b-2 transition-colors',
+							activeMobileTab === 'terminal'
+								? 'border-primary text-primary bg-primary/5'
+								: 'border-transparent text-muted-foreground'
+						)}
+						onClick={() => setActiveMobileTab('terminal')}
+					>
+						<TerminalSquare className="w-4 h-4 inline-block mr-2" />
+						Terminal
+					</button>
+					<button
+						className={cn(
+							'flex-1 py-2 text-sm font-medium border-b-2 transition-colors',
+							activeMobileTab === 'files'
+								? 'border-primary text-primary bg-primary/5'
+								: 'border-transparent text-muted-foreground'
+						)}
+						onClick={() => setActiveMobileTab('files')}
+					>
+						<FolderOpen className="w-4 h-4 inline-block mr-2" />
+						{t('learn.tabs.files')}
+					</button>
+				</div>
+
 				{/* Bottom Panel */}
-				<div className="border-t border-border bg-card/50 flex h-64">
-					{/* Terminal Section (70%) */}
+				<div className="flex-shrink-0 border-t border-border bg-card/50 flex h-64 md:h-64">
+					{/* Terminal Section */}
 					<div
-						className="flex-[0.7] border-r border-border flex flex-col min-w-0"
+						className={cn(
+							'flex flex-col min-w-0 transition-all duration-300',
+							'md:flex-[0.7] md:border-r md:border-border',
+							'w-full md:w-auto', // Mobile full width
+							activeMobileTab === 'terminal' ? 'flex' : 'hidden md:flex' // Mobile toggle
+						)}
 						data-tour="terminal"
 					>
 						<Terminal
@@ -329,12 +425,17 @@ export default function LearnPage() {
 						/>
 					</div>
 
-					{/* Files Section (30%) */}
+					{/* Files Section */}
 					<div
-						className="flex-[0.3] flex flex-col min-w-0 bg-card"
+						className={cn(
+							'flex flex-col min-w-0 bg-card transition-all duration-300',
+							'md:flex-[0.3]',
+							'w-full md:w-auto', // Mobile full width
+							activeMobileTab === 'files' ? 'flex' : 'hidden md:flex' // Mobile toggle
+						)}
 						data-tour="files"
 					>
-						<div className="flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
+						<div className="hidden md:flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
 							<FolderOpen className="w-4 h-4 text-primary" />
 							<span className="text-sm font-medium">
 								{t('learn.tabs.files')}
