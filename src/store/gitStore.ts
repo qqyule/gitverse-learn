@@ -495,6 +495,33 @@ export const useGitStore = create<GitStore>()(
 						s.lastOutput = output
 					})
 					break
+				case 'tag':
+					if (gitArgs[0]) {
+						// 创建新标签
+						const tagName = gitArgs[0]
+						const currentHash =
+							get().HEAD.type === 'branch'
+								? get().branches[get().HEAD.ref]?.headCommitHash
+								: get().HEAD.ref
+						if (currentHash) {
+							set((s) => {
+								s.tags[tagName] = currentHash
+								s.lastOutput = `Created tag '${tagName}' at ${currentHash.slice(
+									0,
+									7
+								)}`
+								s.commandHistory.push(`git tag ${tagName}`)
+							})
+						}
+					} else {
+						// 列出所有标签
+						const tags = Object.keys(get().tags)
+						set((s) => {
+							s.lastOutput = tags.length > 0 ? tags.join('\n') : 'No tags found'
+							s.commandHistory.push('git tag')
+						})
+					}
+					break
 				default:
 					set((s) => {
 						s.lastOutput = `git: '${gitCmd}' is not a git command`
