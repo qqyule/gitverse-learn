@@ -121,7 +121,11 @@ export function Terminal({
 						<div
 							ref={outputRef}
 							className="h-48 overflow-y-auto p-4 font-mono text-sm space-y-2"
-							onClick={() => inputRef.current?.focus()}
+							onClick={(e) => {
+								if (!window.getSelection()?.toString()) {
+									inputRef.current?.focus()
+								}
+							}}
 						>
 							{history.length === 0 && (
 								<div className="text-muted-foreground">

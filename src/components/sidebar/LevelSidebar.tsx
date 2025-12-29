@@ -8,10 +8,12 @@ import {
 	CheckCircle2,
 	Circle,
 	ChevronRight,
+	Lock,
 } from 'lucide-react'
 import { Level, levels } from '@/data/levels'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
+import { useProgressStore } from '@/store/progressStore'
 
 interface LevelSidebarProps {
 	currentLevel: Level
@@ -28,6 +30,7 @@ export function LevelSidebar({
 }: LevelSidebarProps) {
 	const gitState = useGitStore()
 	const { t, i18n } = useTranslation()
+	const completedLevels = useProgressStore((state) => state.completedLevels)
 
 	/**
 	 * 获取关卡的翻译文本
@@ -196,20 +199,32 @@ export function LevelSidebar({
 							<div className="space-y-1">
 								{phaseLevels.map((level) => {
 									const isActive = level.id === currentLevel.id
-									const isCompleted = level.validation(gitState)
+									// Check persistence store first, fall back to current validation for immediate feedback
+									const isCompleted =
+										completedLevels.includes(level.id) ||
+										level.validation(gitState)
+
+									const index = levels.findIndex((l) => l.id === level.id)
+									const isLocked =
+										index > 0 && !completedLevels.includes(levels[index - 1].id)
 
 									return (
 										<button
 											key={level.id}
-											onClick={() => onLevelSelect(level)}
+											disabled={isLocked}
+											onClick={() => !isLocked && onLevelSelect(level)}
 											className={cn(
 												'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
 												isActive
 													? 'bg-primary/20 text-primary'
+													: isLocked
+													? 'opacity-50 cursor-not-allowed text-muted-foreground'
 													: 'hover:bg-secondary/50 text-foreground'
 											)}
 										>
-											{isCompleted ? (
+											{isLocked ? (
+												<Lock className="w-4 h-4 text-muted-foreground" />
+											) : isCompleted ? (
 												<CheckCircle2 className="w-4 h-4 text-success" />
 											) : (
 												<Circle className="w-4 h-4 text-muted-foreground" />

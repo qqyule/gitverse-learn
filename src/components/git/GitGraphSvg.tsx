@@ -117,33 +117,6 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 									opacity={0.3}
 								/>
 
-								{/* HEAD indicator */}
-								{node.isHead && (
-									<motion.g
-										initial={{ y: -10, opacity: 0 }}
-										animate={{ y: 0, opacity: 1 }}
-										transition={{ delay: 0.3 }}
-									>
-										<rect
-											x={node.x - 25}
-											y={node.y - 45}
-											width={50}
-											height={22}
-											rx={11}
-											fill="hsl(172, 66%, 50%)"
-											filter="url(#shadow)"
-										/>
-										<text
-											x={node.x}
-											y={node.y - 30}
-											textAnchor="middle"
-											className="text-[12px] font-bold fill-background uppercase tracking-wider"
-										>
-											HEAD
-										</text>
-									</motion.g>
-								)}
-
 								{/* Branch labels */}
 								{node.branches.length > 0 && (
 									<g>
@@ -200,6 +173,48 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 						))}
 					</AnimatePresence>
 				</g>
+
+				{/* HEAD indicator - Rendered separately for smooth animation between nodes */}
+				<AnimatePresence>
+					{layout.nodes
+						.filter((n) => n.isHead)
+						.map((headNode) => (
+							<motion.g
+								key="HEAD"
+								initial={false}
+								animate={{ x: headNode.x, y: headNode.y }}
+								transition={{
+									type: 'spring',
+									stiffness: 500,
+									damping: 30,
+								}}
+							>
+								<motion.g
+									initial={{ y: -10, opacity: 0 }}
+									animate={{ y: 0, opacity: 1 }}
+									exit={{ y: -10, opacity: 0 }}
+								>
+									<rect
+										x={-25}
+										y={-45}
+										width={50}
+										height={22}
+										rx={11}
+										fill="hsl(172, 66%, 50%)"
+										filter="url(#shadow)"
+									/>
+									<text
+										x={0}
+										y={-30}
+										textAnchor="middle"
+										className="text-[12px] font-bold fill-background uppercase tracking-wider"
+									>
+										HEAD
+									</text>
+								</motion.g>
+							</motion.g>
+						))}
+				</AnimatePresence>
 			</svg>
 		</div>
 	)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSwitch } from '@/components/ui/language-switch'
+import { loadLevelState, saveLevelState } from '@/lib/storage'
+import { useProgressStore } from '@/store/progressStore'
 import {
 	Menu,
 	X,
@@ -37,7 +39,8 @@ export default function LearnPage() {
 	const [terminalInput, setTerminalInput] = useState('')
 
 	const gitState = useGitStore()
-	const { init, resetState } = gitState
+	const { init, resetState, loadScenario } = gitState
+	const { markLevelCompleted, completedLevels } = useProgressStore()
 
 	const currentLevel = getLevelById(levelId || 'level-1') || levels[0]
 	const currentIndex = levels.findIndex((l) => l.id === currentLevel.id)
@@ -60,13 +63,22 @@ export default function LearnPage() {
 	useEffect(() => {
 		if (currentLevel.validation(gitState) && !showSuccess) {
 			setShowSuccess(true)
+			markLevelCompleted(currentLevel.id)
 			const title = getLevelTitle(currentLevel)
 			toast({
 				title: t('learn.levelComplete'),
 				description: t('learn.levelCompleteDesc', { title }),
 			})
 		}
-	}, [gitState, currentLevel, showSuccess, toast, t, getLevelTitle])
+	}, [
+		gitState,
+		currentLevel,
+		showSuccess,
+		toast,
+		t,
+		getLevelTitle,
+		markLevelCompleted,
+	])
 
 	// Reset success state when level changes
 	useEffect(() => {
@@ -75,14 +87,12 @@ export default function LearnPage() {
 
 	const handleLevelSelect = (level: Level) => {
 		navigate(`/learn/${level.id}`)
-		resetState()
 	}
 
 	const handleNextLevel = () => {
 		if (hasNext) {
 			const nextLevel = levels[currentIndex + 1]
 			navigate(`/learn/${nextLevel.id}`)
-			resetState()
 		}
 	}
 
@@ -90,7 +100,6 @@ export default function LearnPage() {
 		if (hasPrev) {
 			const prevLevel = levels[currentIndex - 1]
 			navigate(`/learn/${prevLevel.id}`)
-			resetState()
 		}
 	}
 
@@ -110,6 +119,46 @@ export default function LearnPage() {
 			description: t('learn.headAt', { hash: hash.slice(0, 7) }),
 		})
 	}
+
+	// Load state when level changes
+	useEffect(() => {
+		if (levelId) {
+			const savedState = loadLevelState(levelId)
+			if (savedState) {
+				loadScenario(savedState)
+			} else {
+				resetState()
+			}
+		}
+	}, [levelId, resetState, loadScenario])
+
+	// Save state changes
+	useEffect(() => {
+		if (!levelId) return
+
+		const unsubscribe = useGitStore.subscribe((state) => {
+			saveLevelState(levelId, state)
+		})
+
+		return () => {
+			unsubscribe()
+		}
+	}, [levelId])
+
+	// Enforce linear progression
+	useEffect(() => {
+		if (currentIndex > 0) {
+			const prevLevelId = levels[currentIndex - 1].id
+			if (!completedLevels.includes(prevLevelId)) {
+				navigate(`/learn/${levels[0].id}`, { replace: true })
+				toast({
+					title: t('common.locked'),
+					description: t('learn.levelLocked'),
+					variant: 'destructive',
+				})
+			}
+		}
+	}, [currentIndex, completedLevels, navigate, toast, t])
 
 	return (
 		<div className="flex h-screen w-full bg-background overflow-hidden">
