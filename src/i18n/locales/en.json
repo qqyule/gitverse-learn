@@ -1,275 +1,275 @@
 {
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "reset": "Reset",
-    "next": "Next",
-    "prev": "Previous",
-    "level": "Level",
-    "of": "of",
-    "locked": "Locked",
-    "close": "Close"
-  },
-  "home": {
-    "badge": "Interactive Git Learning",
-    "title": "GitMaster",
-    "subtitle": "Visual",
-    "description": "Master Git through interactive visualization. Watch branches grow, commits form, and merges happen in real-time. Learn by doing, not reading.",
-    "startButton": "Start Learning",
-    "syllabusButton": "View Syllabus",
-    "stats": {
-      "levels": "12 Levels",
-      "commands": "20+ Commands",
-      "cli": "Real CLI"
-    },
-    "features": {
-      "title": "Learn Git Visually",
-      "subtitle": "No more memorizing commands. See how Git actually works under the hood.",
-      "commits": {
-        "title": "Visual Commits",
-        "description": "See your commits come alive as nodes on an interactive graph"
-      },
-      "branches": {
-        "title": "Branch Mastery",
-        "description": "Create and navigate branches with beautiful visualizations"
-      },
-      "merges": {
-        "title": "Merge Magic",
-        "description": "Watch merges happen in real-time with animated pathways"
-      },
-      "terminal": {
-        "title": "Real Commands",
-        "description": "Practice actual Git commands in a safe sandbox environment"
-      }
-    },
-    "cta": {
-      "title": "Ready to Master Git?",
-      "description": "Start your journey from commits to complex merges. Become a Git expert in no time.",
-      "button": "Begin Your Journey"
-    },
-    "footer": "Built for developers who want to truly understand Git"
-  },
-  "learn": {
-    "levelComplete": "🎉 Level Complete!",
-    "levelCompleteDesc": "You've mastered \"{{title}}\"",
-    "nextLevel": "Next Level",
-    "resetBtn": "Reset",
-    "resetTitle": "Repository Reset",
-    "resetDesc": "Start fresh with this level",
-    "checkedOut": "Checked out",
-    "headAt": "HEAD is now at {{hash}}",
-    "levelLocked": "Please complete previous levels first",
-    "tabs": {
-      "terminal": "Terminal",
-      "files": "Files"
-    }
-  },
-  "sidebar": {
-    "levels": "Levels",
-    "goal": "Goal",
-    "hints": "Hints",
-    "commands": "Commands"
-  },
-  "file": {
-    "stage": "Stage",
-    "stageAll": "Stage All",
-    "workingDirectory": "Working Directory",
-    "stagingArea": "Staging Area",
-    "noFiles": "No files in working directory"
-  },
-  "levels": {
-    "level-1": {
-      "title": "First Snapshot",
-      "subtitle": "Genesis",
-      "description": "Git saves snapshots of your project, not just changes. Each commit is a complete picture of all your files at that moment.",
-      "goal": "Initialize a repository and make your first commit.",
-      "hints": [
-        "Run \"git init\" to create a new repository",
-        "Modify a file to see it change status",
-        "Use \"git add .\" to stage all changes",
-        "Run \"git commit -m message\" to save"
-      ]
-    },
-    "level-2": {
-      "title": "Time Traveler",
-      "subtitle": "Genesis",
-      "description": "Git lets you travel through time! Use checkout to visit any commit and see your project as it was.",
-      "goal": "Create 2 commits, then checkout the first one (detached HEAD).",
-      "hints": [
-        "Make a change and commit it",
-        "Run \"git log\" to see commit history",
-        "Use \"git checkout <hash>\" with the first commit's hash",
-        "Notice HEAD is now \"detached\""
-      ]
-    },
-    "level-3": {
-      "title": "Status Report",
-      "subtitle": "Genesis",
-      "description": "Before committing, check what has changed. Git status shows the state of your working directory and staging area.",
-      "goal": "Use git status to see modified files, then check your commit history with git log.",
-      "hints": [
-        "Modify a file in the working directory",
-        "Run \"git status\" to see the changes",
-        "Stage with \"git add .\" and run status again",
-        "After committing, run \"git log\" to see history"
-      ]
-    },
-    "level-4": {
-      "title": "Branching Timeline",
-      "subtitle": "Multiverse",
-      "description": "Branches are lightweight pointers to commits. They let you work on features without affecting the main code.",
-      "goal": "Create a new branch called \"feature\" and make a commit on it.",
-      "hints": [
-        "Use \"git branch feature\" to create a branch",
-        "Run \"git checkout feature\" to switch to it",
-        "Or use \"git checkout -b feature\" for both steps",
-        "Make a commit on the new branch"
-      ]
-    },
-    "level-5": {
-      "title": "Shadow Clones",
-      "subtitle": "Multiverse",
-      "description": "Real projects often have multiple branches: features, bugfixes, experiments. Each branch is an independent line of development.",
-      "goal": "Create two branches: \"feature-a\" and \"feature-b\", and make a commit on each.",
-      "hints": [
-        "Create first branch: \"git checkout -b feature-a\"",
-        "Make a commit on feature-a",
-        "Go back to main: \"git checkout main\"",
-        "Create second branch: \"git checkout -b feature-b\"",
-        "Make a commit on feature-b"
-      ]
-    },
-    "level-6": {
-      "title": "Merging Paths",
-      "subtitle": "Multiverse",
-      "description": "Merge brings changes from one branch into another. When one branch is directly ahead, Git performs a \"fast-forward\" merge.",
-      "goal": "Merge feature-a into main using fast-forward.",
-      "hints": [
-        "First, checkout main: \"git checkout main\"",
-        "Then merge: \"git merge feature-a\"",
-        "Watch the graph update!",
-        "Notice main now points to the same commit as feature-a"
-      ]
-    },
-    "level-7": {
-      "title": "Spacetime Intersection",
-      "subtitle": "Multiverse",
-      "description": "When branches have diverged, Git creates a merge commit with two parents. This is called a 3-way merge.",
-      "goal": "Merge feature-b into main to create a merge commit.",
-      "hints": [
-        "Make sure you are on main: \"git checkout main\"",
-        "Merge feature-b: \"git merge feature-b\"",
-        "A merge commit will be created",
-        "Notice the commit has two parent lines in the graph"
-      ]
-    },
-    "level-8": {
-      "title": "Soft Landing",
-      "subtitle": "Regret & Rewrite",
-      "description": "Made a commit too early? Reset --soft undoes the commit but keeps all your changes staged.",
-      "goal": "Make a commit, then reset it with --soft to keep your changes.",
-      "hints": [
-        "Make a change and commit it",
-        "Run \"git reset --soft HEAD~1\"",
-        "Your changes are still staged!",
-        "Try \"git status\" to verify"
-      ]
-    },
-    "level-9": {
-      "title": "Hard Landing",
-      "subtitle": "Regret & Rewrite",
-      "description": "Sometimes you want to completely discard changes. Reset --hard throws away everything and restores the previous state.",
-      "goal": "Make a commit, then reset it with --hard to discard all changes.",
-      "hints": [
-        "Make a change and commit it",
-        "Run \"git reset --hard HEAD~1\"",
-        "Your changes are completely gone!",
-        "Use with caution in real projects"
-      ]
-    },
-    "level-10": {
-      "title": "Selective Amnesia",
-      "subtitle": "Regret & Rewrite",
-      "description": "You can also reset without specifying --soft or --hard. The default --mixed mode unstages changes but keeps them in your working directory.",
-      "goal": "Commit a change, then use git reset HEAD~1 (mixed mode).",
-      "hints": [
-        "Make a change and commit it",
-        "Run \"git reset HEAD~1\" (no --soft or --hard)",
-        "Check status: changes are in working dir but not staged",
-        "This is the default reset behavior"
-      ]
-    },
-    "level-11": {
-      "title": "Milestone",
-      "subtitle": "The Ensemble",
-      "description": "Tags mark important points in history like releases. Unlike branches, tags never move - they always point to the same commit.",
-      "goal": "Create a tag called \"v1.0\" on the current commit.",
-      "hints": [
-        "Make sure you have at least one commit",
-        "Run \"git tag v1.0\" to create a tag",
-        "Tags are like permanent bookmarks",
-        "Use \"git tag\" to list all tags"
-      ]
-    },
-    "level-12": {
-      "title": "The Journey Continues",
-      "subtitle": "The Ensemble",
-      "description": "Congratulations! You have learned the core concepts of Git. The real power of Git comes from collaboration with remote repositories.",
-      "goal": "Create a new branch called \"next-chapter\" to symbolize your continued learning.",
-      "hints": [
-        "You have mastered: init, add, commit, log, status",
-        "You have mastered: branch, checkout, merge",
-        "You have mastered: reset (soft, hard, mixed)",
-        "Create \"next-chapter\" branch to complete your journey!"
-      ]
-    }
-  },
-  "phases": {
-    "1": "Genesis",
-    "2": "Multiverse",
-    "3": "Regret & Rewrite",
-    "4": "The Ensemble"
-  },
-  "tour": {
-    "welcome": {
-      "title": "Welcome to GitMaster! 👋",
-      "description": "Let's take a quick tour to help you get started with interactive Git learning."
-    },
-    "steps": {
-      "sidebarHeader": {
-        "title": "Course Information",
-        "description": "Here you can see the course branding and current learning mode."
-      },
-      "levelInfo": {
-        "title": "Level Details",
-        "description": "This section shows the current level's title, description, goals, and helpful hints to guide you."
-      },
-      "levelList": {
-        "title": "Level Navigator",
-        "description": "Browse all available levels. Completed levels show a checkmark ✓. Locked levels require completing previous ones first."
-      },
-      "gitGraph": {
-        "title": "Git Visualization",
-        "description": "Watch your Git repository come to life! Commits appear as nodes, branches as colored lines, and merges connect them."
-      },
-      "terminal": {
-        "title": "Git Terminal",
-        "description": "Type Git commands here to practice. Try 'git init' to initialize a repository!"
-      },
-      "files": {
-        "title": "File Explorer",
-        "description": "View and manage files in your working directory. Stage files for commit and track changes here."
-      }
-    },
-    "buttons": {
-      "next": "Next",
-      "prev": "Previous",
-      "skip": "Skip Tour",
-      "done": "Got it!",
-      "restart": "Restart Tour"
-    }
-  }
+	"common": {
+		"loading": "Loading...",
+		"error": "Error",
+		"success": "Success",
+		"cancel": "Cancel",
+		"confirm": "Confirm",
+		"reset": "Reset",
+		"next": "Next",
+		"prev": "Previous",
+		"level": "Level",
+		"of": "of",
+		"locked": "Locked",
+		"close": "Close"
+	},
+	"home": {
+		"badge": "Interactive Git Learning",
+		"title": "GitMaster",
+		"subtitle": "Visual",
+		"description": "Master Git through interactive visualization. Watch branches grow, commits form, and merges happen in real-time. Learn by doing, not reading.",
+		"startButton": "Start Learning",
+		"syllabusButton": "View Syllabus",
+		"stats": {
+			"levels": "12 Levels",
+			"commands": "20+ Commands",
+			"cli": "Real CLI"
+		},
+		"features": {
+			"title": "Learn Git Visually",
+			"subtitle": "No more memorizing commands. See how Git actually works under the hood.",
+			"commits": {
+				"title": "Visual Commits",
+				"description": "See your commits come alive as nodes on an interactive graph"
+			},
+			"branches": {
+				"title": "Branch Mastery",
+				"description": "Create and navigate branches with beautiful visualizations"
+			},
+			"merges": {
+				"title": "Merge Magic",
+				"description": "Watch merges happen in real-time with animated pathways"
+			},
+			"terminal": {
+				"title": "Real Commands",
+				"description": "Practice actual Git commands in a safe sandbox environment"
+			}
+		},
+		"cta": {
+			"title": "Ready to Master Git?",
+			"description": "Start your journey from commits to complex merges. Become a Git expert in no time.",
+			"button": "Begin Your Journey"
+		},
+		"footer": "Built for developers who want to truly understand Git"
+	},
+	"learn": {
+		"levelComplete": "🎉 Level Complete!",
+		"levelCompleteDesc": "You've mastered \"{{title}}\"",
+		"nextLevel": "Next Level",
+		"resetBtn": "Reset",
+		"resetTitle": "Repository Reset",
+		"resetDesc": "Start fresh with this level",
+		"checkedOut": "Checked out",
+		"headAt": "HEAD is now at {{hash}}",
+		"levelLocked": "Please complete previous levels first",
+		"tabs": {
+			"terminal": "Terminal",
+			"files": "Files"
+		}
+	},
+	"sidebar": {
+		"levels": "Levels",
+		"goal": "Goal",
+		"hints": "Hints",
+		"commands": "Commands"
+	},
+	"file": {
+		"stage": "Stage",
+		"stageAll": "Stage All",
+		"workingDirectory": "Working Directory",
+		"stagingArea": "Staging Area",
+		"noFiles": "No files in working directory"
+	},
+	"levels": {
+		"level-1": {
+			"title": "First Snapshot",
+			"subtitle": "Genesis",
+			"description": "Git saves snapshots of your project, not just changes. Each commit is a complete picture of all your files at that moment.",
+			"goal": "Initialize a repository and make your first commit.",
+			"hints": [
+				"Run \"git init\" to create a new repository",
+				"Modify a file to see it change status",
+				"Use \"git add .\" to stage all changes",
+				"Run \"git commit -m message\" to save"
+			]
+		},
+		"level-2": {
+			"title": "Time Traveler",
+			"subtitle": "Genesis",
+			"description": "Git lets you travel through time! Use checkout to visit any commit and see your project as it was.",
+			"goal": "Create 2 commits, then checkout the first one (detached HEAD).",
+			"hints": [
+				"Make a change and commit it",
+				"Run \"git log\" to see commit history",
+				"Use \"git checkout <hash>\" with the first commit's hash",
+				"Notice HEAD is now \"detached\""
+			]
+		},
+		"level-3": {
+			"title": "Status Report",
+			"subtitle": "Genesis",
+			"description": "Before committing, check what has changed. Git status shows the state of your working directory and staging area.",
+			"goal": "Use git status to see modified files, then check your commit history with git log.",
+			"hints": [
+				"Modify a file in the working directory",
+				"Run \"git status\" to see the changes",
+				"Stage with \"git add .\" and run status again",
+				"After committing, run \"git log\" to see history"
+			]
+		},
+		"level-4": {
+			"title": "Branching Timeline",
+			"subtitle": "Multiverse",
+			"description": "Branches are lightweight pointers to commits. They let you work on features without affecting the main code.",
+			"goal": "Create a new branch called \"feature\" and make a commit on it.",
+			"hints": [
+				"Use \"git branch feature\" to create a branch",
+				"Run \"git checkout feature\" to switch to it",
+				"Or use \"git checkout -b feature\" for both steps",
+				"Make a commit on the new branch"
+			]
+		},
+		"level-5": {
+			"title": "Shadow Clones",
+			"subtitle": "Multiverse",
+			"description": "Real projects often have multiple branches: features, bugfixes, experiments. Each branch is an independent line of development.",
+			"goal": "Create two branches: \"feature-a\" and \"feature-b\", and make a commit on each.",
+			"hints": [
+				"Create first branch: \"git checkout -b feature-a\"",
+				"Make a commit on feature-a",
+				"Go back to main: \"git checkout main\"",
+				"Create second branch: \"git checkout -b feature-b\"",
+				"Make a commit on feature-b"
+			]
+		},
+		"level-6": {
+			"title": "Merging Paths",
+			"subtitle": "Multiverse",
+			"description": "Merge brings changes from one branch into another. When one branch is directly ahead, Git performs a \"fast-forward\" merge.",
+			"goal": "Merge feature-a into main using fast-forward.",
+			"hints": [
+				"First, checkout main: \"git checkout main\"",
+				"Then merge: \"git merge feature-a\"",
+				"Watch the graph update!",
+				"Notice main now points to the same commit as feature-a"
+			]
+		},
+		"level-7": {
+			"title": "Spacetime Intersection",
+			"subtitle": "Multiverse",
+			"description": "When branches have diverged, Git creates a merge commit with two parents. This is called a 3-way merge.",
+			"goal": "Merge feature-b into main to create a merge commit.",
+			"hints": [
+				"Make sure you are on main: \"git checkout main\"",
+				"Merge feature-b: \"git merge feature-b\"",
+				"A merge commit will be created",
+				"Notice the commit has two parent lines in the graph"
+			]
+		},
+		"level-8": {
+			"title": "Soft Landing",
+			"subtitle": "Regret & Rewrite",
+			"description": "Made a commit too early? Reset --soft undoes the commit but keeps all your changes staged.",
+			"goal": "Make a commit, then reset it with --soft to keep your changes.",
+			"hints": [
+				"Make a change and commit it",
+				"Run \"git reset --soft HEAD~1\"",
+				"Your changes are still staged!",
+				"Try \"git status\" to verify"
+			]
+		},
+		"level-9": {
+			"title": "Hard Landing",
+			"subtitle": "Regret & Rewrite",
+			"description": "Sometimes you want to completely discard changes. Reset --hard throws away everything and restores the previous state.",
+			"goal": "Make a commit, then reset it with --hard to discard all changes.",
+			"hints": [
+				"Make a change and commit it",
+				"Run \"git reset --hard HEAD~1\"",
+				"Your changes are completely gone!",
+				"Use with caution in real projects"
+			]
+		},
+		"level-10": {
+			"title": "Selective Amnesia",
+			"subtitle": "Regret & Rewrite",
+			"description": "You can also reset without specifying --soft or --hard. The default --mixed mode unstages changes but keeps them in your working directory.",
+			"goal": "Commit a change, then use git reset HEAD~1 (mixed mode).",
+			"hints": [
+				"Make a change and commit it",
+				"Run \"git reset HEAD~1\" (no --soft or --hard)",
+				"Check status: changes are in working dir but not staged",
+				"This is the default reset behavior"
+			]
+		},
+		"level-11": {
+			"title": "Milestone",
+			"subtitle": "The Ensemble",
+			"description": "Tags mark important points in history like releases. Unlike branches, tags never move - they always point to the same commit.",
+			"goal": "Create a tag called \"v1.0\" on the current commit.",
+			"hints": [
+				"Make sure you have at least one commit",
+				"Run \"git tag v1.0\" to create a tag",
+				"Tags are like permanent bookmarks",
+				"Use \"git tag\" to list all tags"
+			]
+		},
+		"level-12": {
+			"title": "The Journey Continues",
+			"subtitle": "The Ensemble",
+			"description": "Congratulations! You have learned the core concepts of Git. The real power of Git comes from collaboration with remote repositories.",
+			"goal": "Create a new branch called \"next-chapter\" to symbolize your continued learning.",
+			"hints": [
+				"You have mastered: init, add, commit, log, status",
+				"You have mastered: branch, checkout, merge",
+				"You have mastered: reset (soft, hard, mixed)",
+				"Create \"next-chapter\" branch to complete your journey!"
+			]
+		}
+	},
+	"phases": {
+		"1": "Genesis",
+		"2": "Multiverse",
+		"3": "Regret & Rewrite",
+		"4": "The Ensemble"
+	},
+	"tour": {
+		"welcome": {
+			"title": "Welcome to GitMaster! 👋",
+			"description": "Let's take a quick tour to help you get started with interactive Git learning."
+		},
+		"steps": {
+			"sidebarHeader": {
+				"title": "Course Information",
+				"description": "Here you can see the course branding and current learning mode."
+			},
+			"levelInfo": {
+				"title": "Level Details",
+				"description": "This section shows the current level's title, description, goals, and helpful hints to guide you."
+			},
+			"levelList": {
+				"title": "Level Navigator",
+				"description": "Browse all available levels. Completed levels show a checkmark ✓. Locked levels require completing previous ones first."
+			},
+			"gitGraph": {
+				"title": "Git Visualization",
+				"description": "Watch your Git repository come to life! Commits appear as nodes, branches as colored lines, and merges connect them."
+			},
+			"terminal": {
+				"title": "Git Terminal",
+				"description": "Type Git commands here to practice. Try 'git init' to initialize a repository!"
+			},
+			"files": {
+				"title": "File Explorer",
+				"description": "View and manage files in your working directory. Stage files for commit and track changes here."
+			}
+		},
+		"buttons": {
+			"next": "Next",
+			"prev": "Previous",
+			"skip": "Skip Tour",
+			"done": "Got it!",
+			"restart": "Restart Tour"
+		}
+	}
 }

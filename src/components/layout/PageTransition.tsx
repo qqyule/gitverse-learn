@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react'
+import type React from 'react'
+import { useEffect, useRef } from 'react'
 import { pageEnter } from '@/lib/animations'
 
 interface PageTransitionProps {
@@ -6,10 +7,7 @@ interface PageTransitionProps {
 	className?: string
 }
 
-export const PageTransition: React.FC<PageTransitionProps> = ({
-	children,
-	className,
-}) => {
+export const PageTransition: React.FC<PageTransitionProps> = ({ children, className }) => {
 	const containerRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {

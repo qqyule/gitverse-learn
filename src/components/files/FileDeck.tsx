@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FileText, FilePlus, FileEdit, Trash2 } from 'lucide-react'
-import { useGitStore } from '@/store/gitStore'
-import { cn } from '@/lib/utils'
+import { FileEdit, FilePlus, FileText, Trash2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { staggerChildren } from '@/lib/animations'
+import { cn } from '@/lib/utils'
+import { useGitStore } from '@/store/gitStore'
 
 interface FileDeckProps {
 	className?: string
@@ -19,7 +19,7 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 		if (listRef.current) {
 			staggerChildren(listRef.current.children)
 		}
-	}, [workingDirectory]) // Re-animate when files change
+	}, []) // Re-animate when files change
 
 	const { t } = useTranslation()
 
@@ -53,12 +53,7 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 
 	if (files.length === 0) {
 		return (
-			<div
-				className={cn(
-					'flex items-center justify-center text-muted-foreground',
-					className
-				)}
-			>
+			<div className={cn('flex items-center justify-center text-muted-foreground', className)}>
 				<p className="text-sm">{t('file.noFiles')}</p>
 			</div>
 		)
@@ -67,11 +62,10 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 	return (
 		<div className={cn('space-y-2', className)}>
 			<div className="flex items-center justify-between mb-4">
-				<h3 className="text-sm font-medium text-muted-foreground">
-					{t('file.workingDirectory')}
-				</h3>
+				<h3 className="text-sm font-medium text-muted-foreground">{t('file.workingDirectory')}</h3>
 				{files.some(([_, f]) => f.status === 'modified') && (
 					<button
+						type="button"
 						onClick={() => add('all')}
 						className="text-xs text-primary hover:text-primary/80 transition-colors"
 					>
@@ -98,15 +92,12 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 					>
 						{getStatusIcon(file.status)}
 						<div className="flex-1 min-w-0">
-							<p className="text-sm font-medium truncate text-foreground">
-								{path}
-							</p>
-							<p className="text-xs text-muted-foreground capitalize">
-								{file.status}
-							</p>
+							<p className="text-sm font-medium truncate text-foreground">{path}</p>
+							<p className="text-xs text-muted-foreground capitalize">{file.status}</p>
 						</div>
 						{file.status === 'modified' && (
 							<button
+								type="button"
 								onClick={(e) => {
 									e.stopPropagation()
 									add([path])

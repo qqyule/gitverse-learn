@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Terminal as TerminalIcon, ChevronUp, ChevronDown } from 'lucide-react'
-import { useGitStore } from '@/store/gitStore'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronDown, ChevronUp, Terminal as TerminalIcon } from 'lucide-react'
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
+import { useGitStore } from '@/store/gitStore'
 
 interface TerminalProps {
 	className?: string
@@ -20,9 +21,7 @@ export function Terminal({
 	onInputChange,
 }: TerminalProps) {
 	const [input, setInput] = useState('')
-	const [history, setHistory] = useState<{ command: string; output: string }[]>(
-		[]
-	)
+	const [history, setHistory] = useState<{ command: string; output: string }[]>([])
 	const [historyIndex, setHistoryIndex] = useState(-1)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const outputRef = useRef<HTMLDivElement>(null)
@@ -44,8 +43,7 @@ export function Terminal({
 			e.preventDefault()
 			const commands = history.map((h) => h.command)
 			if (commands.length > 0) {
-				const newIndex =
-					historyIndex < commands.length - 1 ? historyIndex + 1 : historyIndex
+				const newIndex = historyIndex < commands.length - 1 ? historyIndex + 1 : historyIndex
 				setHistoryIndex(newIndex)
 				setInput(commands[commands.length - 1 - newIndex] || '')
 			}
@@ -67,7 +65,7 @@ export function Terminal({
 		if (outputRef.current) {
 			outputRef.current.scrollTop = outputRef.current.scrollHeight
 		}
-	}, [history])
+	}, [])
 
 	useEffect(() => {
 		if (isExpanded && inputRef.current) {
@@ -93,6 +91,7 @@ export function Terminal({
 		>
 			{/* Header */}
 			<button
+				type="button"
 				onClick={onToggle}
 				className="flex items-center justify-between px-4 py-2 bg-secondary/50 border-b border-border hover:bg-secondary/70 transition-colors"
 			>

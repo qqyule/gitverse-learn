@@ -1,13 +1,6 @@
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
-import type {
-	GitStore,
-	GitHash,
-	GitCommit,
-	FileStructure,
-	Branch,
-	FileEntry,
-} from '@/types/git'
+import type { Branch, FileEntry, FileStructure, GitCommit, GitHash, GitStore } from '@/types/git'
 
 // Utility to generate short hash
 const generateHash = (): GitHash => {
@@ -66,7 +59,7 @@ export const useGitStore = create<GitStore>()(
 				}
 
 				state.commits[hash] = initialCommit
-				state.branches['main'] = {
+				state.branches.main = {
 					name: 'main',
 					headCommitHash: hash,
 					color: BRANCH_COLORS[0],
@@ -81,8 +74,7 @@ export const useGitStore = create<GitStore>()(
 
 		add: (files) => {
 			set((state) => {
-				const filesToAdd =
-					files === 'all' ? Object.keys(state.workingDirectory) : files
+				const filesToAdd = files === 'all' ? Object.keys(state.workingDirectory) : files
 
 				filesToAdd.forEach((filePath) => {
 					const file = state.workingDirectory[filePath]
@@ -93,9 +85,7 @@ export const useGitStore = create<GitStore>()(
 				})
 
 				state.lastOutput = `Added ${filesToAdd.length} file(s) to staging area`
-				state.commandHistory.push(
-					`git add ${files === 'all' ? '.' : files.join(' ')}`
-				)
+				state.commandHistory.push(`git add ${files === 'all' ? '.' : files.join(' ')}`)
 			})
 		},
 
@@ -132,8 +122,7 @@ export const useGitStore = create<GitStore>()(
 			set((state) => {
 				const currentBranch = state.branches[state.HEAD.ref]
 				const parentHash =
-					currentBranch?.headCommitHash ||
-					(state.HEAD.type === 'detached' ? state.HEAD.ref : null)
+					currentBranch?.headCommitHash || (state.HEAD.type === 'detached' ? state.HEAD.ref : null)
 				const hash = generateHash()
 
 				// Merge working directory with staged changes
@@ -283,10 +272,7 @@ export const useGitStore = create<GitStore>()(
 
 					const mergeCommit: GitCommit = {
 						hash,
-						parents: [
-							targetBranch.headCommitHash,
-							sourceBranchObj.headCommitHash,
-						],
+						parents: [targetBranch.headCommitHash, sourceBranchObj.headCommitHash],
 						message: `Merge branch '${sourceBranch}' into ${state.HEAD.ref}`,
 						author: 'You',
 						timestamp: Date.now(),
@@ -438,9 +424,7 @@ export const useGitStore = create<GitStore>()(
 						const branches = Object.keys(get().branches)
 						const current = get().HEAD.type === 'branch' ? get().HEAD.ref : null
 						set((s) => {
-							s.lastOutput = branches
-								.map((b) => (b === current ? `* ${b}` : `  ${b}`))
-								.join('\n')
+							s.lastOutput = branches.map((b) => (b === current ? `* ${b}` : `  ${b}`)).join('\n')
 						})
 					}
 					break
@@ -483,15 +467,9 @@ export const useGitStore = create<GitStore>()(
 								status.modified.map((f) => `  modified: ${f}`).join('\n')
 						}
 						if (status.untracked.length) {
-							output +=
-								'\nUntracked files:\n' +
-								status.untracked.map((f) => `  ${f}`).join('\n')
+							output += `\nUntracked files:\n${status.untracked.map((f) => `  ${f}`).join('\n')}`
 						}
-						if (
-							!status.staged.length &&
-							!status.modified.length &&
-							!status.untracked.length
-						) {
+						if (!status.staged.length && !status.modified.length && !status.untracked.length) {
 							output += '\nnothing to commit, working tree clean'
 						}
 						s.lastOutput = output
@@ -509,10 +487,7 @@ export const useGitStore = create<GitStore>()(
 						if (currentHash) {
 							set((s) => {
 								s.tags[tagName] = currentHash
-								s.lastOutput = `Created tag '${tagName}' at ${currentHash.slice(
-									0,
-									7
-								)}`
+								s.lastOutput = `Created tag '${tagName}' at ${currentHash.slice(0, 7)}`
 								s.commandHistory.push(`git tag ${tagName}`)
 							})
 						}

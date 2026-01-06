@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import type { GitCommit, GitState } from '../types/git'
 import { levels } from './levels'
-import type { GitState, GitCommit, Branch } from '../types/git'
 
 // Helper to create a minimal valid GitState
 const createMockState = (overrides?: Partial<GitState>): GitState => {

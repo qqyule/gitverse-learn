@@ -1,21 +1,21 @@
-import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { useTranslation } from 'react-i18next'
 import {
 	BookOpen,
-	Target,
-	Lightbulb,
 	CheckCircle2,
-	Circle,
 	ChevronRight,
+	Circle,
+	Lightbulb,
 	Lock,
+	Target,
 	X,
 } from 'lucide-react'
-import { Level, levels } from '@/data/levels'
+import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { type Level, levels } from '@/data/levels'
+import { staggerChildren } from '@/lib/animations'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
-import { staggerChildren } from '@/lib/animations'
 
 interface LevelSidebarProps {
 	currentLevel: Level
@@ -46,11 +46,7 @@ export function LevelSidebar({
 	/**
 	 * 获取关卡的翻译文本
 	 */
-	const getLevelText = (
-		levelId: string,
-		field: string,
-		fallback: string
-	): string => {
+	const getLevelText = (levelId: string, field: string, fallback: string): string => {
 		const key = `levels.${levelId}.${field}`
 		const translated = t(key, { returnObjects: true })
 		// 检查是否返回了翻译 key 本身（未找到翻译）
@@ -63,10 +59,7 @@ export function LevelSidebar({
 	/**
 	 * 获取关卡的翻译提示数组
 	 */
-	const getLevelHints = (
-		levelId: string,
-		fallbackHints: string[]
-	): string[] => {
+	const getLevelHints = (levelId: string, fallbackHints: string[]): string[] => {
 		const key = `levels.${levelId}.hints`
 		const translated = t(key, { returnObjects: true })
 		if (Array.isArray(translated)) {
@@ -84,20 +77,20 @@ export function LevelSidebar({
 	}
 
 	// Group levels by phase
-	const phases = levels.reduce((acc, level) => {
-		if (!acc[level.phase]) {
-			acc[level.phase] = []
-		}
-		acc[level.phase].push(level)
-		return acc
-	}, {} as Record<number, Level[]>)
+	const phases = levels.reduce(
+		(acc, level) => {
+			if (!acc[level.phase]) {
+				acc[level.phase] = []
+			}
+			acc[level.phase].push(level)
+			return acc
+		},
+		{} as Record<number, Level[]>
+	)
 
 	return (
 		<div
-			className={cn(
-				'flex flex-col h-full bg-sidebar border-r border-sidebar-border',
-				className
-			)}
+			className={cn('flex flex-col h-full bg-sidebar border-r border-sidebar-border', className)}
 		>
 			{/* Header */}
 			<div
@@ -106,12 +99,11 @@ export function LevelSidebar({
 			>
 				<div>
 					<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
-					<p className="text-xs text-muted-foreground mt-1">
-						{t('home.badge')}
-					</p>
+					<p className="text-xs text-muted-foreground mt-1">{t('home.badge')}</p>
 				</div>
 				{onClose && (
 					<button
+						type="button"
 						onClick={onClose}
 						className="md:hidden p-2 hover:bg-muted/50 rounded-full transition-colors"
 						aria-label="Close sidebar"
@@ -122,10 +114,7 @@ export function LevelSidebar({
 			</div>
 
 			{/* Current Level Info */}
-			<div
-				className="p-4 border-b border-sidebar-border space-y-4"
-				data-tour="level-info"
-			>
+			<div className="p-4 border-b border-sidebar-border space-y-4" data-tour="level-info">
 				<div className="space-y-2">
 					<div className="level-badge">
 						<BookOpen className="w-3.5 h-3.5" />
@@ -142,11 +131,7 @@ export function LevelSidebar({
 				</div>
 
 				<p className="text-sm text-muted-foreground leading-relaxed">
-					{getLevelText(
-						currentLevel.id,
-						'description',
-						currentLevel.description
-					)}
+					{getLevelText(currentLevel.id, 'description', currentLevel.description)}
 				</p>
 
 				{/* Goal */}
@@ -202,6 +187,7 @@ export function LevelSidebar({
 						<div className="flex flex-wrap gap-2">
 							{currentLevel.commands.map((cmd) => (
 								<button
+									type="button"
 									key={cmd}
 									onClick={() => onCommandClick?.(cmd)}
 									className="text-xs bg-primary/10 hover:bg-primary/20 text-primary px-2 py-1 rounded transition-colors border border-primary/20"
@@ -216,34 +202,27 @@ export function LevelSidebar({
 			</div>
 
 			{/* Level List */}
-			<div
-				ref={listRef}
-				className="flex-1 overflow-y-auto p-4"
-				data-tour="level-list"
-			>
+			<div ref={listRef} className="flex-1 overflow-y-auto p-4" data-tour="level-list">
 				<h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
 					{t('sidebar.levels')}
 				</h4>
 				<div className="space-y-4">
 					{Object.entries(phases).map(([phase, phaseLevels]) => (
 						<div key={phase}>
-							<p className="text-xs text-muted-foreground mb-2">
-								{getPhaseTitle(Number(phase))}
-							</p>
+							<p className="text-xs text-muted-foreground mb-2">{getPhaseTitle(Number(phase))}</p>
 							<div className="space-y-1">
 								{phaseLevels.map((level) => {
 									const isActive = level.id === currentLevel.id
 									// Check persistence store first, fall back to current validation for immediate feedback
 									const isCompleted =
-										completedLevels.includes(level.id) ||
-										level.validation(gitState)
+										completedLevels.includes(level.id) || level.validation(gitState)
 
 									const index = levels.findIndex((l) => l.id === level.id)
-									const isLocked =
-										index > 0 && !completedLevels.includes(levels[index - 1].id)
+									const isLocked = index > 0 && !completedLevels.includes(levels[index - 1].id)
 
 									return (
 										<button
+											type="button"
 											key={level.id}
 											disabled={isLocked}
 											onClick={() => !isLocked && onLevelSelect(level)}
@@ -253,8 +232,8 @@ export function LevelSidebar({
 												isActive
 													? 'bg-primary/20 text-primary'
 													: isLocked
-													? 'opacity-50 cursor-not-allowed text-muted-foreground'
-													: 'hover:bg-secondary/50 text-foreground'
+														? 'opacity-50 cursor-not-allowed text-muted-foreground'
+														: 'hover:bg-secondary/50 text-foreground'
 											)}
 										>
 											{isLocked ? (

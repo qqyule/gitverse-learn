@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { useGitStore } from './gitStore'
 
 describe('gitStore', () => {
@@ -53,7 +53,7 @@ describe('gitStore', () => {
 		// Create branch
 		store.branch('feature')
 		let state = useGitStore.getState()
-		expect(state.branches['feature']).toBeDefined()
+		expect(state.branches.feature).toBeDefined()
 
 		// Checkout
 		store.checkout('feature')
@@ -100,8 +100,6 @@ describe('gitStore', () => {
 		// This is a known limitation or bug in the simplified simulation.
 		// I will test that HEAD moved.
 
-		expect(
-			state.commandHistory.some((c) => c.includes('git reset --soft'))
-		).toBe(true)
+		expect(state.commandHistory.some((c) => c.includes('git reset --soft'))).toBe(true)
 	})
 })

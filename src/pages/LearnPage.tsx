@@ -1,34 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { GitGraphSvg } from '@/components/git/GitGraphSvg'
-import { Terminal } from '@/components/terminal/Terminal'
-import { FileDeck } from '@/components/files/FileDeck'
-import { LevelSidebar } from '@/components/sidebar/LevelSidebar'
-import { levels, getLevelById, Level } from '@/data/levels'
-import { useGitStore } from '@/store/gitStore'
-import { Button } from '@/components/ui/button'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
-import { LanguageSwitch } from '@/components/ui/language-switch'
-import { loadLevelState, saveLevelState } from '@/lib/storage'
-import { useProgressStore } from '@/store/progressStore'
-import { PageTransition } from '@/components/layout/PageTransition'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
-	Menu,
-	X,
-	PartyPopper,
-	RotateCcw,
-	ChevronRight,
 	ChevronLeft,
-	TerminalSquare,
+	ChevronRight,
 	FolderOpen,
 	HelpCircle,
+	Menu,
+	PartyPopper,
+	RotateCcw,
+	TerminalSquare,
+	X,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
+import { FileDeck } from '@/components/files/FileDeck'
+import { GitGraphSvg } from '@/components/git/GitGraphSvg'
+import { PageTransition } from '@/components/layout/PageTransition'
+import { LevelSidebar } from '@/components/sidebar/LevelSidebar'
+import { Terminal } from '@/components/terminal/Terminal'
+import { Button } from '@/components/ui/button'
+import { LanguageSwitch } from '@/components/ui/language-switch'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { getLevelById, type Level, levels } from '@/data/levels'
 import { useToast } from '@/hooks/use-toast'
-import { useTour, restartTour } from '@/hooks/useTour'
+import { restartTour, useTour } from '@/hooks/useTour'
+import { loadLevelState, saveLevelState } from '@/lib/storage'
+import { cn } from '@/lib/utils'
+import { useGitStore } from '@/store/gitStore'
+import { useProgressStore } from '@/store/progressStore'
 
 export default function LearnPage() {
 	const { levelId } = useParams<{ levelId: string }>()
@@ -40,9 +39,7 @@ export default function LearnPage() {
 	const [terminalExpanded, setTerminalExpanded] = useState(true)
 	const [showSuccess, setShowSuccess] = useState(false)
 	const [terminalInput, setTerminalInput] = useState('')
-	const [activeMobileTab, setActiveMobileTab] = useState<'terminal' | 'files'>(
-		'terminal'
-	)
+	const [activeMobileTab, setActiveMobileTab] = useState<'terminal' | 'files'>('terminal')
 
 	const gitState = useGitStore()
 	const { init, resetState, loadScenario } = gitState
@@ -97,20 +94,12 @@ export default function LearnPage() {
 				description: t('learn.levelCompleteDesc', { title }),
 			})
 		}
-	}, [
-		gitState,
-		currentLevel,
-		showSuccess,
-		toast,
-		t,
-		getLevelTitle,
-		markLevelCompleted,
-	])
+	}, [gitState, currentLevel, showSuccess, toast, t, getLevelTitle, markLevelCompleted])
 
 	// Reset success state when level changes
 	useEffect(() => {
 		setShowSuccess(false)
-	}, [levelId])
+	}, [])
 
 	const handleLevelSelect = (level: Level) => {
 		navigate(`/learn/${level.id}`)
@@ -250,16 +239,8 @@ export default function LearnPage() {
 				{/* Top Bar */}
 				<header className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-card/50">
 					<div className="flex items-center gap-3">
-						<Button
-							variant="ghost"
-							size="icon"
-							onClick={() => setSidebarOpen(!sidebarOpen)}
-						>
-							{sidebarOpen ? (
-								<X className="w-5 h-5" />
-							) : (
-								<Menu className="w-5 h-5" />
-							)}
+						<Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
+							{sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
 						</Button>
 
 						<div className="flex items-center gap-2">
@@ -300,28 +281,16 @@ export default function LearnPage() {
 							>
 								<Button onClick={handleNextLevel} className="gap-2" size="sm">
 									<PartyPopper className="w-4 h-4" />
-									<span className="hidden sm:inline">
-										{t('learn.nextLevel')}
-									</span>
+									<span className="hidden sm:inline">{t('learn.nextLevel')}</span>
 									<ChevronRight className="w-4 h-4 sm:hidden" />
 								</Button>
 							</motion.div>
 						)}
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={handleReset}
-							className="hidden sm:flex"
-						>
+						<Button variant="outline" size="sm" onClick={handleReset} className="hidden sm:flex">
 							<RotateCcw className="w-4 h-4 mr-2" />
 							{t('learn.resetBtn')}
 						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							onClick={handleReset}
-							className="sm:hidden"
-						>
+						<Button variant="outline" size="icon" onClick={handleReset} className="sm:hidden">
 							<RotateCcw className="w-4 h-4" />
 						</Button>
 						<div className="hidden sm:block">
@@ -379,11 +348,12 @@ export default function LearnPage() {
 				{/* Mobile Tab Switcher */}
 				<div className="md:hidden flex border-t border-border bg-card">
 					<button
+						type="button"
 						className={cn(
-							'flex-1 py-2 text-sm font-medium border-b-2 transition-colors',
+							'flex-1 p-3 text-sm font-medium flex items-center justify-center transition-colors',
 							activeMobileTab === 'terminal'
-								? 'border-primary text-primary bg-primary/5'
-								: 'border-transparent text-muted-foreground'
+								? 'bg-primary/10 text-primary border-b-2 border-primary'
+								: 'text-muted-foreground hover:bg-muted/50'
 						)}
 						onClick={() => setActiveMobileTab('terminal')}
 					>
@@ -391,11 +361,12 @@ export default function LearnPage() {
 						Terminal
 					</button>
 					<button
+						type="button"
 						className={cn(
-							'flex-1 py-2 text-sm font-medium border-b-2 transition-colors',
+							'flex-1 p-3 text-sm font-medium flex items-center justify-center transition-colors',
 							activeMobileTab === 'files'
-								? 'border-primary text-primary bg-primary/5'
-								: 'border-transparent text-muted-foreground'
+								? 'bg-primary/10 text-primary border-b-2 border-primary'
+								: 'text-muted-foreground hover:bg-muted/50'
 						)}
 						onClick={() => setActiveMobileTab('files')}
 					>
@@ -437,9 +408,7 @@ export default function LearnPage() {
 					>
 						<div className="hidden md:flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
 							<FolderOpen className="w-4 h-4 text-primary" />
-							<span className="text-sm font-medium">
-								{t('learn.tabs.files')}
-							</span>
+							<span className="text-sm font-medium">{t('learn.tabs.files')}</span>
 						</div>
 						<div className="flex-1 overflow-y-auto p-4">
 							<FileDeck />

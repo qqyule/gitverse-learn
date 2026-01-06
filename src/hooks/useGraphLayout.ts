@@ -1,13 +1,6 @@
-import { useMemo } from 'react'
 import * as d3 from 'd3'
-import type {
-	GitCommit,
-	GitHash,
-	Branch,
-	GraphLayout,
-	GraphNode,
-	GraphEdge,
-} from '@/types/git'
+import { useMemo } from 'react'
+import type { Branch, GitCommit, GitHash, GraphEdge, GraphLayout, GraphNode } from '@/types/git'
 
 const NODE_SPACING_X = 200
 const NODE_SPACING_Y = 60
@@ -27,9 +20,7 @@ export function useGraphLayout(
 		}
 
 		// Sort commits by timestamp
-		const sortedCommits = [...commitList].sort(
-			(a, b) => a.timestamp - b.timestamp
-		)
+		const sortedCommits = [...commitList].sort((a, b) => a.timestamp - b.timestamp)
 
 		// Assign lanes to branches
 		const branchLanes: Record<string, number> = {}
@@ -55,10 +46,7 @@ export function useGraphLayout(
 		})
 
 		// Calculate node positions
-		const commitPositions: Record<
-			GitHash,
-			{ x: number; y: number; lane: number }
-		> = {}
+		const commitPositions: Record<GitHash, { x: number; y: number; lane: number }> = {}
 		const laneOccupancy: Record<number, number> = {}
 
 		sortedCommits.forEach((commit, index) => {
@@ -68,9 +56,7 @@ export function useGraphLayout(
 
 			if (commitBranches.length > 0) {
 				// Use the primary branch's lane
-				const primaryBranch = commitBranches.includes('main')
-					? 'main'
-					: commitBranches[0]
+				const primaryBranch = commitBranches.includes('main') ? 'main' : commitBranches[0]
 				lane = branchLanes[primaryBranch] || 0
 			} else if (commit.parents.length > 0) {
 				// Inherit lane from parent
@@ -90,16 +76,13 @@ export function useGraphLayout(
 		})
 
 		// Determine current HEAD commit
-		const headCommitHash =
-			headType === 'branch' ? branches[headRef]?.headCommitHash : headRef
+		const headCommitHash = headType === 'branch' ? branches[headRef]?.headCommitHash : headRef
 
 		// Create nodes
 		const nodes: GraphNode[] = sortedCommits.map((commit) => {
 			const pos = commitPositions[commit.hash]
 			const commitBranches = commitToBranches[commit.hash] || []
-			const primaryBranch = commitBranches.includes('main')
-				? 'main'
-				: commitBranches[0]
+			const primaryBranch = commitBranches.includes('main') ? 'main' : commitBranches[0]
 			const branch = branches[primaryBranch]
 
 			return {
@@ -134,13 +117,10 @@ export function useGraphLayout(
 								Object.keys(branches).find(
 									(b) =>
 										branches[b].headCommitHash === parentHash ||
-										commits[parentHash]?.parents.includes(
-											branches[b].headCommitHash
-										)
+										commits[parentHash]?.parents.includes(branches[b].headCommitHash)
 								) || 'main'
-						  ]?.color || 'hsl(215, 20%, 45%)'
-						: nodes.find((n) => n.id === commit.hash)?.color ||
-						  'hsl(215, 20%, 45%)'
+							]?.color || 'hsl(215, 20%, 45%)'
+						: nodes.find((n) => n.id === commit.hash)?.color || 'hsl(215, 20%, 45%)'
 
 					edges.push({
 						id: `${commit.hash}-${parentHash}`,

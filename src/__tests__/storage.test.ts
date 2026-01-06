@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { saveLevelState, loadLevelState, clearLevelState } from '@/lib/storage'
-import { GitStore } from '@/types/git'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { clearLevelState, loadLevelState, saveLevelState } from '@/lib/storage'
+import type { GitStore } from '@/types/git'
 
 const localStorageMock = (() => {
 	let store: Record<string, string> = {}
@@ -67,9 +67,7 @@ describe('storage', () => {
 			localStorageMock.getItem.mockReturnValueOnce(JSON.stringify(mockState))
 			const loaded = loadLevelState(levelId)
 			expect(loaded).toEqual(mockState)
-			expect(localStorageMock.getItem).toHaveBeenCalledWith(
-				`gitmaster-level-${levelId}`
-			)
+			expect(localStorageMock.getItem).toHaveBeenCalledWith(`gitmaster-level-${levelId}`)
 		})
 
 		it('should return null if no state exists', () => {
@@ -93,9 +91,7 @@ describe('storage', () => {
 	describe('clearLevelState', () => {
 		it('should remove state from localStorage', () => {
 			clearLevelState(levelId)
-			expect(localStorageMock.removeItem).toHaveBeenCalledWith(
-				`gitmaster-level-${levelId}`
-			)
+			expect(localStorageMock.removeItem).toHaveBeenCalledWith(`gitmaster-level-${levelId}`)
 		})
 	})
 })

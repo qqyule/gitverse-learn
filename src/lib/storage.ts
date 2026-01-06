@@ -1,4 +1,4 @@
-import { GitStore } from '@/types/git'
+import type { GitStore } from '@/types/git'
 
 const STORAGE_PREFIX = 'gitmaster-level-'
 
@@ -15,10 +15,7 @@ export const saveLevelState = (levelId: string, state: Partial<GitStore>) => {
 			commandHistory: state.commandHistory,
 			lastOutput: state.lastOutput,
 		}
-		localStorage.setItem(
-			`${STORAGE_PREFIX}${levelId}`,
-			JSON.stringify(stateToSave)
-		)
+		localStorage.setItem(`${STORAGE_PREFIX}${levelId}`, JSON.stringify(stateToSave))
 	} catch (error) {
 		console.error('Failed to save level state:', error)
 	}

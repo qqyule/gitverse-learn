@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import anime from 'animejs'
+import { Circle, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { X, CheckCircle2, Circle, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { levels, Level } from '@/data/levels'
-import { animateIn, animateOut } from '@/lib/animations' // staggerChildren is removed
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import anime from 'animejs'
+import { type Level, levels } from '@/data/levels'
 
 interface SyllabusModalProps {
 	isOpen: boolean
@@ -64,7 +62,9 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 				const items = listRef.current.querySelectorAll('.syllabus-item')
 				if (items.length > 0) {
 					// Reset opacity first just in case
-					items.forEach((el) => ((el as HTMLElement).style.opacity = '0'))
+					items.forEach((el) => {
+						;(el as HTMLElement).style.opacity = '0'
+					})
 
 					setTimeout(() => {
 						anime({
@@ -120,13 +120,16 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 	if (!isOpen || !mounted) return null
 
 	// Group levels by phase
-	const phases = levels.reduce((acc, level) => {
-		if (!acc[level.phase]) {
-			acc[level.phase] = []
-		}
-		acc[level.phase].push(level)
-		return acc
-	}, {} as Record<number, Level[]>)
+	const phases = levels.reduce(
+		(acc, level) => {
+			if (!acc[level.phase]) {
+				acc[level.phase] = []
+			}
+			acc[level.phase].push(level)
+			return acc
+		},
+		{} as Record<number, Level[]>
+	)
 
 	const getLevelText = (id: string, field: string, fallback: string) => {
 		const key = `levels.${id}.${field}`
@@ -191,11 +194,7 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 														{getLevelText(level.id, 'title', level.title)}
 													</h4>
 													<p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-														{getLevelText(
-															level.id,
-															'description',
-															level.description
-														)}
+														{getLevelText(level.id, 'description', level.description)}
 													</p>
 												</div>
 											</div>

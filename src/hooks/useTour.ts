@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { type Driver, type DriveStep, driver } from 'driver.js'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { driver, Driver, DriveStep } from 'driver.js'
 import 'driver.js/dist/driver.css'
-import { tourSteps, TOUR_STORAGE_KEY } from '@/lib/tourSteps'
+import { TOUR_STORAGE_KEY, tourSteps } from '@/lib/tourSteps'
 
 /**
  * 检查是否为首次访问（未完成过引导）
@@ -157,7 +157,7 @@ export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 			driverRef.current = newDriver
 			newDriver.drive()
 		}
-	}, [i18n.language, createDriver, isActive])
+	}, [createDriver, isActive])
 
 	// 清理
 	useEffect(() => {

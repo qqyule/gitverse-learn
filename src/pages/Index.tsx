@@ -1,22 +1,22 @@
-import React from 'react'
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
 import {
+	BookOpen,
 	GitBranch,
 	GitCommit,
 	GitMerge,
 	Play,
 	Sparkles,
-	BookOpen,
 	Terminal,
 	Zap,
 } from 'lucide-react'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { SyllabusModal } from '@/components/home/SyllabusModal'
 import { PageTransition } from '@/components/layout/PageTransition'
 import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageSwitch } from '@/components/ui/language-switch'
-import { SyllabusModal } from '@/components/home/SyllabusModal'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export default function Index() {
 	const navigate = useNavigate()
@@ -126,9 +126,7 @@ export default function Index() {
 							className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8"
 						>
 							<Sparkles className="w-4 h-4 text-primary" />
-							<span className="text-sm text-primary font-medium">
-								{t('home.badge')}
-							</span>
+							<span className="text-sm text-primary font-medium">{t('home.badge')}</span>
 						</motion.div>
 
 						{/* Title */}
@@ -213,13 +211,9 @@ export default function Index() {
 					>
 						<h2 className="text-3xl md:text-4xl font-bold mb-4">
 							{t('home.features.title').split(' ').slice(0, -1).join(' ')}{' '}
-							<span className="gradient-text">
-								{t('home.features.title').split(' ').slice(-1)}
-							</span>
+							<span className="gradient-text">{t('home.features.title').split(' ').slice(-1)}</span>
 						</h2>
-						<p className="text-muted-foreground max-w-xl mx-auto">
-							{t('home.features.subtitle')}
-						</p>
+						<p className="text-muted-foreground max-w-xl mx-auto">{t('home.features.subtitle')}</p>
 					</motion.div>
 
 					<div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -236,9 +230,7 @@ export default function Index() {
 									<feature.icon className="w-6 h-6 text-primary" />
 								</div>
 								<h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-								<p className="text-sm text-muted-foreground">
-									{feature.description}
-								</p>
+								<p className="text-sm text-muted-foreground">{feature.description}</p>
 							</motion.div>
 						))}
 					</div>
@@ -259,9 +251,7 @@ export default function Index() {
 						}}
 					>
 						<div className="relative z-10">
-							<h2 className="text-3xl md:text-4xl font-bold mb-4">
-								{t('home.cta.title')}
-							</h2>
+							<h2 className="text-3xl md:text-4xl font-bold mb-4">{t('home.cta.title')}</h2>
 							<p className="text-muted-foreground mb-8 max-w-xl mx-auto">
 								{t('home.cta.description')}
 							</p>
@@ -281,10 +271,7 @@ export default function Index() {
 				</div>
 			</footer>
 
-			<SyllabusModal
-				isOpen={showSyllabus}
-				onClose={() => setShowSyllabus(false)}
-			/>
+			<SyllabusModal isOpen={showSyllabus} onClose={() => setShowSyllabus(false)} />
 		</PageTransition>
 	)
 }

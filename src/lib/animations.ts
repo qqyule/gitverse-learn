@@ -13,10 +13,7 @@ interface AnimationOptions {
 /**
  * 通用进场动画 (淡入 + 上浮)
  */
-export const animateIn = (
-	target: string | HTMLElement | null,
-	options?: AnimationOptions
-) => {
+export const animateIn = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
 		targets: target,
@@ -32,10 +29,7 @@ export const animateIn = (
 /**
  * 通用出场动画 (淡出 + 下沉)
  */
-export const animateOut = (
-	target: string | HTMLElement | null,
-	options?: AnimationOptions
-) => {
+export const animateOut = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
 		targets: target,
@@ -67,13 +61,7 @@ export const pulse = (target: string | HTMLElement | null) => {
  * 适用于列表、网格布局的子项依次出现
  */
 export const staggerChildren = (
-	targets:
-		| string
-		| HTMLElement
-		| NodeList
-		| HTMLCollection
-		| HTMLElement[]
-		| null,
+	targets: string | HTMLElement | NodeList | HTMLCollection | HTMLElement[] | null,
 	options?: AnimationOptions
 ) => {
 	if (!targets) return
@@ -92,10 +80,7 @@ export const staggerChildren = (
  * 页面整体进场动画
  * 稍微显著一点的滑入效果
  */
-export const pageEnter = (
-	target: string | HTMLElement | null,
-	options?: AnimationOptions
-) => {
+export const pageEnter = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
 		targets: target,

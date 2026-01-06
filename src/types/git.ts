@@ -1,11 +1,6 @@
 export type GitHash = string
 
-export type FileStatus =
-	| 'unmodified'
-	| 'modified'
-	| 'staged'
-	| 'deleted'
-	| 'added'
+export type FileStatus = 'unmodified' | 'modified' | 'staged' | 'deleted' | 'added'
 
 export interface FileEntry {
 	path: string

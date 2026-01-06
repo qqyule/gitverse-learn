@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useGitStore } from '@/store/gitStore'
-import { useGraphLayout, generateEdgePath } from '@/hooks/useGraphLayout'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useRef } from 'react'
+import { generateEdgePath, useGraphLayout } from '@/hooks/useGraphLayout'
 import { cn } from '@/lib/utils'
+import { useGitStore } from '@/store/gitStore'
 
 interface GitGraphSvgProps {
 	className?: string
@@ -22,8 +22,7 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 				<div className="text-center text-muted-foreground">
 					<p className="text-lg">No commits yet</p>
 					<p className="text-sm mt-2">
-						Run <code className="text-primary font-mono">git init</code> to
-						start
+						Run <code className="text-primary font-mono">git init</code> to start
 					</p>
 				</div>
 			</div>
@@ -32,12 +31,7 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 
 	return (
 		<div className={cn('overflow-auto', className)}>
-			<svg
-				ref={svgRef}
-				width={layout.width}
-				height={layout.height}
-				className="min-w-full"
-			>
+			<svg ref={svgRef} width={layout.width} height={layout.height} className="min-w-full">
 				{/* Glow filter for nodes */}
 				<defs>
 					<filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -109,13 +103,7 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 								/>
 
 								{/* Inner highlight */}
-								<circle
-									cx={node.x - 5}
-									cy={node.y - 5}
-									r={5}
-									fill="white"
-									opacity={0.3}
-								/>
+								<circle cx={node.x - 5} cy={node.y - 5} r={5} fill="white" opacity={0.3} />
 
 								{/* Branch labels */}
 								{node.branches.length > 0 && (
@@ -147,9 +135,7 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 														textAnchor="middle"
 														className="text-[12px] font-bold fill-foreground"
 													>
-														{branchName.length > 15
-															? branchName.slice(0, 14) + '…'
-															: branchName}
+														{branchName.length > 15 ? `${branchName.slice(0, 14)}…` : branchName}
 													</text>
 													<text
 														x={node.x}
