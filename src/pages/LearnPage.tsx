@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ErrorBoundary } from '@/components/error/ErrorBoundary'
 import { FileDeck } from '@/components/files/FileDeck'
 import { GitGraphSvg } from '@/components/git/GitGraphSvg'
 import { PageTransition } from '@/components/layout/PageTransition'
@@ -29,7 +30,7 @@ import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
 
-export default function LearnPage() {
+function LearnPageContent() {
 	const { levelId } = useParams<{ levelId: string }>()
 	const navigate = useNavigate()
 	const { toast } = useToast()
@@ -419,3 +420,22 @@ export default function LearnPage() {
 		</PageTransition>
 	)
 }
+
+// Wrap the main component with ErrorBoundary
+const WrappedLearnPage = () => (
+	<ErrorBoundary
+		fallback={
+			<div className="flex flex-col items-center justify-center min-h-screen p-4">
+				<h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+				<p className="text-muted-foreground mb-4">
+					An error occurred while loading the learning page.
+				</p>
+				<Button onClick={() => window.location.reload()}>Reload Page</Button>
+			</div>
+		}
+	>
+		<LearnPageContent />
+	</ErrorBoundary>
+)
+
+export default WrappedLearnPage
