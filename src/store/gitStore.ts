@@ -2,9 +2,25 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import type { Branch, FileEntry, FileStructure, GitCommit, GitHash, GitStore } from '@/types/git'
 
-// Utility to generate short hash
+// Utility to generate short hash (cryptographically secure)
 const generateHash = (): GitHash => {
-	return Math.random().toString(36).substring(2, 9)
+	const chars = '0123456789abcdef'
+	let result = ''
+	const randomValues = new Uint8Array(7)
+
+	if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+		crypto.getRandomValues(randomValues)
+	} else {
+		// Fallback for environments without crypto API
+		for (let i = 0; i < 7; i++) {
+			randomValues[i] = Math.floor(Math.random() * 256)
+		}
+	}
+
+	for (let i = 0; i < 7; i++) {
+		result += chars[randomValues[i] % chars.length]
+	}
+	return result
 }
 
 // Branch colors
