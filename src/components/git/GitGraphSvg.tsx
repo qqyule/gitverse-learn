@@ -1,21 +1,21 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useMemo, useRef } from 'react'
 import { generateEdgePath, useGraphLayout } from '@/hooks/useGraphLayout'
-import { cn } from '@/lib/utils'
+import { cn, sanitizeSvgId } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 
 // Memoized static SVG filters to prevent re-render
 const GraphFilters = React.memo(function GraphFilters() {
 	return (
 		<defs>
-			<filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+			<filter id={sanitizeSvgId('glow')} x="-50%" y="-50%" width="200%" height="200%">
 				<feGaussianBlur stdDeviation="4" result="coloredBlur" />
 				<feMerge>
 					<feMergeNode in="coloredBlur" />
 					<feMergeNode in="SourceGraphic" />
 				</feMerge>
 			</filter>
-			<filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+			<filter id={sanitizeSvgId('shadow')} x="-50%" y="-50%" width="200%" height="200%">
 				<feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3" />
 			</filter>
 		</defs>
