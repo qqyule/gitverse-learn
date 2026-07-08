@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ErrorBoundary } from '@/components/error/ErrorBoundary'
 import { FileDeck } from '@/components/files/FileDeck'
 import { GitGraphSvg } from '@/components/git/GitGraphSvg'
 import { PageTransition } from '@/components/layout/PageTransition'
@@ -30,7 +31,7 @@ import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
 import type { Level } from '@/types/git'
 
-export default function LearnPage() {
+function LearnPageContent() {
 	const { levelId } = useParams<{ levelId: string }>()
 	const navigate = useNavigate()
 	const { toast } = useToast()
@@ -102,7 +103,7 @@ export default function LearnPage() {
 	// not-yet-completed levels and lets the user skip ahead.
 	useEffect(() => {
 		setShowSuccess(false)
-	}, [currentLevel.id])
+	}, [])
 
 	const handleLevelSelect = (level: Level) => {
 		navigate(`/learn/${level.id}`)
@@ -425,3 +426,22 @@ export default function LearnPage() {
 		</PageTransition>
 	)
 }
+
+// Wrap the main component with ErrorBoundary
+const WrappedLearnPage = () => (
+	<ErrorBoundary
+		fallback={
+			<div className="flex min-h-screen flex-col items-center justify-center p-4">
+				<h1 className="mb-4 font-bold text-2xl">Something went wrong</h1>
+				<p className="mb-4 text-muted-foreground">
+					An error occurred while loading the learning page.
+				</p>
+				<Button onClick={() => window.location.reload()}>Reload Page</Button>
+			</div>
+		}
+	>
+		<LearnPageContent />
+	</ErrorBoundary>
+)
+
+export default WrappedLearnPage

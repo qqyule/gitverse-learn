@@ -1,8 +1,50 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 import { generateEdgePath, useGraphLayout } from '@/hooks/useGraphLayout'
-import { cn } from '@/lib/utils'
+import { cn, sanitizeSvgId } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
+
+// Memoized static SVG filters to prevent re-render
+const GraphFilters = React.memo(function GraphFilters() {
+	return (
+		<defs>
+			<filter height="200%" id={sanitizeSvgId('glow')} width="200%" x="-50%" y="-50%">
+				<feGaussianBlur result="coloredBlur" stdDeviation="4" />
+				<feMerge>
+					<feMergeNode in="coloredBlur" />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			</filter>
+			<filter height="200%" id={sanitizeSvgId('shadow')} width="200%" x="-50%" y="-50%">
+				<feDropShadow dx="0" dy="2" floodOpacity="0.3" stdDeviation="3" />
+			</filter>
+		</defs>
+	)
+})
+
+// Memoized edge component for better performance
+const GraphEdge = React.memo(function GraphEdge({
+	edge,
+	onAnimationComplete,
+}: {
+	edge: import('@/types/git').GraphEdge
+	onAnimationComplete?: () => void
+}) {
+	return (
+		<motion.path
+			animate={{ opacity: 1, pathLength: 1 }}
+			className="git-edge"
+			d={generateEdgePath(edge.sourceX, edge.sourceY, edge.targetX, edge.targetY, edge.isMerge)}
+			exit={{ opacity: 0 }}
+			initial={{ opacity: 0, pathLength: 0 }}
+			onAnimationComplete={onAnimationComplete}
+			stroke={edge.color}
+			strokeDasharray={edge.isMerge ? '6,4' : 'none'}
+			strokeWidth={edge.isMerge ? 2 : 2.5}
+			transition={{ duration: 0.5, ease: 'easeOut' }}
+		/>
+	)
+})
 
 interface GitGraphSvgProps {
 	className?: string
@@ -31,43 +73,19 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 
 	return (
 		<div className={cn('overflow-auto', className)}>
-			<svg className="min-w-full" height={layout.height} ref={svgRef} width={layout.width}>
-				{/* Glow filter for nodes */}
-				<defs>
-					<filter height="200%" id="glow" width="200%" x="-50%" y="-50%">
-						<feGaussianBlur result="coloredBlur" stdDeviation="4" />
-						<feMerge>
-							<feMergeNode in="coloredBlur" />
-							<feMergeNode in="SourceGraphic" />
-						</feMerge>
-					</filter>
-					<filter height="200%" id="shadow" width="200%" x="-50%" y="-50%">
-						<feDropShadow dx="0" dy="2" floodOpacity="0.3" stdDeviation="3" />
-					</filter>
-				</defs>
-
+			<svg
+				className="min-w-full"
+				height={layout.height}
+				ref={svgRef}
+				style={{ willChange: 'contents' }}
+				width={layout.width}
+			>
+				<GraphFilters />
 				{/* Render edges first (behind nodes) */}
 				<g className="edges">
 					<AnimatePresence>
 						{layout.edges.map((edge) => (
-							<motion.path
-								animate={{ opacity: 1, pathLength: 1 }}
-								className="git-edge"
-								d={generateEdgePath(
-									edge.sourceX,
-									edge.sourceY,
-									edge.targetX,
-									edge.targetY,
-									edge.isMerge
-								)}
-								exit={{ opacity: 0 }}
-								initial={{ opacity: 0, pathLength: 0 }}
-								key={edge.id}
-								stroke={edge.color}
-								strokeDasharray={edge.isMerge ? '6,4' : 'none'}
-								strokeWidth={edge.isMerge ? 2 : 2.5}
-								transition={{ duration: 0.5, ease: 'easeOut' }}
-							/>
+							<GraphEdge edge={edge as any} key={edge.id} />
 						))}
 					</AnimatePresence>
 				</g>
