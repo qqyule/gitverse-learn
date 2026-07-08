@@ -1,18 +1,4 @@
-import type { GitStore } from '@/types/git'
-
-export interface Level {
-	id: string
-	phase: number
-	title: string
-	titleZh: string
-	subtitle: string
-	description: string
-	goal: string
-	hints: string[]
-	commands: string[]
-	validation: (state: GitStore) => boolean
-	setup?: () => void
-}
+import type { Level } from '@/types/git'
 
 const isAncestor = (
 	commits: Record<string, any>,
@@ -44,11 +30,7 @@ const isAncestor = (
 export const levels: Level[] = [
 	// ============ Phase 1: Genesis（创世纪）- 基础操作 ============
 	{
-		id: 'level-1',
-		phase: 1,
-		title: 'First Snapshot',
-		titleZh: '第一次快照',
-		subtitle: 'Genesis',
+		commands: ['git init', 'git add', 'git commit'],
 		description:
 			'Git saves snapshots of your project, not just changes. Each commit is a complete picture of all your files at that moment.',
 		goal: 'Initialize a repository and make your first commit.',
@@ -58,7 +40,11 @@ export const levels: Level[] = [
 			'Use "git add ." to stage all changes',
 			'Run "git commit -m message" to save',
 		],
-		commands: ['git init', 'git add', 'git commit'],
+		id: 'level-1',
+		phase: 1,
+		subtitle: 'Genesis',
+		title: 'First Snapshot',
+		titleZh: '第一次快照',
 		validation: (state) => {
 			const commits = Object.values(state.commits)
 			// 需要至少 2 个 commit：init 自动创建的 + 用户手动 commit 的
@@ -66,11 +52,7 @@ export const levels: Level[] = [
 		},
 	},
 	{
-		id: 'level-2',
-		phase: 1,
-		title: 'Time Traveler',
-		titleZh: '时间旅行者',
-		subtitle: 'Genesis',
+		commands: ['git log', 'git checkout'],
 		description:
 			'Git lets you travel through time! Use checkout to visit any commit and see your project as it was.',
 		goal: 'Create 2 commits, then checkout the first one (detached HEAD).',
@@ -80,18 +62,18 @@ export const levels: Level[] = [
 			'Use "git checkout <hash>" with the first commit\'s hash',
 			'Notice HEAD is now "detached"',
 		],
-		commands: ['git log', 'git checkout'],
+		id: 'level-2',
+		phase: 1,
+		subtitle: 'Genesis',
+		title: 'Time Traveler',
+		titleZh: '时间旅行者',
 		validation: (state) => {
 			const commits = Object.values(state.commits)
 			return commits.length >= 2 && state.HEAD.type === 'detached'
 		},
 	},
 	{
-		id: 'level-3',
-		phase: 1,
-		title: 'Status Report',
-		titleZh: '状态报告',
-		subtitle: 'Genesis',
+		commands: ['git status', 'git log'],
 		description:
 			'Before committing, check what has changed. Git status shows the state of your working directory and staging area.',
 		goal: 'Use git status to see modified files, then check your commit history with git log.',
@@ -101,22 +83,19 @@ export const levels: Level[] = [
 			'Stage with "git add ." and run status again',
 			'After committing, run "git log" to see history',
 		],
-		commands: ['git status', 'git log'],
-		validation: (state) => {
-			return (
-				state.commandHistory.some((cmd: string) => cmd.includes('git status')) &&
-				state.commandHistory.some((cmd: string) => cmd.includes('git log'))
-			)
-		},
+		id: 'level-3',
+		phase: 1,
+		subtitle: 'Genesis',
+		title: 'Status Report',
+		titleZh: '状态报告',
+		validation: (state) =>
+			state.commandHistory.some((cmd: string) => cmd.includes('git status')) &&
+			state.commandHistory.some((cmd: string) => cmd.includes('git log')),
 	},
 
 	// ============ Phase 2: Multiverse（平行宇宙）- 分支操作 ============
 	{
-		id: 'level-4',
-		phase: 2,
-		title: 'Branching Timeline',
-		titleZh: '分裂的时间线',
-		subtitle: 'Multiverse',
+		commands: ['git branch', 'git checkout -b'],
 		description:
 			'Branches are lightweight pointers to commits. They let you work on features without affecting the main code.',
 		goal: 'Create a new branch called "feature" and make a commit on it.',
@@ -126,11 +105,15 @@ export const levels: Level[] = [
 			'Or use "git checkout -b feature" for both steps',
 			'Make a commit on the new branch',
 		],
-		commands: ['git branch', 'git checkout -b'],
+		id: 'level-4',
+		phase: 2,
+		subtitle: 'Multiverse',
+		title: 'Branching Timeline',
+		titleZh: '分裂的时间线',
 		validation: (state) => {
 			const featureBranch = state.branches.feature
 			const mainBranch = state.branches.main
-			if (!featureBranch || !mainBranch) return false
+			if (!(featureBranch && mainBranch)) return false
 
 			// Feature branch must be ahead of main (main is ancestor of feature)
 			// And they must not point to the same commit
@@ -141,11 +124,7 @@ export const levels: Level[] = [
 		},
 	},
 	{
-		id: 'level-5',
-		phase: 2,
-		title: 'Shadow Clones',
-		titleZh: '多重影分身',
-		subtitle: 'Multiverse',
+		commands: ['git branch', 'git checkout -b', 'git checkout'],
 		description:
 			'Real projects often have multiple branches: features, bugfixes, experiments. Each branch is an independent line of development.',
 		goal: 'Create two branches: "feature-a" and "feature-b", and make a commit on each.',
@@ -156,11 +135,15 @@ export const levels: Level[] = [
 			'Create second branch: "git checkout -b feature-b"',
 			'Make a commit on feature-b',
 		],
-		commands: ['git branch', 'git checkout -b', 'git checkout'],
+		id: 'level-5',
+		phase: 2,
+		subtitle: 'Multiverse',
+		title: 'Shadow Clones',
+		titleZh: '多重影分身',
 		validation: (state) => {
 			const hasFeatureA = state.branches['feature-a'] !== undefined
 			const hasFeatureB = state.branches['feature-b'] !== undefined
-			if (!hasFeatureA || !hasFeatureB) return false
+			if (!(hasFeatureA && hasFeatureB)) return false
 
 			// 两个分支的 commit 都应该不同于 main
 			const mainHash = state.branches.main?.headCommitHash
@@ -171,11 +154,7 @@ export const levels: Level[] = [
 		},
 	},
 	{
-		id: 'level-6',
-		phase: 2,
-		title: 'Merging Paths',
-		titleZh: '殊途同归',
-		subtitle: 'Multiverse',
+		commands: ['git merge', 'git checkout'],
 		description:
 			'Merge brings changes from one branch into another. When one branch is directly ahead, Git performs a "fast-forward" merge.',
 		goal: 'Merge feature-a into main using fast-forward.',
@@ -185,19 +164,19 @@ export const levels: Level[] = [
 			'Watch the graph update!',
 			'Notice main now points to the same commit as feature-a',
 		],
-		commands: ['git merge', 'git checkout'],
+		id: 'level-6',
+		phase: 2,
+		subtitle: 'Multiverse',
+		title: 'Merging Paths',
+		titleZh: '殊途同归',
 		validation: (state) => {
-			if (!state.branches.main || !state.branches['feature-a']) return false
+			if (!(state.branches.main && state.branches['feature-a'])) return false
 			// Fast-forward: main 现在应该指向 feature-a 的 commit
 			return state.branches.main.headCommitHash === state.branches['feature-a'].headCommitHash
 		},
 	},
 	{
-		id: 'level-7',
-		phase: 2,
-		title: 'Spacetime Intersection',
-		titleZh: '时空交汇',
-		subtitle: 'Multiverse',
+		commands: ['git merge'],
 		description:
 			'When branches have diverged, Git creates a merge commit with two parents. This is called a 3-way merge.',
 		goal: 'Merge feature-b into main to create a merge commit.',
@@ -207,7 +186,11 @@ export const levels: Level[] = [
 			'A merge commit will be created',
 			'Notice the commit has two parent lines in the graph',
 		],
-		commands: ['git merge'],
+		id: 'level-7',
+		phase: 2,
+		subtitle: 'Multiverse',
+		title: 'Spacetime Intersection',
+		titleZh: '时空交汇',
 		validation: (state) => {
 			if (!state.branches.main) return false
 			const mainCommit = state.commits[state.branches.main.headCommitHash]
@@ -218,11 +201,7 @@ export const levels: Level[] = [
 
 	// ============ Phase 3: Regret & Rewrite（后悔药）- 撤销与修改 ============
 	{
-		id: 'level-8',
-		phase: 3,
-		title: 'Soft Landing',
-		titleZh: '软着陆',
-		subtitle: 'Regret & Rewrite',
+		commands: ['git reset --soft'],
 		description:
 			'Made a commit too early? Reset --soft undoes the commit but keeps all your changes staged.',
 		goal: 'Make a commit, then reset it with --soft to keep your changes.',
@@ -232,17 +211,16 @@ export const levels: Level[] = [
 			'Your changes are still staged!',
 			'Try "git status" to verify',
 		],
-		commands: ['git reset --soft'],
-		validation: (state) => {
-			return state.commandHistory.some((cmd: string) => cmd.includes('git reset --soft'))
-		},
+		id: 'level-8',
+		phase: 3,
+		subtitle: 'Regret & Rewrite',
+		title: 'Soft Landing',
+		titleZh: '软着陆',
+		validation: (state) =>
+			state.commandHistory.some((cmd: string) => cmd.includes('git reset --soft')),
 	},
 	{
-		id: 'level-9',
-		phase: 3,
-		title: 'Hard Landing',
-		titleZh: '硬着陆',
-		subtitle: 'Regret & Rewrite',
+		commands: ['git reset --hard'],
 		description:
 			'Sometimes you want to completely discard changes. Reset --hard throws away everything and restores the previous state.',
 		goal: 'Make a commit, then reset it with --hard to discard all changes.',
@@ -252,17 +230,16 @@ export const levels: Level[] = [
 			'Your changes are completely gone!',
 			'Use with caution in real projects',
 		],
-		commands: ['git reset --hard'],
-		validation: (state) => {
-			return state.commandHistory.some((cmd: string) => cmd.includes('git reset --hard'))
-		},
+		id: 'level-9',
+		phase: 3,
+		subtitle: 'Regret & Rewrite',
+		title: 'Hard Landing',
+		titleZh: '硬着陆',
+		validation: (state) =>
+			state.commandHistory.some((cmd: string) => cmd.includes('git reset --hard')),
 	},
 	{
-		id: 'level-10',
-		phase: 3,
-		title: 'Selective Amnesia',
-		titleZh: '选择性失忆',
-		subtitle: 'Regret & Rewrite',
+		commands: ['git reset'],
 		description:
 			'You can also reset without specifying --soft or --hard. The default --mixed mode unstages changes but keeps them in your working directory.',
 		goal: 'Commit a change, then use git reset HEAD~1 (mixed mode).',
@@ -272,7 +249,11 @@ export const levels: Level[] = [
 			'Check status: changes are in working dir but not staged',
 			'This is the default reset behavior',
 		],
-		commands: ['git reset'],
+		id: 'level-10',
+		phase: 3,
+		subtitle: 'Regret & Rewrite',
+		title: 'Selective Amnesia',
+		titleZh: '选择性失忆',
 		validation: (state) => {
 			// 检查是否执行了不带 --soft 或 --hard 的 reset
 			return state.commandHistory.some(
@@ -284,11 +265,7 @@ export const levels: Level[] = [
 
 	// ============ Phase 4: The Ensemble（团队协作）- 进阶操作 ============
 	{
-		id: 'level-11',
-		phase: 4,
-		title: 'Milestone',
-		titleZh: '里程碑',
-		subtitle: 'The Ensemble',
+		commands: ['git tag'],
 		description:
 			'Tags mark important points in history like releases. Unlike branches, tags never move - they always point to the same commit.',
 		goal: 'Create a tag called "v1.0" on the current commit.',
@@ -298,17 +275,15 @@ export const levels: Level[] = [
 			'Tags are like permanent bookmarks',
 			'Use "git tag" to list all tags',
 		],
-		commands: ['git tag'],
-		validation: (state) => {
-			return state.tags && state.tags['v1.0'] !== undefined
-		},
+		id: 'level-11',
+		phase: 4,
+		subtitle: 'The Ensemble',
+		title: 'Milestone',
+		titleZh: '里程碑',
+		validation: (state) => state.tags && state.tags['v1.0'] !== undefined,
 	},
 	{
-		id: 'level-12',
-		phase: 4,
-		title: 'The Journey Continues',
-		titleZh: '旅程继续',
-		subtitle: 'The Ensemble',
+		commands: ['git branch', 'git checkout -b'],
 		description:
 			'Congratulations! You have learned the core concepts of Git. The real power of Git comes from collaboration with remote repositories.',
 		goal: 'Create a new branch called "next-chapter" to symbolize your continued learning.',
@@ -318,10 +293,13 @@ export const levels: Level[] = [
 			'You have mastered: reset (soft, hard, mixed)',
 			'Create "next-chapter" branch to complete your journey!',
 		],
-		commands: ['git branch', 'git checkout -b'],
-		validation: (state) => {
-			return state.commandHistory.some((cmd: string) => cmd.includes('git reset --soft'))
-		},
+		id: 'level-12',
+		phase: 4,
+		subtitle: 'The Ensemble',
+		title: 'The Journey Continues',
+		titleZh: '旅程继续',
+		validation: (state) =>
+			state.commandHistory.some((cmd: string) => cmd.includes('git reset --soft')),
 	},
 ]
 

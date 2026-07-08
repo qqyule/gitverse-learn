@@ -11,18 +11,19 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type Level, levels } from '@/data/levels'
+import { levels } from '@/data/levels'
 import { staggerChildren } from '@/lib/animations'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
+import type { Level } from '@/types/git'
 
 interface LevelSidebarProps {
-	currentLevel: Level
-	onLevelSelect: (level: Level) => void
-	onCommandClick?: (command: string) => void
-	onClose?: () => void
 	className?: string
+	currentLevel: Level
+	onClose?: () => void
+	onCommandClick?: (command: string) => void
+	onLevelSelect: (level: Level) => void
 }
 
 export function LevelSidebar({
@@ -33,7 +34,7 @@ export function LevelSidebar({
 	className,
 }: LevelSidebarProps) {
 	const gitState = useGitStore()
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
 	const completedLevels = useProgressStore((state) => state.completedLevels)
 	const listRef = useRef<HTMLDivElement>(null)
 
@@ -90,67 +91,67 @@ export function LevelSidebar({
 
 	return (
 		<div
-			className={cn('flex flex-col h-full bg-sidebar border-r border-sidebar-border', className)}
+			className={cn('flex h-full flex-col border-sidebar-border border-r bg-sidebar', className)}
 		>
 			{/* Header */}
 			<div
-				className="p-4 border-b border-sidebar-border flex items-center justify-between"
+				className="flex items-center justify-between border-sidebar-border border-b p-4"
 				data-tour="sidebar-header"
 			>
 				<div>
-					<h2 className="text-lg font-bold gradient-text">GitMaster Visual</h2>
-					<p className="text-xs text-muted-foreground mt-1">{t('home.badge')}</p>
+					<h2 className="gradient-text font-bold text-lg">GitMaster Visual</h2>
+					<p className="mt-1 text-muted-foreground text-xs">{t('home.badge')}</p>
 				</div>
 				{onClose && (
 					<button
-						type="button"
-						onClick={onClose}
-						className="md:hidden p-2 hover:bg-muted/50 rounded-full transition-colors"
 						aria-label="Close sidebar"
+						className="rounded-full p-2 transition-colors hover:bg-muted/50 md:hidden"
+						onClick={onClose}
+						type="button"
 					>
-						<X className="w-5 h-5 text-muted-foreground" />
+						<X className="h-5 w-5 text-muted-foreground" />
 					</button>
 				)}
 			</div>
 
 			{/* Current Level Info */}
-			<div className="p-4 border-b border-sidebar-border space-y-4" data-tour="level-info">
+			<div className="space-y-4 border-sidebar-border border-b p-4" data-tour="level-info">
 				<div className="space-y-2">
 					<div className="level-badge">
-						<BookOpen className="w-3.5 h-3.5" />
+						<BookOpen className="h-3.5 w-3.5" />
 						<span>
 							{t('common.level')} {levels.indexOf(currentLevel) + 1}
 						</span>
 					</div>
-					<h3 className="text-lg font-semibold">
+					<h3 className="font-semibold text-lg">
 						{getLevelText(currentLevel.id, 'title', currentLevel.title)}
 					</h3>
-					<p className="text-xs text-primary/70">
+					<p className="text-primary/70 text-xs">
 						{getLevelText(currentLevel.id, 'subtitle', currentLevel.subtitle)}
 					</p>
 				</div>
 
-				<p className="text-sm text-muted-foreground leading-relaxed">
+				<p className="text-muted-foreground text-sm leading-relaxed">
 					{getLevelText(currentLevel.id, 'description', currentLevel.description)}
 				</p>
 
 				{/* Goal */}
-				<div className="p-3 rounded-lg bg-secondary/50 border border-border">
-					<div className="flex items-center gap-2 text-primary mb-2">
-						<Target className="w-4 h-4" />
-						<span className="text-sm font-medium">{t('sidebar.goal')}</span>
+				<div className="rounded-lg border border-border bg-secondary/50 p-3">
+					<div className="mb-2 flex items-center gap-2 text-primary">
+						<Target className="h-4 w-4" />
+						<span className="font-medium text-sm">{t('sidebar.goal')}</span>
 					</div>
-					<p className="text-sm text-foreground">
+					<p className="text-foreground text-sm">
 						{getLevelText(currentLevel.id, 'goal', currentLevel.goal)}
 					</p>
 				</div>
 			</div>
 
 			{/* Hints */}
-			<div className="p-4 border-b border-sidebar-border">
-				<div className="flex items-center gap-2 text-warning mb-3">
-					<Lightbulb className="w-4 h-4" />
-					<span className="text-sm font-medium">{t('sidebar.hints')}</span>
+			<div className="border-sidebar-border border-b p-4">
+				<div className="mb-3 flex items-center gap-2 text-warning">
+					<Lightbulb className="h-4 w-4" />
+					<span className="font-medium text-sm">{t('sidebar.hints')}</span>
 				</div>
 				<ul className="space-y-2">
 					{getLevelHints(currentLevel.id, currentLevel.hints).map((hint, i) => {
@@ -165,13 +166,13 @@ export function LevelSidebar({
 
 						return (
 							<motion.li
-								key={i}
-								initial={{ opacity: 0, x: -10 }}
 								animate={{ opacity: 1, x: 0 }}
+								className="group flex items-start gap-2 text-muted-foreground text-xs"
+								initial={{ opacity: 0, x: -10 }}
+								key={i}
 								transition={{ delay: i * 0.1 }}
-								className="group flex items-start gap-2 text-xs text-muted-foreground"
 							>
-								<ChevronRight className="w-3 h-3 mt-0.5 text-primary" />
+								<ChevronRight className="mt-0.5 h-3 w-3 text-primary" />
 								<span>{hint}</span>
 							</motion.li>
 						)
@@ -181,17 +182,17 @@ export function LevelSidebar({
 				{/* Suggested Commands */}
 				{currentLevel.commands && currentLevel.commands.length > 0 && (
 					<div className="mt-4">
-						<span className="text-xs font-medium text-muted-foreground block mb-2">
+						<span className="mb-2 block font-medium text-muted-foreground text-xs">
 							{t('sidebar.commands', 'Commands')}:
 						</span>
 						<div className="flex flex-wrap gap-2">
 							{currentLevel.commands.map((cmd) => (
 								<button
-									type="button"
+									className="rounded border border-primary/20 bg-primary/10 px-2 py-1 text-primary text-xs transition-colors hover:bg-primary/20"
 									key={cmd}
 									onClick={() => onCommandClick?.(cmd)}
-									className="text-xs bg-primary/10 hover:bg-primary/20 text-primary px-2 py-1 rounded transition-colors border border-primary/20"
 									title={t('sidebar.clickToFill', 'Click to fill')}
+									type="button"
 								>
 									{cmd}
 								</button>
@@ -202,14 +203,14 @@ export function LevelSidebar({
 			</div>
 
 			{/* Level List */}
-			<div ref={listRef} className="flex-1 overflow-y-auto p-4" data-tour="level-list">
-				<h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
+			<div className="flex-1 overflow-y-auto p-4" data-tour="level-list" ref={listRef}>
+				<h4 className="mb-3 font-medium text-muted-foreground text-xs uppercase tracking-wider">
 					{t('sidebar.levels')}
 				</h4>
 				<div className="space-y-4">
 					{Object.entries(phases).map(([phase, phaseLevels]) => (
 						<div key={phase}>
-							<p className="text-xs text-muted-foreground mb-2">{getPhaseTitle(Number(phase))}</p>
+							<p className="mb-2 text-muted-foreground text-xs">{getPhaseTitle(Number(phase))}</p>
 							<div className="space-y-1">
 								{phaseLevels.map((level) => {
 									const isActive = level.id === currentLevel.id
@@ -222,26 +223,26 @@ export function LevelSidebar({
 
 									return (
 										<button
-											type="button"
-											key={level.id}
-											disabled={isLocked}
-											onClick={() => !isLocked && onLevelSelect(level)}
-											style={{ opacity: 0 }} // Initial state
 											className={cn(
-												'level-btn w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-sm transition-colors',
+												'level-btn flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors',
 												isActive
 													? 'bg-primary/20 text-primary'
 													: isLocked
-														? 'opacity-50 cursor-not-allowed text-muted-foreground'
-														: 'hover:bg-secondary/50 text-foreground'
+														? 'cursor-not-allowed text-muted-foreground opacity-50'
+														: 'text-foreground hover:bg-secondary/50'
 											)}
+											disabled={isLocked}
+											key={level.id}
+											onClick={() => !isLocked && onLevelSelect(level)}
+											style={{ opacity: 0 }} // Initial state
+											type="button"
 										>
 											{isLocked ? (
-												<Lock className="w-4 h-4 text-muted-foreground" />
+												<Lock className="h-4 w-4 text-muted-foreground" />
 											) : isCompleted ? (
-												<CheckCircle2 className="w-4 h-4 text-success" />
+												<CheckCircle2 className="h-4 w-4 text-success" />
 											) : (
-												<Circle className="w-4 h-4 text-muted-foreground" />
+												<Circle className="h-4 w-4 text-muted-foreground" />
 											)}
 											<span className="truncate">
 												{getLevelText(level.id, 'title', level.title)}

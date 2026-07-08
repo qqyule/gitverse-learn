@@ -4,10 +4,10 @@ import anime from 'animejs'
  * 动画配置选项接口
  */
 interface AnimationOptions {
+	complete?: () => void
+	delay?: number
 	duration?: number
 	easing?: string
-	delay?: number
-	complete?: () => void
 }
 
 /**
@@ -16,13 +16,13 @@ interface AnimationOptions {
 export const animateIn = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
-		targets: target,
-		opacity: [0, 1],
-		translateY: [20, 0],
+		complete: options?.complete,
+		delay: options?.delay || 0,
 		duration: options?.duration || 800,
 		easing: options?.easing || 'easeOutExpo',
-		delay: options?.delay || 0,
-		complete: options?.complete,
+		opacity: [0, 1],
+		targets: target,
+		translateY: [20, 0],
 	})
 }
 
@@ -32,13 +32,13 @@ export const animateIn = (target: string | HTMLElement | null, options?: Animati
 export const animateOut = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
-		targets: target,
-		opacity: [1, 0],
-		translateY: [0, 20],
+		complete: options?.complete,
+		delay: options?.delay || 0,
 		duration: options?.duration || 600,
 		easing: options?.easing || 'easeInExpo',
-		delay: options?.delay || 0,
-		complete: options?.complete,
+		opacity: [1, 0],
+		targets: target,
+		translateY: [0, 20],
 	})
 }
 
@@ -49,10 +49,10 @@ export const animateOut = (target: string | HTMLElement | null, options?: Animat
 export const pulse = (target: string | HTMLElement | null) => {
 	if (!target) return
 	anime({
-		targets: target,
-		scale: [1, 0.95, 1],
 		duration: 300,
 		easing: 'easeInOutQuad',
+		scale: [1, 0.95, 1],
+		targets: target,
 	})
 }
 
@@ -66,13 +66,13 @@ export const staggerChildren = (
 ) => {
 	if (!targets) return
 	anime({
-		targets: targets,
-		opacity: [0, 1],
-		translateY: [20, 0],
+		complete: options?.complete,
 		delay: anime.stagger(100, { start: options?.delay || 0 }), // 每个元素延迟 100ms
 		duration: options?.duration || 800,
 		easing: options?.easing || 'easeOutExpo',
-		complete: options?.complete,
+		opacity: [0, 1],
+		targets,
+		translateY: [20, 0],
 	})
 }
 
@@ -83,13 +83,13 @@ export const staggerChildren = (
 export const pageEnter = (target: string | HTMLElement | null, options?: AnimationOptions) => {
 	if (!target) return
 	anime({
-		targets: target,
-		opacity: [0, 1],
-		translateY: [30, 0],
+		complete: options?.complete,
+		delay: options?.delay || 0,
 		duration: options?.duration || 1000,
 		easing: 'easeOutCubic',
-		delay: options?.delay || 0,
-		complete: options?.complete,
+		opacity: [0, 1],
+		targets: target,
+		translateY: [30, 0],
 	})
 }
 
@@ -100,14 +100,14 @@ export const pageEnter = (target: string | HTMLElement | null, options?: Animati
 export const shake = (target: string | HTMLElement | null) => {
 	if (!target) return
 	anime({
+		easing: 'easeInOutQuad',
 		targets: target,
 		translateX: [
-			{ value: -10, duration: 100 },
-			{ value: 10, duration: 100 },
-			{ value: -10, duration: 100 },
-			{ value: 10, duration: 100 },
-			{ value: 0, duration: 100 },
+			{ duration: 100, value: -10 },
+			{ duration: 100, value: 10 },
+			{ duration: 100, value: -10 },
+			{ duration: 100, value: 10 },
+			{ duration: 100, value: 0 },
 		],
-		easing: 'easeInOutQuad',
 	})
 }

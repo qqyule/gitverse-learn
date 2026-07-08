@@ -9,8 +9,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 const languages = [
-	{ code: 'en', label: 'English', flag: '🇺🇸' },
-	{ code: 'zh-CN', label: '中文', flag: '🇨🇳' },
+	{ code: 'en', flag: '🇺🇸', label: 'English' },
+	{ code: 'zh-CN', flag: '🇨🇳', label: '中文' },
 ]
 
 /**
@@ -19,7 +19,6 @@ const languages = [
  */
 export const LanguageSwitch = () => {
 	const { i18n } = useTranslation()
-	const currentLang = languages.find((l) => l.code === i18n.language) || languages[0]
 
 	const handleLanguageChange = (langCode: string) => {
 		i18n.changeLanguage(langCode)
@@ -28,7 +27,7 @@ export const LanguageSwitch = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant="ghost" size="icon" aria-label="Switch language">
+				<Button aria-label="Switch language" size="icon" variant="ghost">
 					<Languages className="h-5 w-5" />
 					<span className="sr-only">Switch language</span>
 				</Button>
@@ -36,9 +35,9 @@ export const LanguageSwitch = () => {
 			<DropdownMenuContent align="end">
 				{languages.map((lang) => (
 					<DropdownMenuItem
+						className={i18n.language === lang.code ? 'bg-accent' : ''}
 						key={lang.code}
 						onClick={() => handleLanguageChange(lang.code)}
-						className={i18n.language === lang.code ? 'bg-accent' : ''}
 					>
 						<span className="mr-2">{lang.flag}</span>
 						{lang.label}

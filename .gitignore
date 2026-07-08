@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Build info
+*.tsbuildinfo
+
+# Temp / backup files
+_tmp_*
+*.bak
+
+# Local agent working memory (not part of the project source)
+.workbuddy/

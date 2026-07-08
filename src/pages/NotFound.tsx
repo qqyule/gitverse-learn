@@ -13,8 +13,8 @@ const NotFound = () => {
 	return (
 		<PageTransition className="flex min-h-screen items-center justify-center bg-muted">
 			<div className="text-center">
-				<h1 className="mb-4 text-4xl font-bold">404</h1>
-				<p className="mb-8 text-xl text-muted-foreground">Oops! Page not found</p>
+				<h1 className="mb-4 font-bold text-4xl">404</h1>
+				<p className="mb-8 text-muted-foreground text-xl">Oops! Page not found</p>
 				<Button asChild>
 					<Link to="/">Return to Home</Link>
 				</Button>

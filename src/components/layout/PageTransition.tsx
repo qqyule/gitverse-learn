@@ -17,7 +17,7 @@ export const PageTransition: React.FC<PageTransitionProps> = ({ children, classN
 	}, [])
 
 	return (
-		<div ref={containerRef} className={className}>
+		<div className={className} ref={containerRef}>
 			{children}
 		</div>
 	)

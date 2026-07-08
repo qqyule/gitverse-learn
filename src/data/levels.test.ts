@@ -5,29 +5,29 @@ import { levels } from './levels'
 // Helper to create a minimal valid GitState
 const createMockState = (overrides?: Partial<GitState>): GitState => {
 	const defaultState: GitState = {
-		commits: {},
 		branches: {
 			main: {
-				name: 'main',
-				headCommitHash: 'init-hash',
 				color: 'blue',
+				headCommitHash: 'init-hash',
+				name: 'main',
 			},
 		},
-		tags: {},
-		HEAD: { type: 'branch', ref: 'main' },
-		stagingArea: {},
-		workingDirectory: {},
 		commandHistory: [],
+		commits: {},
+		HEAD: { ref: 'main', type: 'branch' },
 		lastOutput: '',
+		stagingArea: {},
+		tags: {},
+		workingDirectory: {},
 	}
 	return { ...defaultState, ...overrides }
 }
 
 const createCommit = (hash: string, parents: string[] = []): GitCommit => ({
-	hash,
-	parents,
-	message: 'test',
 	author: 'test',
+	hash,
+	message: 'test',
+	parents,
 	timestamp: Date.now(),
 	tree: {},
 })
@@ -62,7 +62,7 @@ describe('Level Validation Logic', () => {
 		it('should fail if commits < 2', () => {
 			const state = createMockState({
 				commits: { 'init-hash': createCommit('init-hash') },
-				HEAD: { type: 'detached', ref: 'init-hash' },
+				HEAD: { ref: 'init-hash', type: 'detached' },
 			})
 			expect(level.validation(state)).toBe(false)
 		})
@@ -73,7 +73,7 @@ describe('Level Validation Logic', () => {
 					'init-hash': createCommit('init-hash'),
 					'second-hash': createCommit('second-hash', ['init-hash']),
 				},
-				HEAD: { type: 'branch', ref: 'main' },
+				HEAD: { ref: 'main', type: 'branch' },
 			})
 			expect(level.validation(state)).toBe(false)
 		})
@@ -84,14 +84,14 @@ describe('Level Validation Logic', () => {
 					'init-hash': createCommit('init-hash'),
 					'second-hash': createCommit('second-hash', ['init-hash']),
 				},
-				HEAD: { type: 'detached', ref: 'init-hash' },
+				HEAD: { ref: 'init-hash', type: 'detached' },
 			})
 			expect(level.validation(state)).toBe(true)
 		})
 	})
 
-	describe('Level 3: Branching Timeline', () => {
-		const level = levels.find((l) => l.id === 'level-3')!
+	describe('Level 4: Branching Timeline', () => {
+		const level = levels.find((l) => l.id === 'level-4')!
 
 		it('should fail if feature branch does not exist', () => {
 			const state = createMockState()
@@ -101,8 +101,8 @@ describe('Level Validation Logic', () => {
 		it('should fail if feature branch equals main branch', () => {
 			const state = createMockState({
 				branches: {
-					main: { name: 'main', headCommitHash: 'c1', color: 'blue' },
-					feature: { name: 'feature', headCommitHash: 'c1', color: 'red' },
+					feature: { color: 'red', headCommitHash: 'c1', name: 'feature' },
+					main: { color: 'blue', headCommitHash: 'c1', name: 'main' },
 				},
 				commits: {
 					c1: createCommit('c1'),
@@ -115,8 +115,8 @@ describe('Level Validation Logic', () => {
 			// This simulates random unrelated commit
 			const state = createMockState({
 				branches: {
-					main: { name: 'main', headCommitHash: 'c1', color: 'blue' },
-					feature: { name: 'feature', headCommitHash: 'c2', color: 'red' },
+					feature: { color: 'red', headCommitHash: 'c2', name: 'feature' },
+					main: { color: 'blue', headCommitHash: 'c1', name: 'main' },
 				},
 				commits: {
 					c1: createCommit('c1'),
@@ -129,8 +129,8 @@ describe('Level Validation Logic', () => {
 		it('should pass if feature is ahead of main', () => {
 			const state = createMockState({
 				branches: {
-					main: { name: 'main', headCommitHash: 'c1', color: 'blue' },
-					feature: { name: 'feature', headCommitHash: 'c2', color: 'red' },
+					feature: { color: 'red', headCommitHash: 'c2', name: 'feature' },
+					main: { color: 'blue', headCommitHash: 'c1', name: 'main' },
 				},
 				commits: {
 					c1: createCommit('c1'),
@@ -141,27 +141,32 @@ describe('Level Validation Logic', () => {
 		})
 	})
 
-	describe('Level 4: Merging Paths', () => {
-		const level = levels.find((l) => l.id === 'level-4')!
+	describe('Level 6: Merging Paths (Fast-Forward)', () => {
+		const level = levels.find((l) => l.id === 'level-6')!
 
 		it('should pass if fast-forward (hashes equal)', () => {
 			const state = createMockState({
 				branches: {
-					main: { name: 'main', headCommitHash: 'c2', color: 'blue' },
-					feature: { name: 'feature', headCommitHash: 'c2', color: 'red' },
+					'feature-a': { color: 'red', headCommitHash: 'c2', name: 'feature-a' },
+					main: { color: 'blue', headCommitHash: 'c2', name: 'main' },
 				},
 				commits: {
+					c1: createCommit('c1'),
 					c2: createCommit('c2', ['c1']),
 				},
 			})
 			expect(level.validation(state)).toBe(true)
 		})
+	})
+
+	describe('Level 7: Spacetime Intersection (Merge Commit)', () => {
+		const level = levels.find((l) => l.id === 'level-7')!
 
 		it('should pass if merge commit (2 parents)', () => {
 			const state = createMockState({
 				branches: {
-					main: { name: 'main', headCommitHash: 'merge-commit', color: 'blue' },
-					feature: { name: 'feature', headCommitHash: 'c2', color: 'red' },
+					feature: { color: 'red', headCommitHash: 'c2', name: 'feature' },
+					main: { color: 'blue', headCommitHash: 'merge-commit', name: 'main' },
 				},
 				commits: {
 					'merge-commit': createCommit('merge-commit', ['c1', 'c2']),
@@ -171,8 +176,8 @@ describe('Level Validation Logic', () => {
 		})
 	})
 
-	describe('Level 5: Soft Landing', () => {
-		const level = levels.find((l) => l.id === 'level-5')!
+	describe('Level 8: Soft Landing', () => {
+		const level = levels.find((l) => l.id === 'level-8')!
 
 		it('should fail if no reset command', () => {
 			const state = createMockState({

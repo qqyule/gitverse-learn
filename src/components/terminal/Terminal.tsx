@@ -7,10 +7,10 @@ import { useGitStore } from '@/store/gitStore'
 
 interface TerminalProps {
 	className?: string
-	isExpanded?: boolean
-	onToggle?: () => void
 	externalInput?: string
+	isExpanded?: boolean
 	onInputChange?: (value: string) => void
+	onToggle?: () => void
 }
 
 export function Terminal({
@@ -26,7 +26,7 @@ export function Terminal({
 	const inputRef = useRef<HTMLInputElement>(null)
 	const outputRef = useRef<HTMLDivElement>(null)
 
-	const { executeCommand, commandHistory, lastOutput } = useGitStore()
+	const { executeCommand } = useGitStore()
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -85,24 +85,24 @@ export function Terminal({
 	return (
 		<div
 			className={cn(
-				'flex flex-col bg-card border border-border rounded-lg overflow-hidden',
+				'flex flex-col overflow-hidden rounded-lg border border-border bg-card',
 				className
 			)}
 		>
 			{/* Header */}
 			<button
-				type="button"
+				className="flex items-center justify-between border-border border-b bg-secondary/50 px-4 py-2 transition-colors hover:bg-secondary/70"
 				onClick={onToggle}
-				className="flex items-center justify-between px-4 py-2 bg-secondary/50 border-b border-border hover:bg-secondary/70 transition-colors"
+				type="button"
 			>
 				<div className="flex items-center gap-2">
-					<TerminalIcon className="w-4 h-4 text-primary" />
-					<span className="text-sm font-medium">Terminal</span>
+					<TerminalIcon className="h-4 w-4 text-primary" />
+					<span className="font-medium text-sm">Terminal</span>
 				</div>
 				{isExpanded ? (
-					<ChevronDown className="w-4 h-4 text-muted-foreground" />
+					<ChevronDown className="h-4 w-4 text-muted-foreground" />
 				) : (
-					<ChevronUp className="w-4 h-4 text-muted-foreground" />
+					<ChevronUp className="h-4 w-4 text-muted-foreground" />
 				)}
 			</button>
 
@@ -110,21 +110,29 @@ export function Terminal({
 			<AnimatePresence>
 				{isExpanded && (
 					<motion.div
-						initial={{ height: 0 }}
 						animate={{ height: 'auto' }}
-						exit={{ height: 0 }}
-						transition={{ duration: 0.2 }}
 						className="overflow-hidden"
+						exit={{ height: 0 }}
+						initial={{ height: 0 }}
+						transition={{ duration: 0.2 }}
 					>
 						{/* Output */}
 						<div
-							ref={outputRef}
-							className="h-48 overflow-y-auto p-4 font-mono text-sm space-y-2"
-							onClick={(e) => {
+							aria-label="Focus terminal input"
+							className="h-48 space-y-2 overflow-y-auto p-4 font-mono text-sm"
+							onClick={() => {
 								if (!window.getSelection()?.toString()) {
 									inputRef.current?.focus()
 								}
 							}}
+							onKeyDown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									inputRef.current?.focus()
+								}
+							}}
+							ref={outputRef}
+							role="button"
+							tabIndex={0}
 						>
 							{history.length === 0 && (
 								<div className="text-muted-foreground">
@@ -135,13 +143,13 @@ export function Terminal({
 								</div>
 							)}
 							{history.map((entry, i) => (
-								<div key={i} className="space-y-1">
+								<div className="space-y-1" key={i}>
 									<div className="flex items-center gap-2">
 										<span className="text-success">$</span>
 										<span className="text-foreground">{entry.command}</span>
 									</div>
 									{entry.output && (
-										<pre className="text-muted-foreground whitespace-pre-wrap pl-4">
+										<pre className="whitespace-pre-wrap pl-4 text-muted-foreground">
 											{entry.output}
 										</pre>
 									)}
@@ -150,22 +158,22 @@ export function Terminal({
 						</div>
 
 						{/* Input */}
-						<form onSubmit={handleSubmit} className="border-t border-border">
+						<form className="border-border border-t" onSubmit={handleSubmit}>
 							<div className="flex items-center gap-2 px-4 py-2">
-								<span className="text-success font-mono">$</span>
+								<span className="font-mono text-success">$</span>
 								<input
-									ref={inputRef}
-									type="text"
-									value={input}
+									autoComplete="off"
+									className="terminal-input text-foreground placeholder:text-muted-foreground"
 									onChange={(e) => {
 										setInput(e.target.value)
 										onInputChange?.(e.target.value)
 									}}
 									onKeyDown={handleKeyDown}
 									placeholder="Type a git command..."
-									className="terminal-input text-foreground placeholder:text-muted-foreground"
-									autoComplete="off"
+									ref={inputRef}
 									spellCheck={false}
+									type="text"
+									value={input}
 								/>
 							</div>
 						</form>

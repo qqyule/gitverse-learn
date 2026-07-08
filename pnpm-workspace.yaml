@@ -1,0 +1,7 @@
+# pnpm v11+ requires build scripts to be explicitly approved.
+# `onlyBuiltDependencies` was deprecated in v11 in favor of `allowBuilds`.
+# These two packages ship prebuilt platform binaries; their postinstall just
+# verifies the binary, so approving the build is safe.
+allowBuilds:
+  "@swc/core": true
+  "esbuild": true

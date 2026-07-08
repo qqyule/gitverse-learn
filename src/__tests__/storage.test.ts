@@ -5,15 +5,15 @@ import type { GitStore } from '@/types/git'
 const localStorageMock = (() => {
 	let store: Record<string, string> = {}
 	return {
-		getItem: vi.fn((key: string) => store[key] || null),
-		setItem: vi.fn((key: string, value: string) => {
-			store[key] = value
+		clear: vi.fn(() => {
+			store = {}
 		}),
+		getItem: vi.fn((key: string) => store[key] || null),
 		removeItem: vi.fn((key: string) => {
 			delete store[key]
 		}),
-		clear: vi.fn(() => {
-			store = {}
+		setItem: vi.fn((key: string, value: string) => {
+			store[key] = value
 		}),
 	}
 })()
@@ -29,14 +29,14 @@ describe('storage', () => {
 	})
 
 	const mockState: Partial<GitStore> = {
-		commits: [],
 		branches: {},
-		tags: {},
-		HEAD: { type: 'branch', value: 'main' },
-		stagingArea: {},
-		workingDirectory: {},
 		commandHistory: [],
+		commits: {},
+		HEAD: { ref: 'main', type: 'branch' },
 		lastOutput: '',
+		stagingArea: {},
+		tags: {},
+		workingDirectory: {},
 	}
 	const levelId = 'test-level'
 
@@ -53,7 +53,7 @@ describe('storage', () => {
 			localStorageMock.setItem.mockImplementationOnce(() => {
 				throw new Error('Storage full')
 			})
-			const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+			const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
 			saveLevelState(levelId, mockState)
 
@@ -78,7 +78,7 @@ describe('storage', () => {
 
 		it('should handle JSON parse errors', () => {
 			localStorageMock.getItem.mockReturnValueOnce('invalid json')
-			const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+			const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
 			const loaded = loadLevelState(levelId)
 

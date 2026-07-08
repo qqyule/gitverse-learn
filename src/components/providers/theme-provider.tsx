@@ -7,16 +7,14 @@ type ThemeProviderProps = ComponentProps<typeof NextThemesProvider>
  * 主题提供器组件
  * 封装 next-themes，支持 system/light/dark 三种模式
  */
-export const ThemeProvider = ({ children, ...props }: ThemeProviderProps) => {
-	return (
-		<NextThemesProvider
-			attribute="class"
-			defaultTheme="dark"
-			enableSystem
-			disableTransitionOnChange
-			{...props}
-		>
-			{children}
-		</NextThemesProvider>
-	)
-}
+export const ThemeProvider = ({ children, ...props }: ThemeProviderProps) => (
+	<NextThemesProvider
+		attribute="class"
+		defaultTheme="dark"
+		disableTransitionOnChange
+		enableSystem
+		{...props}
+	>
+		{children}
+	</NextThemesProvider>
+)

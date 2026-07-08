@@ -1,4 +1,3 @@
-import * as d3 from 'd3'
 import { useMemo } from 'react'
 import type { Branch, GitCommit, GitHash, GraphEdge, GraphLayout, GraphNode } from '@/types/git'
 
@@ -16,7 +15,7 @@ export function useGraphLayout(
 		const commitList = Object.values(commits)
 
 		if (commitList.length === 0) {
-			return { nodes: [], edges: [], width: 0, height: 0 }
+			return { edges: [], height: 0, nodes: [], width: 0 }
 		}
 
 		// Sort commits by timestamp
@@ -47,7 +46,6 @@ export function useGraphLayout(
 
 		// Calculate node positions
 		const commitPositions: Record<GitHash, { x: number; y: number; lane: number }> = {}
-		const laneOccupancy: Record<number, number> = {}
 
 		sortedCommits.forEach((commit, index) => {
 			// Determine lane based on branches pointing to this commit
@@ -72,7 +70,7 @@ export function useGraphLayout(
 			const x = PADDING + index * NODE_SPACING_X
 			const y = PADDING + lane * NODE_SPACING_Y
 
-			commitPositions[commit.hash] = { x, y, lane }
+			commitPositions[commit.hash] = { lane, x, y }
 		})
 
 		// Determine current HEAD commit
@@ -86,24 +84,19 @@ export function useGraphLayout(
 			const branch = branches[primaryBranch]
 
 			return {
-				id: commit.hash,
+				branches: commitBranches,
+				color: branch?.color || 'hsl(199, 89%, 48%)',
 				commit,
+				id: commit.hash,
+				isHead: commit.hash === headCommitHash,
+				lane: pos.lane,
 				x: pos.x,
 				y: pos.y,
-				lane: pos.lane,
-				color: branch?.color || 'hsl(199, 89%, 48%)',
-				branches: commitBranches,
-				isHead: commit.hash === headCommitHash,
 			}
 		})
 
-		// Create edges using D3 curve
+		// Create edges
 		const edges: GraphEdge[] = []
-		const lineGenerator = d3
-			.line<{ x: number; y: number }>()
-			.x((d) => d.x)
-			.y((d) => d.y)
-			.curve(d3.curveMonotoneX)
 
 		sortedCommits.forEach((commit) => {
 			commit.parents.forEach((parentHash, parentIndex) => {
@@ -123,15 +116,15 @@ export function useGraphLayout(
 						: nodes.find((n) => n.id === commit.hash)?.color || 'hsl(215, 20%, 45%)'
 
 					edges.push({
+						color,
 						id: `${commit.hash}-${parentHash}`,
+						isMerge,
 						source: commit.hash,
-						target: parentHash,
 						sourceX: sourcePos.x,
 						sourceY: sourcePos.y,
+						target: parentHash,
 						targetX: targetPos.x,
 						targetY: targetPos.y,
-						color,
-						isMerge,
 					})
 				}
 			})
@@ -141,10 +134,10 @@ export function useGraphLayout(
 		const maxY = Math.max(...nodes.map((n) => n.y)) + PADDING
 
 		return {
-			nodes,
 			edges,
-			width: Math.max(maxX, 400),
 			height: Math.max(maxY, 200),
+			nodes,
+			width: Math.max(maxX, 400),
 		}
 	}, [commits, branches, headRef, headType])
 }
@@ -163,7 +156,6 @@ export function generateEdgePath(
 
 	// Curved path for different lanes
 	const midX = (sourceX + targetX) / 2
-	const controlOffset = Math.abs(sourceY - targetY) * 0.5
 
 	if (isMerge) {
 		// Merge path curves from source to target

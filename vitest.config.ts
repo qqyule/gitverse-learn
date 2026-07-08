@@ -6,19 +6,19 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
 	plugins: [react()],
-	test: {
-		globals: true,
-		environment: 'jsdom',
-		setupFiles: ['./src/test/setup.ts'],
-		include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-		coverage: {
-			reporter: ['text', 'json', 'html'],
-			exclude: ['node_modules/', 'src/test/', '**/*.d.ts'],
-		},
-	},
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, './src'),
+			'@': path.resolve(import.meta.dirname, './src'),
 		},
+	},
+	test: {
+		coverage: {
+			exclude: ['node_modules/', 'src/test/', '**/*.d.ts'],
+			reporter: ['text', 'json', 'html'],
+		},
+		environment: 'jsdom',
+		globals: true,
+		include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+		setupFiles: ['./src/test/setup.ts'],
 	},
 })

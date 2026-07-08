@@ -3,9 +3,9 @@ import { Circle, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { type Level, levels } from '@/data/levels'
+import { levels } from '@/data/levels'
+import type { Level } from '@/types/git'
 
 interface SyllabusModalProps {
 	isOpen: boolean
@@ -14,7 +14,6 @@ interface SyllabusModalProps {
 
 export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 	const { t } = useTranslation()
-	const navigate = useNavigate()
 	const overlayRef = useRef<HTMLDivElement>(null)
 	const contentRef = useRef<HTMLDivElement>(null)
 	const listRef = useRef<HTMLDivElement>(null)
@@ -35,10 +34,10 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 				// Reset opacity
 				overlayRef.current.style.opacity = '0'
 				anime({
-					targets: overlayRef.current,
-					opacity: [0, 1],
 					duration: 400,
 					easing: 'easeOutQuad',
+					opacity: [0, 1],
+					targets: overlayRef.current,
 				})
 			}
 
@@ -46,13 +45,13 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 			if (contentRef.current) {
 				contentRef.current.style.opacity = '0'
 				anime({
-					targets: contentRef.current,
+					delay: 100,
+					duration: 500,
+					easing: 'easeOutElastic(1, .8)',
 					opacity: [0, 1],
 					scale: [0.9, 1],
+					targets: contentRef.current,
 					translateY: [20, 0],
-					duration: 500,
-					delay: 100,
-					easing: 'easeOutElastic(1, .8)',
 				})
 			}
 
@@ -68,12 +67,12 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 
 					setTimeout(() => {
 						anime({
-							targets: items,
-							opacity: [0, 1],
-							translateY: [20, 0],
 							delay: anime.stagger(50),
 							duration: 600,
 							easing: 'easeOutExpo',
+							opacity: [0, 1],
+							targets: items,
+							translateY: [20, 0],
 						})
 					}, 200)
 				}
@@ -96,19 +95,19 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 
 			timeline
 				.add({
-					targets: contentRef.current,
-					opacity: 0,
-					scale: 0.9,
-					translateY: 20,
 					duration: 300,
 					easing: 'easeInQuad',
+					opacity: 0,
+					scale: 0.9,
+					targets: contentRef.current,
+					translateY: 20,
 				})
 				.add(
 					{
-						targets: overlayRef.current,
-						opacity: 0,
 						duration: 300,
 						easing: 'easeInQuad',
+						opacity: 0,
+						targets: overlayRef.current,
 					},
 					'-=200'
 				)
@@ -117,7 +116,7 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 		}
 	}
 
-	if (!isOpen || !mounted) return null
+	if (!(isOpen && mounted)) return null
 
 	// Group levels by phase
 	const phases = levels.reduce(
@@ -134,7 +133,7 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 	const getLevelText = (id: string, field: string, fallback: string) => {
 		const key = `levels.${id}.${field}`
 		const val = t(key)
-		return val !== key ? val : fallback
+		return val === key ? fallback : val
 	}
 
 	const getPhaseTitle = (phase: number) => t(`phases.${phase}`)
@@ -144,56 +143,64 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 		<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
 			{/* Backdrop */}
 			<div
-				ref={overlayRef}
+				aria-label="Close"
 				className="absolute inset-0 bg-background/80 backdrop-blur-sm"
 				onClick={handleClose}
+				onKeyDown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ') {
+						handleClose()
+					}
+				}}
+				ref={overlayRef}
+				role="button"
 				style={{ opacity: 0 }}
+				tabIndex={0}
 			/>
 
 			{/* Modal Content */}
 			<div
+				className="relative flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
 				ref={contentRef}
-				className="relative w-full max-w-2xl max-h-[85vh] flex flex-col bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
 				style={{ opacity: 0 }}
 			>
 				{/* Header */}
-				<div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card/50">
-					<h2 className="text-xl font-bold">{t('home.syllabusButton')}</h2>
+				<div className="flex items-center justify-between border-border border-b bg-card/50 px-6 py-4">
+					<h2 className="font-bold text-xl">{t('home.syllabusButton')}</h2>
 					<Button
-						variant="ghost"
-						size="icon"
-						onClick={handleClose}
 						className="rounded-full hover:bg-secondary"
+						onClick={handleClose}
+						size="icon"
+						variant="ghost"
 					>
-						<X className="w-5 h-5" />
+						<X className="h-5 w-5" />
 					</Button>
 				</div>
 
 				{/* Scrollable List */}
 				<div className="flex-1 overflow-y-auto p-6">
-					<div ref={listRef} className="space-y-8">
+					<div className="space-y-8" ref={listRef}>
 						{Object.entries(phases).map(([phase, phaseLevels]) => (
-							<div key={phase} className="space-y-4">
-								<h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-									<span className="w-1.5 h-1.5 rounded-full bg-primary" />
+							<div className="space-y-4" key={phase}>
+								<h3 className="flex items-center gap-2 font-semibold text-muted-foreground text-sm uppercase tracking-wider">
+									<span className="h-1.5 w-1.5 rounded-full bg-primary" />
 									{getPhaseTitle(Number(phase))}
 								</h3>
 								<div className="grid gap-3 sm:grid-cols-2">
-									{phaseLevels.map((level, index) => (
+									{phaseLevels.map((level) => (
 										<div
-											key={level.id}
-											style={{ opacity: 0 }} // Initial state for stagger
-											className="syllabus-item group relative p-4 rounded-lg border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-colors cursor-default"
+											className="syllabus-item group relative cursor-default rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50 hover:bg-accent/50"
+											key={level.id} // Initial state for stagger
+											style={{ opacity: 0 }}
 										>
 											<div className="flex items-start gap-3">
 												<div className="mt-1">
-													<Circle className="w-4 h-4 text-primary/40" />
+													<Circle className="h-4 w-4 text-primary/40" />
 												</div>
 												<div>
-													<h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
+													<h4 className="font-medium text-foreground transition-colors group-hover:text-primary">
 														{getLevelText(level.id, 'title', level.title)}
 													</h4>
-													<p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+													<p className="mt-1 line-clamp-2 text-muted-foreground text-xs">
 														{getLevelText(level.id, 'description', level.description)}
 													</p>
 												</div>
@@ -207,7 +214,7 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 				</div>
 
 				{/* Footer */}
-				<div className="p-4 border-t border-border bg-muted/20 flex justify-end">
+				<div className="flex justify-end border-border border-t bg-muted/20 p-4">
 					<Button onClick={handleClose}>{t('common.close')}</Button>
 				</div>
 			</div>

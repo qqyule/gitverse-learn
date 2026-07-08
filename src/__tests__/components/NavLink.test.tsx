@@ -16,7 +16,7 @@ describe('NavLink', () => {
 	it('should apply custom class names', () => {
 		render(
 			<MemoryRouter>
-				<NavLink to="/test" className="custom-class">
+				<NavLink className="custom-class" to="/test">
 					Test Link
 				</NavLink>
 			</MemoryRouter>
@@ -28,7 +28,7 @@ describe('NavLink', () => {
 	it('should apply active class when link is active', () => {
 		render(
 			<MemoryRouter initialEntries={['/test']}>
-				<NavLink to="/test" activeClassName="active-class">
+				<NavLink activeClassName="active-class" to="/test">
 					Test Link
 				</NavLink>
 			</MemoryRouter>
@@ -40,7 +40,7 @@ describe('NavLink', () => {
 	it('should not apply active class when link is inactive', () => {
 		render(
 			<MemoryRouter initialEntries={['/other']}>
-				<NavLink to="/test" activeClassName="active-class">
+				<NavLink activeClassName="active-class" to="/test">
 					Test Link
 				</NavLink>
 			</MemoryRouter>

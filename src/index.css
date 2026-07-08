@@ -1,163 +1,284 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-/* GitMaster Visual - Dark-first Design System */
+@plugin "@tailwindcss/typography";
 
-@layer base {
-	:root {
-		--background: 222 47% 11%;
-		--foreground: 210 40% 98%;
+/* GitMaster uses next-themes: it applies `.dark` / `.light` to <html>.
+   Tailwind v4 defaults `dark:` to prefers-color-scheme, so we opt back into
+   class-based variants to match the class names next-themes toggles. */
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:is(.light *));
 
-		--card: 222 47% 14%;
-		--card-foreground: 210 40% 98%;
+/* GitMaster Visual - Dark-first Design System
+   :root holds the dark (default) palette; `.light` overrides to light. */
+:root {
+	--background: 222 47% 11%;
+	--foreground: 210 40% 98%;
 
-		--popover: 222 47% 12%;
-		--popover-foreground: 210 40% 98%;
+	--card: 222 47% 14%;
+	--card-foreground: 210 40% 98%;
 
-		--primary: 199 89% 48%;
-		--primary-foreground: 222 47% 11%;
+	--popover: 222 47% 12%;
+	--popover-foreground: 210 40% 98%;
 
-		--secondary: 217 33% 17%;
-		--secondary-foreground: 210 40% 98%;
+	--primary: 199 89% 48%;
+	--primary-foreground: 222 47% 11%;
 
-		--muted: 217 33% 17%;
-		--muted-foreground: 215 20% 65%;
+	--secondary: 217 33% 17%;
+	--secondary-foreground: 210 40% 98%;
 
-		--accent: 172 66% 50%;
-		--accent-foreground: 222 47% 11%;
+	--muted: 217 33% 17%;
+	--muted-foreground: 215 20% 65%;
 
-		--destructive: 0 84% 60%;
-		--destructive-foreground: 210 40% 98%;
+	--accent: 172 66% 50%;
+	--accent-foreground: 222 47% 11%;
 
-		--success: 142 76% 36%;
-		--success-foreground: 210 40% 98%;
+	--destructive: 0 84% 60%;
+	--destructive-foreground: 210 40% 98%;
 
-		--warning: 38 92% 50%;
-		--warning-foreground: 222 47% 11%;
+	--success: 142 76% 36%;
+	--success-foreground: 210 40% 98%;
 
-		--border: 217 33% 22%;
-		--input: 217 33% 17%;
-		--ring: 199 89% 48%;
+	--warning: 38 92% 50%;
+	--warning-foreground: 222 47% 11%;
 
-		--radius: 0.75rem;
+	--border: 217 33% 22%;
+	--input: 217 33% 17%;
+	--ring: 199 89% 48%;
 
-		/* Git Graph Colors */
-		--git-main: 199 89% 48%;
-		--git-feature: 280 68% 60%;
-		--git-hotfix: 0 84% 60%;
-		--git-develop: 142 76% 36%;
-		--git-release: 38 92% 50%;
-		--git-node: 199 89% 48%;
-		--git-edge: 215 20% 45%;
-		--git-head: 172 66% 50%;
-		--git-staged: 142 76% 36%;
-		--git-modified: 38 92% 50%;
+	--radius: 0.75rem;
 
-		/* Gradients */
-		--gradient-primary: linear-gradient(
-			135deg,
-			hsl(199 89% 48%),
-			hsl(172 66% 50%)
-		);
-		--gradient-hero: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 14%));
-		--gradient-glow: radial-gradient(
-			ellipse at center,
-			hsl(199 89% 48% / 0.15),
-			transparent 70%
-		);
-		--gradient-card: linear-gradient(
-			180deg,
-			hsl(222 47% 16%),
-			hsl(222 47% 12%)
-		);
+	/* Git Graph Colors */
+	--git-main: 199 89% 48%;
+	--git-feature: 280 68% 60%;
+	--git-hotfix: 0 84% 60%;
+	--git-develop: 142 76% 36%;
+	--git-release: 38 92% 50%;
+	--git-node: 199 89% 48%;
+	--git-edge: 215 20% 45%;
+	--git-head: 172 66% 50%;
+	--git-staged: 142 76% 36%;
+	--git-modified: 38 92% 50%;
 
-		/* Shadows */
-		--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.3);
-		--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.4);
-		--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.4);
+	/* Gradients */
+	--gradient-primary: linear-gradient(
+		135deg,
+		hsl(199 89% 48%),
+		hsl(172 66% 50%)
+	);
+	--gradient-hero: linear-gradient(135deg, hsl(222 47% 8%), hsl(222 47% 14%));
+	--gradient-glow: radial-gradient(
+		ellipse at center,
+		hsl(199 89% 48% / 0.15),
+		transparent 70%
+	);
+	--gradient-card: linear-gradient(180deg, hsl(222 47% 16%), hsl(222 47% 12%));
 
-		/* Sidebar */
-		--sidebar-background: 222 47% 8%;
-		--sidebar-foreground: 210 40% 98%;
-		--sidebar-primary: 199 89% 48%;
-		--sidebar-primary-foreground: 222 47% 11%;
-		--sidebar-accent: 217 33% 17%;
-		--sidebar-accent-foreground: 210 40% 98%;
-		--sidebar-border: 217 33% 17%;
-		--sidebar-ring: 199 89% 48%;
+	/* Shadows */
+	--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.3);
+	--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.4);
+	--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.4);
+
+	/* Sidebar */
+	--sidebar-background: 222 47% 8%;
+	--sidebar-foreground: 210 40% 98%;
+	--sidebar-primary: 199 89% 48%;
+	--sidebar-primary-foreground: 222 47% 11%;
+	--sidebar-accent: 217 33% 17%;
+	--sidebar-accent-foreground: 210 40% 98%;
+	--sidebar-border: 217 33% 17%;
+	--sidebar-ring: 199 89% 48%;
+}
+
+.light {
+	--background: 210 40% 98%;
+	--foreground: 222 47% 11%;
+
+	--card: 0 0% 100%;
+	--card-foreground: 222 47% 11%;
+
+	--popover: 0 0% 100%;
+	--popover-foreground: 222 47% 11%;
+
+	--primary: 199 89% 38%;
+	--primary-foreground: 210 40% 98%;
+
+	--secondary: 210 40% 96%;
+	--secondary-foreground: 222 47% 11%;
+
+	--muted: 210 40% 96%;
+	--muted-foreground: 215 16% 47%;
+
+	--accent: 172 66% 40%;
+	--accent-foreground: 210 40% 98%;
+
+	--destructive: 0 84% 60%;
+	--destructive-foreground: 210 40% 98%;
+
+	--success: 142 76% 36%;
+	--success-foreground: 210 40% 98%;
+
+	--warning: 38 92% 50%;
+	--warning-foreground: 222 47% 11%;
+
+	--border: 214 32% 91%;
+	--input: 214 32% 91%;
+	--ring: 199 89% 38%;
+
+	--git-main: 199 89% 38%;
+	--git-feature: 280 68% 50%;
+	--git-node: 199 89% 38%;
+	--git-edge: 215 20% 65%;
+	--git-head: 172 66% 40%;
+
+	--gradient-primary: linear-gradient(
+		135deg,
+		hsl(199 89% 38%),
+		hsl(172 66% 40%)
+	);
+	--gradient-hero: linear-gradient(135deg, hsl(210 40% 98%), hsl(210 40% 96%));
+	--gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
+	--gradient-glow: radial-gradient(
+		ellipse at center,
+		hsl(199 89% 48% / 0.1),
+		transparent 70%
+	);
+
+	--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.2);
+	--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.3);
+	--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.1);
+
+	--sidebar-background: 0 0% 98%;
+	--sidebar-foreground: 222 47% 11%;
+	--sidebar-primary: 199 89% 38%;
+	--sidebar-primary-foreground: 210 40% 98%;
+	--sidebar-accent: 210 40% 96%;
+	--sidebar-accent-foreground: 222 47% 11%;
+	--sidebar-border: 214 32% 91%;
+	--sidebar-ring: 199 89% 38%;
+}
+
+/* Map every design token to a Tailwind theme color so utilities like
+   `bg-background`, `text-muted-foreground`, `border-border` resolve and
+   support opacity modifiers (e.g. `bg-muted-foreground/30`). */
+@theme inline {
+	--color-background: hsl(var(--background));
+	--color-foreground: hsl(var(--foreground));
+
+	--color-card: hsl(var(--card));
+	--color-card-foreground: hsl(var(--card-foreground));
+
+	--color-popover: hsl(var(--popover));
+	--color-popover-foreground: hsl(var(--popover-foreground));
+
+	--color-primary: hsl(var(--primary));
+	--color-primary-foreground: hsl(var(--primary-foreground));
+
+	--color-secondary: hsl(var(--secondary));
+	--color-secondary-foreground: hsl(var(--secondary-foreground));
+
+	--color-muted: hsl(var(--muted));
+	--color-muted-foreground: hsl(var(--muted-foreground));
+
+	--color-accent: hsl(var(--accent));
+	--color-accent-foreground: hsl(var(--accent-foreground));
+
+	--color-destructive: hsl(var(--destructive));
+	--color-destructive-foreground: hsl(var(--destructive-foreground));
+
+	--color-success: hsl(var(--success));
+	--color-success-foreground: hsl(var(--success-foreground));
+
+	--color-warning: hsl(var(--warning));
+	--color-warning-foreground: hsl(var(--warning-foreground));
+
+	--color-border: hsl(var(--border));
+	--color-input: hsl(var(--input));
+	--color-ring: hsl(var(--ring));
+
+	/* Git Graph Colors */
+	--color-git-main: hsl(var(--git-main));
+	--color-git-feature: hsl(var(--git-feature));
+	--color-git-hotfix: hsl(var(--git-hotfix));
+	--color-git-develop: hsl(var(--git-develop));
+	--color-git-release: hsl(var(--git-release));
+	--color-git-node: hsl(var(--git-node));
+	--color-git-edge: hsl(var(--git-edge));
+	--color-git-head: hsl(var(--git-head));
+	--color-git-staged: hsl(var(--git-staged));
+	--color-git-modified: hsl(var(--git-modified));
+
+	/* Sidebar */
+	--color-sidebar-background: hsl(var(--sidebar-background));
+	--color-sidebar-foreground: hsl(var(--sidebar-foreground));
+	--color-sidebar-primary: hsl(var(--sidebar-primary));
+	--color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+	--color-sidebar-accent: hsl(var(--sidebar-accent));
+	--color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+	--color-sidebar-border: hsl(var(--sidebar-border));
+	--color-sidebar-ring: hsl(var(--sidebar-ring));
+
+	/* Border radius scale derived from --radius */
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+	--radius-2xl: calc(var(--radius) + 8px);
+
+	/* Animations (keyframes defined globally below) */
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+	--animate-slide-up: slide-up 0.5s ease-out;
+	--animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+	--animate-float: float 3s ease-in-out infinite;
+}
+
+@keyframes accordion-down {
+	from {
+		height: 0;
 	}
+	to {
+		height: var(--radix-accordion-content-height);
+	}
+}
 
-	.light {
-		--background: 210 40% 98%;
-		--foreground: 222 47% 11%;
+@keyframes accordion-up {
+	from {
+		height: var(--radix-accordion-content-height);
+	}
+	to {
+		height: 0;
+	}
+}
 
-		--card: 0 0% 100%;
-		--card-foreground: 222 47% 11%;
+@keyframes slide-up {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
 
-		--popover: 0 0% 100%;
-		--popover-foreground: 222 47% 11%;
+@keyframes pulse-glow {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.4));
+	}
+	50% {
+		filter: drop-shadow(0 0 25px hsl(var(--primary) / 0.7));
+	}
+}
 
-		--primary: 199 89% 38%;
-		--primary-foreground: 210 40% 98%;
-
-		--secondary: 210 40% 96%;
-		--secondary-foreground: 222 47% 11%;
-
-		--muted: 210 40% 96%;
-		--muted-foreground: 215 16% 47%;
-
-		--accent: 172 66% 40%;
-		--accent-foreground: 210 40% 98%;
-
-		--destructive: 0 84% 60%;
-		--destructive-foreground: 210 40% 98%;
-
-		--success: 142 76% 36%;
-		--success-foreground: 210 40% 98%;
-
-		--warning: 38 92% 50%;
-		--warning-foreground: 222 47% 11%;
-
-		--border: 214 32% 91%;
-		--input: 214 32% 91%;
-		--ring: 199 89% 38%;
-
-		--git-main: 199 89% 38%;
-		--git-feature: 280 68% 50%;
-		--git-node: 199 89% 38%;
-		--git-edge: 215 20% 65%;
-		--git-head: 172 66% 40%;
-
-		--gradient-primary: linear-gradient(
-			135deg,
-			hsl(199 89% 38%),
-			hsl(172 66% 40%)
-		);
-		--gradient-hero: linear-gradient(
-			135deg,
-			hsl(210 40% 98%),
-			hsl(210 40% 96%)
-		);
-		--gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
-		--gradient-glow: radial-gradient(
-			ellipse at center,
-			hsl(199 89% 48% / 0.1),
-			transparent 70%
-		);
-
-		--shadow-glow: 0 0 30px hsl(199 89% 48% / 0.2);
-		--shadow-node: 0 4px 20px hsl(199 89% 48% / 0.3);
-		--shadow-card: 0 4px 24px hsl(0 0% 0% / 0.1);
-
-		--sidebar-background: 0 0% 98%;
-		--sidebar-foreground: 222 47% 11%;
-		--sidebar-primary: 199 89% 38%;
-		--sidebar-primary-foreground: 210 40% 98%;
-		--sidebar-accent: 210 40% 96%;
-		--sidebar-accent-foreground: 222 47% 11%;
-		--sidebar-border: 214 32% 91%;
-		--sidebar-ring: 199 89% 38%;
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-10px);
 	}
 }
 
@@ -167,8 +288,8 @@
 	}
 
 	body {
-		@apply bg-background text-foreground antialiased;
 		font-family: "Inter", system-ui, -apple-system, sans-serif;
+		@apply bg-background text-foreground antialiased;
 	}
 
 	/* Custom scrollbar */
@@ -192,8 +313,8 @@
 
 @layer components {
 	.git-node {
-		@apply cursor-pointer transition-all duration-200;
 		filter: drop-shadow(var(--shadow-node));
+		@apply cursor-pointer transition-all duration-200;
 	}
 
 	.git-node:hover {
@@ -202,28 +323,28 @@
 	}
 
 	.git-edge {
+		fill: none;
 		stroke: hsl(var(--git-edge));
 		stroke-width: 2.5;
-		fill: none;
 		stroke-linecap: round;
 	}
 
 	.git-head-badge {
-		@apply px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider;
-		background: hsl(var(--git-head));
 		color: hsl(var(--background));
+		background: hsl(var(--git-head));
 		box-shadow: var(--shadow-glow);
+		@apply px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider;
 	}
 
 	.git-branch-badge {
-		@apply px-2 py-0.5 rounded-md text-xs font-semibold;
 		background: hsl(var(--secondary));
 		border: 1px solid hsl(var(--border));
+		@apply px-2 py-0.5 rounded-md text-xs font-semibold;
 	}
 
 	.terminal-input {
-		@apply font-mono text-sm bg-transparent border-none outline-none w-full;
 		caret-color: hsl(var(--primary));
+		@apply font-mono text-sm bg-transparent border-none outline-none w-full;
 	}
 
 	.terminal-prompt {
@@ -231,20 +352,20 @@
 	}
 
 	.file-card {
-		@apply p-3 rounded-lg border transition-all duration-200 cursor-pointer;
 		background: var(--gradient-card);
+		@apply p-3 rounded-lg border transition-all duration-200 cursor-pointer;
 	}
 
 	.file-card:hover {
-		@apply border-primary/50;
 		box-shadow: var(--shadow-glow);
+		@apply border-primary/50;
 	}
 
 	.level-badge {
-		@apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
-		background: hsl(var(--primary) / 0.15);
 		color: hsl(var(--primary));
+		background: hsl(var(--primary) / 0.15);
 		border: 1px solid hsl(var(--primary) / 0.3);
+		@apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium;
 	}
 
 	.glow-text {
@@ -252,83 +373,38 @@
 	}
 
 	.gradient-text {
+		-webkit-text-fill-color: transparent;
 		background: var(--gradient-primary);
 		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
 		background-clip: text;
-	}
-}
-
-@layer utilities {
-	.animate-pulse-glow {
-		animation: pulse-glow 2s ease-in-out infinite;
-	}
-
-	.animate-float {
-		animation: float 3s ease-in-out infinite;
-	}
-
-	.animate-slide-up {
-		animation: slide-up 0.5s ease-out;
-	}
-
-	@keyframes pulse-glow {
-		0%,
-		100% {
-			filter: drop-shadow(0 0 10px hsl(var(--primary) / 0.4));
-		}
-		50% {
-			filter: drop-shadow(0 0 25px hsl(var(--primary) / 0.7));
-		}
-	}
-
-	@keyframes float {
-		0%,
-		100% {
-			transform: translateY(0);
-		}
-		50% {
-			transform: translateY(-10px);
-		}
-	}
-
-	@keyframes slide-up {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
 	}
 }
 
 /* Driver.js Custom Styling */
 .driver-popover.gitmaster-tour-popover {
-	@apply bg-card border-border text-foreground rounded-xl p-6;
+	max-width: 350px;
 	background: var(--gradient-card);
 	border-width: 1px;
 	box-shadow:
 		var(--shadow-card),
 		0 0 20px rgba(0, 0, 0, 0.4);
-	max-width: 350px;
+	@apply bg-card border-border text-foreground rounded-xl p-6;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-title {
-	@apply font-bold text-lg mb-2;
-	color: hsl(var(--foreground));
 	font-family: "Inter", sans-serif;
+	color: hsl(var(--foreground));
+	@apply font-bold text-lg mb-2;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-description {
-	@apply text-sm leading-relaxed mb-6;
 	color: hsl(var(--muted-foreground));
+	@apply text-sm leading-relaxed mb-6;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-progress-text {
-	@apply text-xs font-medium;
 	color: hsl(var(--primary) / 0.8);
+	@apply text-xs font-medium;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-arrow {
@@ -337,13 +413,13 @@
 
 .driver-popover.gitmaster-tour-popover .driver-popover-next-btn,
 .driver-popover.gitmaster-tour-popover .driver-popover-prev-btn {
-	@apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 border-none shadow-none;
 	text-shadow: none;
+	@apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 border-none shadow-none;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-next-btn {
-	@apply bg-primary text-primary-foreground hover:opacity-90;
 	background: var(--gradient-primary);
+	@apply bg-primary text-primary-foreground hover:opacity-90;
 }
 
 .driver-popover.gitmaster-tour-popover .driver-popover-prev-btn {

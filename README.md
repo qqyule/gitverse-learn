@@ -1,9 +1,16 @@
 # GitMaster - 交互式 Git 学习平台
 
-> **本项目由阿里云 ESA 提供加速、计算和保护**
+> **MIT 开源协议 · 完全开源免费** · 由阿里云 ESA 提供加速、计算和保护
 
 <div align="center">
   <img src="https://img.alicdn.com/imgextra/i3/O1CN01H1UU3i1Cti9lYtFrs_!!6000000000139-2-tps-7534-844.png" alt="Logo" width="600" />
+</div>
+
+<div align="center">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Deploy to Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com/new)
+
 </div>
 
 > **探索 Git 的宇宙，从新手到大师的进阶之旅**
@@ -34,9 +41,9 @@
 
 - **Core Framework**:
 
-  - [Vite](https://vitejs.dev/) - 极速构建工具
-  - [React 18](https://react.dev/) - UI 核心库
-  - [TypeScript](https://www.typescriptlang.org/) - 类型安全保证
+  - [Vite](https://vitejs.dev/) - 极速构建工具 (v7)
+  - [React 19](https://react.dev/) - UI 核心库
+  - [TypeScript](https://www.typescriptlang.org/) - 类型安全保证 (v5.9)
 
 - **UI & Experience**:
 
@@ -72,7 +79,7 @@
 
 ### 1. 环境准备
 
-确保您的环境已安装 Node.js (推荐 v18+) 和 pnpm。
+确保您的环境已安装 Node.js (推荐 v22，见 `.nvmrc`) 和 pnpm。
 
 ### 2. 安装依赖
 
@@ -95,18 +102,17 @@ pnpm dev
 
 ## 📦 部署 (Deployment)
 
-本项目支持部署到所有现代静态托管平台（Vercel, Netlify, Github Pages, ESA Pages 等）。
+本项目通过 **GitHub Actions 全自动 CI/CD 部署到 Vercel**（推荐），同时也支持 Netlify / GitHub Pages / EdgeOne / 阿里云 ESA 等平台。
 
-1. **构建项目**:
+- **生产部署**：push 到 `main` 自动触发 `.github/workflows/deploy.yml` → 构建并发布到 Vercel 生产环境。
+- **预览部署**：每个 PR 自动触发 `.github/workflows/preview.yml` → 生成 Vercel 预览环境并在 PR 下留言预览链接。
+- 本地手动构建：
 
-   ```bash
-   pnpm build
-   ```
+  ```bash
+  pnpm build          # 输出到 dist/
+  ```
 
-   构建产物将输出到 `dist` 目录。
-
-2. **部署**:
-   - 将 `dist` 目录内容发布到您的静态 Web 服务器即可。
+> 详细配置（含 Vercel Token / Org ID / Project ID 的获取与 Secrets 设置）见 [DEPLOYMENT.md](./DEPLOYMENT.md)。
 
 ## 🤝 贡献说明
 
@@ -124,4 +130,4 @@ pnpm typecheck
 
 ## 📜 许可证 (License)
 
-MIT License
+本项目基于 [MIT License](./LICENSE) 开源，可自由用于学习、修改与分发。

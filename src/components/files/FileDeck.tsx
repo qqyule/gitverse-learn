@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
 import { FileEdit, FilePlus, FileText, Trash2 } from 'lucide-react'
-import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { staggerChildren } from '@/lib/animations'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 
@@ -13,13 +11,6 @@ interface FileDeckProps {
 
 export function FileDeck({ className, onFileClick }: FileDeckProps) {
 	const { workingDirectory, stagingArea, add, modifyFile } = useGitStore()
-	const listRef = useRef<HTMLDivElement>(null)
-
-	useEffect(() => {
-		if (listRef.current) {
-			staggerChildren(listRef.current.children)
-		}
-	}, []) // Re-animate when files change
 
 	const { t } = useTranslation()
 
@@ -28,13 +19,13 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 	const getStatusIcon = (status: string) => {
 		switch (status) {
 			case 'staged':
-				return <FilePlus className="w-4 h-4 text-success" />
+				return <FilePlus className="h-4 w-4 text-success" />
 			case 'modified':
-				return <FileEdit className="w-4 h-4 text-warning" />
+				return <FileEdit className="h-4 w-4 text-warning" />
 			case 'deleted':
-				return <Trash2 className="w-4 h-4 text-destructive" />
+				return <Trash2 className="h-4 w-4 text-destructive" />
 			default:
-				return <FileText className="w-4 h-4 text-muted-foreground" />
+				return <FileText className="h-4 w-4 text-muted-foreground" />
 		}
 	}
 
@@ -61,72 +52,84 @@ export function FileDeck({ className, onFileClick }: FileDeckProps) {
 
 	return (
 		<div className={cn('space-y-2', className)}>
-			<div className="flex items-center justify-between mb-4">
-				<h3 className="text-sm font-medium text-muted-foreground">{t('file.workingDirectory')}</h3>
+			<div className="mb-4 flex items-center justify-between">
+				<h3 className="font-medium text-muted-foreground text-sm">{t('file.workingDirectory')}</h3>
 				{files.some(([_, f]) => f.status === 'modified') && (
 					<button
-						type="button"
+						className="text-primary text-xs transition-colors hover:text-primary/80"
 						onClick={() => add('all')}
-						className="text-xs text-primary hover:text-primary/80 transition-colors"
+						type="button"
 					>
 						{t('file.stageAll')}
 					</button>
 				)}
 			</div>
 
-			<div ref={listRef} className="grid gap-2">
-				{files.map(([path, file]) => (
-					<div
+			<div className="grid gap-2">
+				{files.map(([path, file], index) => (
+					<motion.div
+						animate={{ opacity: 1, y: 0 }}
+						className={cn(
+							'file-card flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors',
+							getStatusColor(file.status)
+						)}
+						initial={{ opacity: 0, y: 20 }}
 						key={path}
-						style={{ opacity: 0 }} // Initial state for animejs
 						onClick={() => {
 							if (file.status === 'unmodified') {
 								modifyFile(path)
 							}
 							onFileClick?.(path)
 						}}
-						className={cn(
-							'file-card flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
-							getStatusColor(file.status)
-						)}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								if (file.status === 'unmodified') {
+									modifyFile(path)
+								}
+								onFileClick?.(path)
+							}
+						}}
+						role="button"
+						tabIndex={0}
+						transition={{ delay: index * 0.08, duration: 0.4, ease: 'easeOut' }}
 					>
 						{getStatusIcon(file.status)}
-						<div className="flex-1 min-w-0">
-							<p className="text-sm font-medium truncate text-foreground">{path}</p>
-							<p className="text-xs text-muted-foreground capitalize">{file.status}</p>
+						<div className="min-w-0 flex-1">
+							<p className="truncate font-medium text-foreground text-sm">{path}</p>
+							<p className="text-muted-foreground text-xs capitalize">{file.status}</p>
 						</div>
 						{file.status === 'modified' && (
 							<button
-								type="button"
+								className="rounded border border-border bg-background px-2 py-1 text-foreground text-xs transition-colors hover:bg-accent"
 								onClick={(e) => {
 									e.stopPropagation()
 									add([path])
 								}}
-								className="text-xs px-2 py-1 rounded bg-background border border-border hover:bg-accent transition-colors text-foreground"
+								type="button"
 							>
 								{t('file.stage')}
 							</button>
 						)}
-					</div>
+					</motion.div>
 				))}
 			</div>
 
 			{/* Staging Area */}
 			{Object.keys(stagingArea).length > 0 && (
 				<div className="mt-6">
-					<h3 className="text-sm font-medium text-muted-foreground mb-2">
+					<h3 className="mb-2 font-medium text-muted-foreground text-sm">
 						{t('file.stagingArea')}
 					</h3>
 					<div className="grid gap-2">
-						{Object.entries(stagingArea).map(([path, file]) => (
+						{Object.entries(stagingArea).map(([path]) => (
 							<motion.div
-								key={`staged-${path}`}
-								initial={{ opacity: 0, y: 10 }}
 								animate={{ opacity: 1, y: 0 }}
-								className="flex items-center gap-3 p-3 rounded-lg border border-success/50 bg-success/10"
+								className="flex items-center gap-3 rounded-lg border border-success/50 bg-success/10 p-3"
+								initial={{ opacity: 0, y: 10 }}
+								key={`staged-${path}`}
 							>
-								<FilePlus className="w-4 h-4 text-success" />
-								<p className="text-sm font-medium text-foreground">{path}</p>
+								<FilePlus className="h-4 w-4 text-success" />
+								<p className="font-medium text-foreground text-sm">{path}</p>
 							</motion.div>
 						))}
 					</div>

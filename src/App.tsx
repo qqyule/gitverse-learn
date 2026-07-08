@@ -18,10 +18,10 @@ const App = () => (
 				<Sonner />
 				<HashRouter>
 					<Routes>
-						<Route path="/" element={<Index />} />
-						<Route path="/learn/:levelId" element={<LearnPage />} />
+						<Route element={<Index />} path="/" />
+						<Route element={<LearnPage />} path="/learn/:levelId" />
 						{/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-						<Route path="*" element={<NotFound />} />
+						<Route element={<NotFound />} path="*" />
 					</Routes>
 				</HashRouter>
 			</TooltipProvider>

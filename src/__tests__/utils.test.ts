@@ -8,7 +8,7 @@ describe('utils', () => {
 		})
 
 		it('should handle conditional classes', () => {
-			expect(cn('c-1', true && 'c-2', false && 'c-3')).toBe('c-1 c-2')
+			expect(cn('c-1', 'c-2', false)).toBe('c-1 c-2')
 		})
 
 		it('should handle objects', () => {

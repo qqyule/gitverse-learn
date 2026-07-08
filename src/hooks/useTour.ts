@@ -34,14 +34,14 @@ interface UseTourOptions {
 }
 
 interface UseTourReturn {
-	/** 开始引导 */
-	startTour: () => void
-	/** 停止引导 */
-	stopTour: () => void
 	/** 引导是否正在进行 */
 	isActive: boolean
 	/** 是否为首次访问 */
 	isFirstVisit: boolean
+	/** 开始引导 */
+	startTour: () => void
+	/** 停止引导 */
+	stopTour: () => void
 }
 
 /**
@@ -50,7 +50,7 @@ interface UseTourReturn {
  */
 export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 	const { autoStart = true, autoStartDelay = 800 } = options
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
 	const [isActive, setIsActive] = useState(false)
 	const [firstVisit, setFirstVisit] = useState(false)
 	const driverRef = useRef<Driver | null>(null)
@@ -63,17 +63,17 @@ export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 			// 欢迎步骤（无元素高亮）
 			{
 				popover: {
-					title: t('tour.welcome.title'),
 					description: t('tour.welcome.description'),
+					title: t('tour.welcome.title'),
 				},
 			},
 			// 功能区域步骤
 			...tourSteps.map((step) => ({
 				element: step.element,
 				popover: {
-					title: t(`${step.i18nKey}.title`),
 					description: t(`${step.i18nKey}.description`),
 					side: step.popoverPosition as 'top' | 'bottom' | 'left' | 'right',
+					title: t(`${step.i18nKey}.title`),
 				},
 			})),
 		]
@@ -82,28 +82,30 @@ export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 	/**
 	 * 创建 driver 实例
 	 */
-	const createDriver = useCallback((): Driver => {
-		return driver({
-			showProgress: true,
-			animate: true,
-			smoothScroll: true,
-			allowClose: true,
-			overlayColor: 'rgba(0, 0, 0, 0.75)',
-			stagePadding: 8,
-			stageRadius: 8,
-			popoverClass: 'gitmaster-tour-popover',
-			progressText: '{{current}} / {{total}}',
-			nextBtnText: t('tour.buttons.next'),
-			prevBtnText: t('tour.buttons.prev'),
-			doneBtnText: t('tour.buttons.done'),
-			onDestroyed: () => {
-				setIsActive(false)
-				markTourCompleted()
-				setFirstVisit(false)
-			},
-			steps: generateSteps(),
-		})
-	}, [generateSteps, t])
+	const createDriver = useCallback(
+		(): Driver =>
+			driver({
+				allowClose: true,
+				animate: true,
+				doneBtnText: t('tour.buttons.done'),
+				nextBtnText: t('tour.buttons.next'),
+				onDestroyed: () => {
+					setIsActive(false)
+					markTourCompleted()
+					setFirstVisit(false)
+				},
+				overlayColor: 'rgba(0, 0, 0, 0.75)',
+				popoverClass: 'gitmaster-tour-popover',
+				prevBtnText: t('tour.buttons.prev'),
+				progressText: '{{current}} / {{total}}',
+				showProgress: true,
+				smoothScroll: true,
+				stagePadding: 8,
+				stageRadius: 8,
+				steps: generateSteps(),
+			}),
+		[generateSteps, t]
+	)
 
 	/**
 	 * 开始引导
@@ -160,19 +162,20 @@ export const useTour = (options: UseTourOptions = {}): UseTourReturn => {
 	}, [createDriver, isActive])
 
 	// 清理
-	useEffect(() => {
-		return () => {
+	useEffect(
+		() => () => {
 			if (driverRef.current) {
 				driverRef.current.destroy()
 			}
-		}
-	}, [])
+		},
+		[]
+	)
 
 	return {
-		startTour,
-		stopTour,
 		isActive,
 		isFirstVisit: firstVisit,
+		startTour,
+		stopTour,
 	}
 }
 

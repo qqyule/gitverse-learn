@@ -13,6 +13,17 @@ i18n
 	.use(LanguageDetector)
 	.use(initReactI18next)
 	.init({
+		debug: import.meta.env.DEV,
+		detection: {
+			caches: ['localStorage'],
+			lookupLocalStorage: 'i18n-language',
+			// 语言检测顺序：localStorage > navigator
+			order: ['localStorage', 'navigator'],
+		},
+		fallbackLng: 'en',
+		interpolation: {
+			escapeValue: false, // React 已经处理 XSS
+		},
 		resources: {
 			en: {
 				translation: enTranslation,
@@ -20,17 +31,6 @@ i18n
 			'zh-CN': {
 				translation: zhCNTranslation,
 			},
-		},
-		fallbackLng: 'en',
-		debug: import.meta.env.DEV,
-		interpolation: {
-			escapeValue: false, // React 已经处理 XSS
-		},
-		detection: {
-			// 语言检测顺序：localStorage > navigator
-			order: ['localStorage', 'navigator'],
-			caches: ['localStorage'],
-			lookupLocalStorage: 'i18n-language',
 		},
 	})
 

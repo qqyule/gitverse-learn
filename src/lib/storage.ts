@@ -6,14 +6,14 @@ export const saveLevelState = (levelId: string, state: Partial<GitStore>) => {
 	try {
 		// Only save the data parts of the state, not functions
 		const stateToSave = {
-			commits: state.commits,
 			branches: state.branches,
-			tags: state.tags,
-			HEAD: state.HEAD,
-			stagingArea: state.stagingArea,
-			workingDirectory: state.workingDirectory,
 			commandHistory: state.commandHistory,
+			commits: state.commits,
+			HEAD: state.HEAD,
 			lastOutput: state.lastOutput,
+			stagingArea: state.stagingArea,
+			tags: state.tags,
+			workingDirectory: state.workingDirectory,
 		}
 		localStorage.setItem(`${STORAGE_PREFIX}${levelId}`, JSON.stringify(stateToSave))
 	} catch (error) {

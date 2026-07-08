@@ -3,9 +3,7 @@ import { immer } from 'zustand/middleware/immer'
 import type { Branch, FileEntry, FileStructure, GitCommit, GitHash, GitStore } from '@/types/git'
 
 // Utility to generate short hash
-const generateHash = (): GitHash => {
-	return Math.random().toString(36).substring(2, 9)
-}
+const generateHash = (): GitHash => Math.random().toString(36).slice(2, 9)
 
 // Branch colors
 const BRANCH_COLORS = [
@@ -20,57 +18,25 @@ const BRANCH_COLORS = [
 let colorIndex = 0
 const getNextColor = (): string => {
 	const color = BRANCH_COLORS[colorIndex % BRANCH_COLORS.length]
-	colorIndex++
+	colorIndex += 1
 	return color
 }
 
 // Initial state
 const createInitialState = () => ({
-	commits: {} as Record<GitHash, GitCommit>,
 	branches: {} as Record<string, Branch>,
-	tags: {} as Record<string, GitHash>,
-	HEAD: { type: 'branch' as const, ref: 'main' },
-	stagingArea: {} as FileStructure,
-	workingDirectory: {} as FileStructure,
 	commandHistory: [] as string[],
+	commits: {} as Record<GitHash, GitCommit>,
+	HEAD: { ref: 'main', type: 'branch' as const },
 	lastOutput: '',
+	stagingArea: {} as FileStructure,
+	tags: {} as Record<string, GitHash>,
+	workingDirectory: {} as FileStructure,
 })
 
 export const useGitStore = create<GitStore>()(
 	immer((set, get) => ({
 		...createInitialState(),
-
-		init: () => {
-			set((state) => {
-				const hash = generateHash()
-				const initialFile: FileEntry = {
-					path: 'README.md',
-					content: '# My Project\n\nWelcome to my Git repository!',
-					status: 'unmodified',
-				}
-
-				const initialCommit: GitCommit = {
-					hash,
-					parents: [],
-					message: 'Initial commit',
-					author: 'You',
-					timestamp: Date.now(),
-					tree: { 'README.md': { ...initialFile } },
-				}
-
-				state.commits[hash] = initialCommit
-				state.branches.main = {
-					name: 'main',
-					headCommitHash: hash,
-					color: BRANCH_COLORS[0],
-				}
-				state.HEAD = { type: 'branch', ref: 'main' }
-				state.workingDirectory = { 'README.md': { ...initialFile } }
-				state.stagingArea = {}
-				state.lastOutput = 'Initialized empty Git repository'
-				state.commandHistory.push('git init')
-			})
-		},
 
 		add: (files) => {
 			set((state) => {
@@ -89,23 +55,63 @@ export const useGitStore = create<GitStore>()(
 			})
 		},
 
-		modifyFile: (path, content) => {
+		branch: (name) => {
+			const state = get()
+
+			if (state.branches[name]) {
+				set((s) => {
+					s.lastOutput = `fatal: A branch named '${name}' already exists`
+				})
+				return false
+			}
+
 			set((state) => {
-				const file = state.workingDirectory[path]
-				if (!file) return
+				const currentCommitHash =
+					state.HEAD.type === 'branch'
+						? state.branches[state.HEAD.ref].headCommitHash
+						: state.HEAD.ref
 
-				if (content !== undefined) {
-					state.workingDirectory[path].content = content
-				} else {
-					state.workingDirectory[path].content += '\n// Modified'
+				state.branches[name] = {
+					color: getNextColor(),
+					headCommitHash: currentCommitHash,
+					name,
 				}
 
-				if (file.status !== 'added') {
-					state.workingDirectory[path].status = 'modified'
-				}
-
-				state.lastOutput = `Modified file: ${path}`
+				state.lastOutput = `Created branch '${name}'`
+				state.commandHistory.push(`git branch ${name}`)
 			})
+
+			return true
+		},
+
+		checkout: (ref) => {
+			set((state) => {
+				// Check if it's a branch
+				if (state.branches[ref]) {
+					state.HEAD = { ref, type: 'branch' }
+					const branch = state.branches[ref]
+					const commit = state.commits[branch.headCommitHash]
+					if (commit) {
+						state.workingDirectory = JSON.parse(JSON.stringify(commit.tree))
+					}
+					state.lastOutput = `Switched to branch '${ref}'`
+				}
+				// Check if it's a commit hash
+				else if (state.commits[ref]) {
+					state.HEAD = { ref, type: 'detached' }
+					const commit = state.commits[ref]
+					state.workingDirectory = JSON.parse(JSON.stringify(commit.tree))
+					state.lastOutput = `HEAD is now at ${ref.slice(0, 7)} (detached)`
+				} else {
+					state.lastOutput = `error: pathspec '${ref}' did not match any file(s) known to git`
+					return
+				}
+
+				state.stagingArea = {}
+				state.commandHistory.push(`git checkout ${ref}`)
+			})
+
+			return true
 		},
 
 		commit: (message) => {
@@ -132,10 +138,10 @@ export const useGitStore = create<GitStore>()(
 				})
 
 				const newCommit: GitCommit = {
-					hash,
-					parents: parentHash ? [parentHash] : [],
-					message,
 					author: 'You',
+					hash,
+					message,
+					parents: parentHash ? [parentHash] : [],
 					timestamp: Date.now(),
 					tree: newTree,
 				}
@@ -160,214 +166,6 @@ export const useGitStore = create<GitStore>()(
 			})
 
 			return true
-		},
-
-		checkout: (ref) => {
-			set((state) => {
-				// Check if it's a branch
-				if (state.branches[ref]) {
-					state.HEAD = { type: 'branch', ref }
-					const branch = state.branches[ref]
-					const commit = state.commits[branch.headCommitHash]
-					if (commit) {
-						state.workingDirectory = JSON.parse(JSON.stringify(commit.tree))
-					}
-					state.lastOutput = `Switched to branch '${ref}'`
-				}
-				// Check if it's a commit hash
-				else if (state.commits[ref]) {
-					state.HEAD = { type: 'detached', ref }
-					const commit = state.commits[ref]
-					state.workingDirectory = JSON.parse(JSON.stringify(commit.tree))
-					state.lastOutput = `HEAD is now at ${ref.slice(0, 7)} (detached)`
-				} else {
-					state.lastOutput = `error: pathspec '${ref}' did not match any file(s) known to git`
-					return
-				}
-
-				state.stagingArea = {}
-				state.commandHistory.push(`git checkout ${ref}`)
-			})
-
-			return true
-		},
-
-		branch: (name) => {
-			const state = get()
-
-			if (state.branches[name]) {
-				set((s) => {
-					s.lastOutput = `fatal: A branch named '${name}' already exists`
-				})
-				return false
-			}
-
-			set((state) => {
-				const currentCommitHash =
-					state.HEAD.type === 'branch'
-						? state.branches[state.HEAD.ref].headCommitHash
-						: state.HEAD.ref
-
-				state.branches[name] = {
-					name,
-					headCommitHash: currentCommitHash,
-					color: getNextColor(),
-				}
-
-				state.lastOutput = `Created branch '${name}'`
-				state.commandHistory.push(`git branch ${name}`)
-			})
-
-			return true
-		},
-
-		merge: (sourceBranch) => {
-			const state = get()
-			const sourceBranchObj = state.branches[sourceBranch]
-
-			if (!sourceBranchObj) {
-				set((s) => {
-					s.lastOutput = `fatal: '${sourceBranch}' is not a valid branch`
-				})
-				return { success: false, conflict: false }
-			}
-
-			if (state.HEAD.type !== 'branch') {
-				set((s) => {
-					s.lastOutput = 'Cannot merge into detached HEAD state'
-				})
-				return { success: false, conflict: false }
-			}
-
-			set((state) => {
-				const targetBranch = state.branches[state.HEAD.ref]
-				const sourceCommit = state.commits[sourceBranchObj.headCommitHash]
-				const targetCommit = state.commits[targetBranch.headCommitHash]
-
-				// Check for fast-forward possibility
-				let canFastForward = false
-				let current = sourceCommit
-				while (current) {
-					if (current.hash === targetBranch.headCommitHash) {
-						canFastForward = true
-						break
-					}
-					current = current.parents[0]
-						? state.commits[current.parents[0]]
-						: (undefined as unknown as GitCommit)
-				}
-
-				if (canFastForward) {
-					// Fast-forward merge
-					targetBranch.headCommitHash = sourceBranchObj.headCommitHash
-					state.workingDirectory = JSON.parse(JSON.stringify(sourceCommit.tree))
-					state.lastOutput = `Fast-forward merge: ${state.HEAD.ref} -> ${sourceBranch}`
-				} else {
-					// Three-way merge (create merge commit)
-					const hash = generateHash()
-					const mergedTree: FileStructure = {
-						...JSON.parse(JSON.stringify(targetCommit.tree)),
-						...JSON.parse(JSON.stringify(sourceCommit.tree)),
-					}
-
-					const mergeCommit: GitCommit = {
-						hash,
-						parents: [targetBranch.headCommitHash, sourceBranchObj.headCommitHash],
-						message: `Merge branch '${sourceBranch}' into ${state.HEAD.ref}`,
-						author: 'You',
-						timestamp: Date.now(),
-						tree: mergedTree,
-					}
-
-					state.commits[hash] = mergeCommit
-					targetBranch.headCommitHash = hash
-					state.workingDirectory = JSON.parse(JSON.stringify(mergedTree))
-					state.lastOutput = `Merge made by the 'ort' strategy`
-				}
-
-				state.commandHistory.push(`git merge ${sourceBranch}`)
-			})
-
-			return { success: true, conflict: false }
-		},
-
-		reset: (mode, ref) => {
-			set((state) => {
-				const targetRef =
-					ref ||
-					(state.HEAD.type === 'branch'
-						? state.branches[state.HEAD.ref].headCommitHash
-						: state.HEAD.ref)
-
-				const targetCommit = state.commits[targetRef]
-				if (!targetCommit) {
-					state.lastOutput = `fatal: '${targetRef}' is not a valid commit`
-					return
-				}
-
-				// Find parent commit
-				const parentHash = targetCommit.parents[0]
-				if (!parentHash) {
-					state.lastOutput = 'Cannot reset: this is the root commit'
-					return
-				}
-
-				const parentCommit = state.commits[parentHash]
-
-				if (state.HEAD.type === 'branch') {
-					state.branches[state.HEAD.ref].headCommitHash = parentHash
-				}
-
-				if (mode === 'hard') {
-					state.workingDirectory = JSON.parse(JSON.stringify(parentCommit.tree))
-					state.stagingArea = {}
-					state.lastOutput = `HEAD is now at ${parentHash.slice(0, 7)}`
-				} else {
-					// Soft reset - keep changes in working directory
-					state.lastOutput = `Unstaged changes after reset:\n\t${Object.keys(
-						state.workingDirectory
-					).join('\n\t')}`
-				}
-
-				state.commandHistory.push(`git reset --${mode} HEAD~1`)
-			})
-
-			return true
-		},
-
-		log: () => {
-			const state = get()
-			const logs: GitCommit[] = []
-			let currentHash =
-				state.HEAD.type === 'branch'
-					? state.branches[state.HEAD.ref]?.headCommitHash
-					: state.HEAD.ref
-
-			while (currentHash && state.commits[currentHash]) {
-				logs.push(state.commits[currentHash])
-				currentHash = state.commits[currentHash].parents[0]
-			}
-
-			return logs
-		},
-
-		status: () => {
-			const state = get()
-			const staged: string[] = []
-			const modified: string[] = []
-			const untracked: string[] = []
-
-			Object.entries(state.workingDirectory).forEach(([path, file]) => {
-				if (file.status === 'staged') {
-					staged.push(path)
-				} else if (file.status === 'modified') {
-					modified.push(path)
-				} else if (file.status === 'added') {
-					untracked.push(path)
-				}
-			})
-
-			return { staged, modified, untracked }
 		},
 
 		executeCommand: (command) => {
@@ -469,7 +267,7 @@ export const useGitStore = create<GitStore>()(
 						if (status.untracked.length) {
 							output += `\nUntracked files:\n${status.untracked.map((f) => `  ${f}`).join('\n')}`
 						}
-						if (!status.staged.length && !status.modified.length && !status.untracked.length) {
+						if (!(status.staged.length || status.modified.length || status.untracked.length)) {
 							output += '\nnothing to commit, working tree clean'
 						}
 						s.lastOutput = output
@@ -509,16 +307,6 @@ export const useGitStore = create<GitStore>()(
 			return get().lastOutput
 		},
 
-		resetState: () => {
-			set(createInitialState())
-		},
-
-		loadScenario: (scenario) => {
-			set((state) => {
-				Object.assign(state, scenario)
-			})
-		},
-
 		getCurrentBranch: () => {
 			const state = get()
 			return state.HEAD.type === 'branch' ? state.HEAD.ref : null
@@ -531,6 +319,216 @@ export const useGitStore = create<GitStore>()(
 					? state.branches[state.HEAD.ref]?.headCommitHash
 					: state.HEAD.ref
 			return hash ? state.commits[hash] : null
+		},
+
+		init: () => {
+			set((state) => {
+				const hash = generateHash()
+				const initialFile: FileEntry = {
+					content: '# My Project\n\nWelcome to my Git repository!',
+					path: 'README.md',
+					status: 'unmodified',
+				}
+
+				const initialCommit: GitCommit = {
+					author: 'You',
+					hash,
+					message: 'Initial commit',
+					parents: [],
+					timestamp: Date.now(),
+					tree: { 'README.md': { ...initialFile } },
+				}
+
+				state.commits[hash] = initialCommit
+				state.branches.main = {
+					color: BRANCH_COLORS[0],
+					headCommitHash: hash,
+					name: 'main',
+				}
+				state.HEAD = { ref: 'main', type: 'branch' }
+				state.workingDirectory = { 'README.md': { ...initialFile } }
+				state.stagingArea = {}
+				state.lastOutput = 'Initialized empty Git repository'
+				state.commandHistory.push('git init')
+			})
+		},
+
+		loadScenario: (scenario) => {
+			set((state) => {
+				Object.assign(state, scenario)
+			})
+		},
+
+		log: () => {
+			const state = get()
+			const logs: GitCommit[] = []
+			let currentHash =
+				state.HEAD.type === 'branch'
+					? state.branches[state.HEAD.ref]?.headCommitHash
+					: state.HEAD.ref
+
+			while (currentHash && state.commits[currentHash]) {
+				logs.push(state.commits[currentHash])
+				currentHash = state.commits[currentHash].parents[0]
+			}
+
+			return logs
+		},
+
+		merge: (sourceBranch) => {
+			const state = get()
+			const sourceBranchObj = state.branches[sourceBranch]
+
+			if (!sourceBranchObj) {
+				set((s) => {
+					s.lastOutput = `fatal: '${sourceBranch}' is not a valid branch`
+				})
+				return { conflict: false, success: false }
+			}
+
+			if (state.HEAD.type !== 'branch') {
+				set((s) => {
+					s.lastOutput = 'Cannot merge into detached HEAD state'
+				})
+				return { conflict: false, success: false }
+			}
+
+			set((state) => {
+				const targetBranch = state.branches[state.HEAD.ref]
+				const sourceCommit = state.commits[sourceBranchObj.headCommitHash]
+				const targetCommit = state.commits[targetBranch.headCommitHash]
+
+				// Check for fast-forward possibility
+				let canFastForward = false
+				let current = sourceCommit
+				while (current) {
+					if (current.hash === targetBranch.headCommitHash) {
+						canFastForward = true
+						break
+					}
+					current = current.parents[0]
+						? state.commits[current.parents[0]]
+						: (undefined as unknown as GitCommit)
+				}
+
+				if (canFastForward) {
+					// Fast-forward merge
+					targetBranch.headCommitHash = sourceBranchObj.headCommitHash
+					state.workingDirectory = JSON.parse(JSON.stringify(sourceCommit.tree))
+					state.lastOutput = `Fast-forward merge: ${state.HEAD.ref} -> ${sourceBranch}`
+				} else {
+					// Three-way merge (create merge commit)
+					const hash = generateHash()
+					const mergedTree: FileStructure = {
+						...JSON.parse(JSON.stringify(targetCommit.tree)),
+						...JSON.parse(JSON.stringify(sourceCommit.tree)),
+					}
+
+					const mergeCommit: GitCommit = {
+						author: 'You',
+						hash,
+						message: `Merge branch '${sourceBranch}' into ${state.HEAD.ref}`,
+						parents: [targetBranch.headCommitHash, sourceBranchObj.headCommitHash],
+						timestamp: Date.now(),
+						tree: mergedTree,
+					}
+
+					state.commits[hash] = mergeCommit
+					targetBranch.headCommitHash = hash
+					state.workingDirectory = JSON.parse(JSON.stringify(mergedTree))
+					state.lastOutput = `Merge made by the 'ort' strategy`
+				}
+
+				state.commandHistory.push(`git merge ${sourceBranch}`)
+			})
+
+			return { conflict: false, success: true }
+		},
+
+		modifyFile: (path, content) => {
+			set((state) => {
+				const file = state.workingDirectory[path]
+				if (!file) return
+
+				if (content === undefined) {
+					state.workingDirectory[path].content += '\n// Modified'
+				} else {
+					state.workingDirectory[path].content = content
+				}
+
+				if (file.status !== 'added') {
+					state.workingDirectory[path].status = 'modified'
+				}
+
+				state.lastOutput = `Modified file: ${path}`
+			})
+		},
+
+		reset: (mode, ref) => {
+			set((state) => {
+				const targetRef =
+					ref ||
+					(state.HEAD.type === 'branch'
+						? state.branches[state.HEAD.ref].headCommitHash
+						: state.HEAD.ref)
+
+				const targetCommit = state.commits[targetRef]
+				if (!targetCommit) {
+					state.lastOutput = `fatal: '${targetRef}' is not a valid commit`
+					return
+				}
+
+				// Find parent commit
+				const parentHash = targetCommit.parents[0]
+				if (!parentHash) {
+					state.lastOutput = 'Cannot reset: this is the root commit'
+					return
+				}
+
+				const parentCommit = state.commits[parentHash]
+
+				if (state.HEAD.type === 'branch') {
+					state.branches[state.HEAD.ref].headCommitHash = parentHash
+				}
+
+				if (mode === 'hard') {
+					state.workingDirectory = JSON.parse(JSON.stringify(parentCommit.tree))
+					state.stagingArea = {}
+					state.lastOutput = `HEAD is now at ${parentHash.slice(0, 7)}`
+				} else {
+					// Soft reset - keep changes in working directory
+					state.lastOutput = `Unstaged changes after reset:\n\t${Object.keys(
+						state.workingDirectory
+					).join('\n\t')}`
+				}
+
+				state.commandHistory.push(`git reset --${mode} HEAD~1`)
+			})
+
+			return true
+		},
+
+		resetState: () => {
+			set(createInitialState())
+		},
+
+		status: () => {
+			const state = get()
+			const staged: string[] = []
+			const modified: string[] = []
+			const untracked: string[] = []
+
+			Object.entries(state.workingDirectory).forEach(([path, file]) => {
+				if (file.status === 'staged') {
+					staged.push(path)
+				} else if (file.status === 'modified') {
+					modified.push(path)
+				} else if (file.status === 'added') {
+					untracked.push(path)
+				}
+			})
+
+			return { modified, staged, untracked }
 		},
 	}))
 )

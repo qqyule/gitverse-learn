@@ -3,8 +3,8 @@ export type GitHash = string
 export type FileStatus = 'unmodified' | 'modified' | 'staged' | 'deleted' | 'added'
 
 export interface FileEntry {
-	path: string
 	content: string
+	path: string
 	status: FileStatus
 }
 
@@ -13,83 +13,97 @@ export interface FileStructure {
 }
 
 export interface GitCommit {
-	hash: GitHash
-	parents: GitHash[]
-	message: string
 	author: string
+	hash: GitHash
+	message: string
+	parents: GitHash[]
 	timestamp: number
 	tree: FileStructure
 }
 
 export interface Branch {
-	name: string
-	headCommitHash: GitHash
 	color: string
+	headCommitHash: GitHash
+	name: string
 }
 
 export interface HeadState {
-	type: 'branch' | 'detached'
 	ref: string
+	type: 'branch' | 'detached'
 }
 
 export interface GitState {
-	commits: Record<GitHash, GitCommit>
 	branches: Record<string, Branch>
-	tags: Record<string, GitHash>
-	HEAD: HeadState
-	stagingArea: FileStructure
-	workingDirectory: FileStructure
 	commandHistory: string[]
+	commits: Record<GitHash, GitCommit>
+	HEAD: HeadState
 	lastOutput: string
+	stagingArea: FileStructure
+	tags: Record<string, GitHash>
+	workingDirectory: FileStructure
 }
 
 export interface GitActions {
-	init: () => void
 	add: (files: string[] | 'all') => void
-	modifyFile: (path: string, content?: string) => void
-	commit: (message: string) => boolean
-	checkout: (ref: string) => boolean
 	branch: (name: string) => boolean
-	merge: (sourceBranch: string) => { success: boolean; conflict: boolean }
-	reset: (mode: 'soft' | 'hard', ref?: string) => boolean
-	log: () => GitCommit[]
-	status: () => { staged: string[]; modified: string[]; untracked: string[] }
+	checkout: (ref: string) => boolean
+	commit: (message: string) => boolean
 	executeCommand: (command: string) => string
-	resetState: () => void
-	loadScenario: (scenario: Partial<GitState>) => void
 	getCurrentBranch: () => string | null
 	getHeadCommit: () => GitCommit | null
+	init: () => void
+	loadScenario: (scenario: Partial<GitState>) => void
+	log: () => GitCommit[]
+	merge: (sourceBranch: string) => { success: boolean; conflict: boolean }
+	modifyFile: (path: string, content?: string) => void
+	reset: (mode: 'soft' | 'hard', ref?: string) => boolean
+	resetState: () => void
+	status: () => { staged: string[]; modified: string[]; untracked: string[] }
 }
 
 export type GitStore = GitState & GitActions
 
+export interface Level {
+	commands: string[]
+	description: string
+	goal: string
+	hints: string[]
+	id: string
+	phase: number
+	setup?: () => void
+	subtitle: string
+	title: string
+	titleZh: string
+	validation: (state: GitState) => boolean
+}
+
 // Graph visualization types
 export interface GraphNode {
-	id: GitHash
+	branches: string[]
+	color: string
 	commit: GitCommit
+	id: GitHash
+	isHead: boolean
+	lane: number
 	x: number
 	y: number
-	lane: number
-	color: string
-	branches: string[]
-	isHead: boolean
 }
 
 export interface GraphEdge {
+	color: string
 	id: string
+	isMerge: boolean
 	source: GitHash
-	target: GitHash
 	sourceX: number
 	sourceY: number
+	target: GitHash
 	targetX: number
 	targetY: number
-	color: string
-	isMerge: boolean
 }
 
 export interface GraphLayout {
-	nodes: GraphNode[]
 	edges: GraphEdge[]
-	width: number
 	height: number
+	nodes: GraphNode[]
+	width: number
 }

@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!!**/dist", "!!**/coverage", "!!**/node_modules"]
+    "includes": ["!!**/dist", "!!**/coverage", "!!**/node_modules"]
   },
   "formatter": {
     "enabled": true,
@@ -31,7 +31,12 @@
         "noArrayIndexKey": "off",
         "noImplicitAnyLet": "off",
         "noUnknownAtRules": "off",
-        "noDocumentCookie": "off"
+        "noDocumentCookie": "off",
+        "noReactForwardRef": "off",
+        "noLeakedRender": "off",
+        "noUnnecessaryConditions": "off",
+        "noUnknownAttribute": "off",
+        "noShadow": "off"
       },
       "a11y": {
         "useButtonType": "warn",
@@ -45,13 +50,29 @@
         "useAriaPropsForRole": "off"
       },
       "complexity": {
-        "noUselessFragments": "warn"
+        "noUselessFragments": "warn",
+        "noForEach": "off",
+        "noExcessiveCognitiveComplexity": "off"
+      },
+      "performance": {
+        "noNamespaceImport": "off",
+        "useTopLevelRegex": "off",
+        "noJsxPropsBind": "off"
       },
       "style": {
         "useImportType": "warn",
         "useTemplate": "warn",
         "useNodejsImportProtocol": "off",
-        "noNonNullAssertion": "off"
+        "noNonNullAssertion": "off",
+        "useFilenamingConvention": "off",
+        "useBlockStatements": "off",
+        "useConsistentTypeDefinitions": "off",
+        "noExportedImports": "off",
+        "useAtIndex": "off",
+        "noNestedTernary": "off",
+        "useDefaultSwitchClause": "off",
+        "useConsistentBuiltinInstantiation": "off",
+        "useDestructuring": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"

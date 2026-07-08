@@ -21,19 +21,20 @@ import { Terminal } from '@/components/terminal/Terminal'
 import { Button } from '@/components/ui/button'
 import { LanguageSwitch } from '@/components/ui/language-switch'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
-import { getLevelById, type Level, levels } from '@/data/levels'
+import { getLevelById, levels } from '@/data/levels'
 import { useToast } from '@/hooks/use-toast'
 import { restartTour, useTour } from '@/hooks/useTour'
 import { loadLevelState, saveLevelState } from '@/lib/storage'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 import { useProgressStore } from '@/store/progressStore'
+import type { Level } from '@/types/git'
 
 export default function LearnPage() {
 	const { levelId } = useParams<{ levelId: string }>()
 	const navigate = useNavigate()
 	const { toast } = useToast()
-	const { t, i18n } = useTranslation()
+	const { t } = useTranslation()
 
 	const [sidebarOpen, setSidebarOpen] = useState(true)
 	const [terminalExpanded, setTerminalExpanded] = useState(true)
@@ -42,9 +43,9 @@ export default function LearnPage() {
 	const [activeMobileTab, setActiveMobileTab] = useState<'terminal' | 'files'>('terminal')
 
 	const gitState = useGitStore()
-	const { init, resetState, loadScenario } = gitState
+	const { resetState, loadScenario } = gitState
 	const { markLevelCompleted, completedLevels } = useProgressStore()
-	const { startTour, isActive: isTourActive } = useTour({
+	const { startTour } = useTour({
 		autoStart: true,
 		autoStartDelay: 1000,
 	})
@@ -78,7 +79,7 @@ export default function LearnPage() {
 		(level: Level): string => {
 			const key = `levels.${level.id}.title`
 			const translated = t(key)
-			return translated !== key ? translated : level.title
+			return translated === key ? level.title : translated
 		},
 		[t]
 	)
@@ -90,16 +91,18 @@ export default function LearnPage() {
 			markLevelCompleted(currentLevel.id)
 			const title = getLevelTitle(currentLevel)
 			toast({
-				title: t('learn.levelComplete'),
 				description: t('learn.levelCompleteDesc', { title }),
+				title: t('learn.levelComplete'),
 			})
 		}
 	}, [gitState, currentLevel, showSuccess, toast, t, getLevelTitle, markLevelCompleted])
 
-	// Reset success state when level changes
+	// Reset success state when the level changes (not only on mount),
+	// otherwise the "Next Level" success button stays visible on later,
+	// not-yet-completed levels and lets the user skip ahead.
 	useEffect(() => {
 		setShowSuccess(false)
-	}, [])
+	}, [currentLevel.id])
 
 	const handleLevelSelect = (level: Level) => {
 		navigate(`/learn/${level.id}`)
@@ -126,16 +129,16 @@ export default function LearnPage() {
 		resetState()
 		setShowSuccess(false)
 		toast({
-			title: t('learn.resetTitle'),
 			description: t('learn.resetDesc'),
+			title: t('learn.resetTitle'),
 		})
 	}
 
 	const handleNodeClick = (hash: string) => {
 		gitState.checkout(hash)
 		toast({
-			title: t('learn.checkedOut'),
 			description: t('learn.headAt', { hash: hash.slice(0, 7) }),
+			title: t('learn.checkedOut'),
 		})
 	}
 
@@ -180,15 +183,18 @@ export default function LearnPage() {
 		}
 	}, [levelId])
 
-	// Enforce linear progression
+	// Enforce linear progression: if a level is reached without its predecessor
+	// being completed, send the user back to the first not-yet-completed level
+	// (the natural resume point) instead of always jumping to the first level.
 	useEffect(() => {
 		if (currentIndex > 0) {
 			const prevLevelId = levels[currentIndex - 1].id
 			if (!completedLevels.includes(prevLevelId)) {
-				navigate(`/learn/${levels[0].id}`, { replace: true })
+				const resumeLevel = levels.find((l) => !completedLevels.includes(l.id)) || levels[0]
+				navigate(`/learn/${resumeLevel.id}`, { replace: true })
 				toast({
-					title: t('common.locked'),
 					description: t('learn.levelLocked'),
+					title: t('common.locked'),
 					variant: 'destructive',
 				})
 			}
@@ -196,15 +202,15 @@ export default function LearnPage() {
 	}, [currentIndex, completedLevels, navigate, toast, t])
 
 	return (
-		<PageTransition className="flex h-screen w-full bg-background overflow-hidden relative">
+		<PageTransition className="relative flex h-screen w-full overflow-hidden bg-background">
 			{/* Mobile Sidebar Overlay */}
 			<AnimatePresence>
 				{sidebarOpen && window.innerWidth < 768 && (
 					<motion.div
-						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
 						className="absolute inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
+						exit={{ opacity: 0 }}
+						initial={{ opacity: 0 }}
 						onClick={() => setSidebarOpen(false)}
 					/>
 				)}
@@ -214,46 +220,46 @@ export default function LearnPage() {
 			<AnimatePresence mode="wait">
 				{sidebarOpen && (
 					<motion.div
-						initial={{ width: 0, opacity: 0, x: -320 }}
-						animate={{ width: 320, opacity: 1, x: 0 }}
-						exit={{ width: 0, opacity: 0, x: -320 }}
-						transition={{ duration: 0.2 }}
+						animate={{ opacity: 1, width: 320, x: 0 }}
 						className={cn(
-							'flex-shrink-0 h-full border-r border-border bg-sidebar z-50',
-							'absolute md:static top-0 left-0 shadow-xl md:shadow-none'
+							'z-50 h-full flex-shrink-0 border-border border-r bg-sidebar',
+							'absolute top-0 left-0 shadow-xl md:static md:shadow-none'
 						)}
+						exit={{ opacity: 0, width: 0, x: -320 }}
+						initial={{ opacity: 0, width: 0, x: -320 }}
+						transition={{ duration: 0.2 }}
 					>
 						<LevelSidebar
+							className="h-full w-80"
 							currentLevel={currentLevel}
-							onLevelSelect={handleLevelSelect}
-							onCommandClick={(cmd) => setTerminalInput(cmd)}
 							onClose={() => setSidebarOpen(false)}
-							className="w-80 h-full"
+							onCommandClick={(cmd) => setTerminalInput(cmd)}
+							onLevelSelect={handleLevelSelect}
 						/>
 					</motion.div>
 				)}
 			</AnimatePresence>
 
 			{/* Main Content */}
-			<div className="flex-1 flex flex-col min-w-0 h-full relative z-0">
+			<div className="relative z-0 flex h-full min-w-0 flex-1 flex-col">
 				{/* Top Bar */}
-				<header className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-border bg-card/50">
+				<header className="flex flex-shrink-0 items-center justify-between border-border border-b bg-card/50 px-4 py-3">
 					<div className="flex items-center gap-3">
-						<Button variant="ghost" size="icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
-							{sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+						<Button onClick={() => setSidebarOpen(!sidebarOpen)} size="icon" variant="ghost">
+							{sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
 						</Button>
 
 						<div className="flex items-center gap-2">
 							<Button
-								variant="ghost"
-								size="icon"
-								onClick={handlePrevLevel}
-								disabled={!hasPrev}
 								className="hidden sm:flex"
+								disabled={!hasPrev}
+								onClick={handlePrevLevel}
+								size="icon"
+								variant="ghost"
 							>
-								<ChevronLeft className="w-4 h-4" />
+								<ChevronLeft className="h-4 w-4" />
 							</Button>
-							<span className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+							<span className="whitespace-nowrap font-medium text-muted-foreground text-sm">
 								{t('common.level')} {currentIndex + 1}
 								<span className="hidden sm:inline">
 									{' '}
@@ -261,13 +267,13 @@ export default function LearnPage() {
 								</span>
 							</span>
 							<Button
-								variant="ghost"
-								size="icon"
-								onClick={handleNextLevel}
-								disabled={!hasNext}
 								className="hidden sm:flex"
+								disabled={!hasNext}
+								onClick={handleNextLevel}
+								size="icon"
+								variant="ghost"
 							>
-								<ChevronRight className="w-4 h-4" />
+								<ChevronRight className="h-4 w-4" />
 							</Button>
 						</div>
 					</div>
@@ -275,45 +281,45 @@ export default function LearnPage() {
 					<div className="flex items-center gap-2">
 						{showSuccess && hasNext && (
 							<motion.div
-								initial={{ scale: 0 }}
 								animate={{ scale: 1 }}
 								className="flex items-center gap-2"
+								initial={{ scale: 0 }}
 							>
-								<Button onClick={handleNextLevel} className="gap-2" size="sm">
-									<PartyPopper className="w-4 h-4" />
+								<Button className="gap-2" onClick={handleNextLevel} size="sm">
+									<PartyPopper className="h-4 w-4" />
 									<span className="hidden sm:inline">{t('learn.nextLevel')}</span>
-									<ChevronRight className="w-4 h-4 sm:hidden" />
+									<ChevronRight className="h-4 w-4 sm:hidden" />
 								</Button>
 							</motion.div>
 						)}
-						<Button variant="outline" size="sm" onClick={handleReset} className="hidden sm:flex">
-							<RotateCcw className="w-4 h-4 mr-2" />
+						<Button className="hidden sm:flex" onClick={handleReset} size="sm" variant="outline">
+							<RotateCcw className="mr-2 h-4 w-4" />
 							{t('learn.resetBtn')}
 						</Button>
-						<Button variant="outline" size="icon" onClick={handleReset} className="sm:hidden">
-							<RotateCcw className="w-4 h-4" />
+						<Button className="sm:hidden" onClick={handleReset} size="icon" variant="outline">
+							<RotateCcw className="h-4 w-4" />
 						</Button>
 						<div className="hidden sm:block">
 							<LanguageSwitch />
 						</div>
 						<Button
-							variant="ghost"
-							size="icon"
+							className="hidden sm:flex"
 							onClick={() => {
 								restartTour()
 								startTour()
 							}}
+							size="icon"
 							title={t('tour.buttons.restart')}
-							className="hidden sm:flex"
+							variant="ghost"
 						>
-							<HelpCircle className="w-4 h-4" />
+							<HelpCircle className="h-4 w-4" />
 						</Button>
 						<ThemeToggle />
 					</div>
 				</header>
 
 				{/* Graph Area */}
-				<div className="flex-1 relative overflow-hidden" data-tour="git-graph">
+				<div className="relative flex-1 overflow-hidden" data-tour="git-graph">
 					<div
 						className="absolute inset-0"
 						style={{
@@ -327,18 +333,18 @@ export default function LearnPage() {
 					<AnimatePresence>
 						{showSuccess && (
 							<motion.div
-								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
+								className="pointer-events-none absolute inset-0 flex items-center justify-center"
 								exit={{ opacity: 0 }}
-								className="absolute inset-0 pointer-events-none flex items-center justify-center"
+								initial={{ opacity: 0 }}
 							>
 								<motion.div
-									initial={{ scale: 0 }}
 									animate={{ scale: 1 }}
-									transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-									className="bg-success/20 backdrop-blur-sm rounded-full p-8"
+									className="rounded-full bg-success/20 p-8 backdrop-blur-sm"
+									initial={{ scale: 0 }}
+									transition={{ damping: 20, stiffness: 300, type: 'spring' }}
 								>
-									<PartyPopper className="w-16 h-16 text-success" />
+									<PartyPopper className="h-16 w-16 text-success" />
 								</motion.div>
 							</motion.div>
 						)}
@@ -346,69 +352,69 @@ export default function LearnPage() {
 				</div>
 
 				{/* Mobile Tab Switcher */}
-				<div className="md:hidden flex border-t border-border bg-card">
+				<div className="flex border-border border-t bg-card md:hidden">
 					<button
-						type="button"
 						className={cn(
-							'flex-1 p-3 text-sm font-medium flex items-center justify-center transition-colors',
+							'flex flex-1 items-center justify-center p-3 font-medium text-sm transition-colors',
 							activeMobileTab === 'terminal'
-								? 'bg-primary/10 text-primary border-b-2 border-primary'
+								? 'border-primary border-b-2 bg-primary/10 text-primary'
 								: 'text-muted-foreground hover:bg-muted/50'
 						)}
 						onClick={() => setActiveMobileTab('terminal')}
+						type="button"
 					>
-						<TerminalSquare className="w-4 h-4 inline-block mr-2" />
+						<TerminalSquare className="mr-2 inline-block h-4 w-4" />
 						Terminal
 					</button>
 					<button
-						type="button"
 						className={cn(
-							'flex-1 p-3 text-sm font-medium flex items-center justify-center transition-colors',
+							'flex flex-1 items-center justify-center p-3 font-medium text-sm transition-colors',
 							activeMobileTab === 'files'
-								? 'bg-primary/10 text-primary border-b-2 border-primary'
+								? 'border-primary border-b-2 bg-primary/10 text-primary'
 								: 'text-muted-foreground hover:bg-muted/50'
 						)}
 						onClick={() => setActiveMobileTab('files')}
+						type="button"
 					>
-						<FolderOpen className="w-4 h-4 inline-block mr-2" />
+						<FolderOpen className="mr-2 inline-block h-4 w-4" />
 						{t('learn.tabs.files')}
 					</button>
 				</div>
 
 				{/* Bottom Panel */}
-				<div className="flex-shrink-0 border-t border-border bg-card/50 flex h-64 md:h-64">
+				<div className="flex h-64 flex-shrink-0 border-border border-t bg-card/50 md:h-64">
 					{/* Terminal Section */}
 					<div
 						className={cn(
-							'flex flex-col min-w-0 transition-all duration-300',
-							'md:flex-[0.7] md:border-r md:border-border',
+							'flex min-w-0 flex-col transition-all duration-300',
+							'md:flex-[0.7] md:border-border md:border-r',
 							'w-full md:w-auto', // Mobile full width
 							activeMobileTab === 'terminal' ? 'flex' : 'hidden md:flex' // Mobile toggle
 						)}
 						data-tour="terminal"
 					>
 						<Terminal
-							className="border-0 rounded-none h-full flex-1"
-							isExpanded={terminalExpanded}
-							onToggle={() => setTerminalExpanded(!terminalExpanded)}
+							className="h-full flex-1 rounded-none border-0"
 							externalInput={terminalInput}
+							isExpanded={terminalExpanded}
 							onInputChange={setTerminalInput}
+							onToggle={() => setTerminalExpanded(!terminalExpanded)}
 						/>
 					</div>
 
 					{/* Files Section */}
 					<div
 						className={cn(
-							'flex flex-col min-w-0 bg-card transition-all duration-300',
+							'flex min-w-0 flex-col bg-card transition-all duration-300',
 							'md:flex-[0.3]',
 							'w-full md:w-auto', // Mobile full width
 							activeMobileTab === 'files' ? 'flex' : 'hidden md:flex' // Mobile toggle
 						)}
 						data-tour="files"
 					>
-						<div className="hidden md:flex items-center gap-2 px-4 py-2 border-b border-border bg-secondary/50 h-10">
-							<FolderOpen className="w-4 h-4 text-primary" />
-							<span className="text-sm font-medium">{t('learn.tabs.files')}</span>
+						<div className="hidden h-10 items-center gap-2 border-border border-b bg-secondary/50 px-4 py-2 md:flex">
+							<FolderOpen className="h-4 w-4 text-primary" />
+							<span className="font-medium text-sm">{t('learn.tabs.files')}</span>
 						</div>
 						<div className="flex-1 overflow-y-auto p-4">
 							<FileDeck />

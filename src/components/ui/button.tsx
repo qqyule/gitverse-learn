@@ -5,30 +5,30 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
 	{
+		defaultVariants: {
+			size: 'default',
+			variant: 'default',
+		},
 		variants: {
+			size: {
+				default: 'h-10 px-4 py-2',
+				icon: 'h-10 w-10',
+				lg: 'h-11 rounded-md px-8',
+				sm: 'h-9 rounded-md px-3',
+			},
 			variant: {
 				default:
 					'bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/25',
 				destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+				ghost: 'hover:bg-accent hover:text-accent-foreground',
+				glow: 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:bg-primary/90 hover:shadow-primary/50',
+				link: 'text-primary underline-offset-4 hover:underline',
 				outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-				ghost: 'hover:bg-accent hover:text-accent-foreground',
-				link: 'text-primary underline-offset-4 hover:underline',
 				success: 'bg-success text-success-foreground hover:bg-success/90',
-				glow: 'bg-primary text-primary-foreground shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:bg-primary/90',
 			},
-			size: {
-				default: 'h-10 px-4 py-2',
-				sm: 'h-9 rounded-md px-3',
-				lg: 'h-11 rounded-md px-8',
-				icon: 'h-10 w-10',
-			},
-		},
-		defaultVariants: {
-			variant: 'default',
-			size: 'default',
 		},
 	}
 )
@@ -44,7 +44,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		const Comp = asChild ? Slot : 'button'
 
 		const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-			if (!asChild && !props.disabled) {
+			if (!(asChild || props.disabled)) {
 				// 动态导入或直接调用，这里假设已经导入了
 				import('@/lib/animations').then(({ pulse }) => {
 					pulse(e.currentTarget)
@@ -55,9 +55,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 		return (
 			<Comp
-				className={cn(buttonVariants({ variant, size, className }))}
-				ref={ref}
+				className={cn(buttonVariants({ className, size, variant }))}
 				onClick={handleClick}
+				ref={ref}
 				{...props}
 			/>
 		)
