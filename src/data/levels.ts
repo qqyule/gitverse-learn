@@ -302,6 +302,53 @@ export const levels: Level[] = [
 		// (the previous validation wrongly reused level-8's reset --soft check).
 		validation: (state) => state.branches['next-chapter'] !== undefined,
 	},
+
+	// ============ Expansion（扩产示范）- 证明关卡框架可平滑扩展 ============
+	{
+		commands: ['git add', 'git commit'],
+		description:
+			'Committing is how you capture a snapshot. Practicing the commit loop builds muscle memory for daily work.',
+		goal: 'Make a commit using "git commit -m".',
+		hints: [
+			'Modify a file in the working directory',
+			'Run "git add ." to stage your change',
+			'Commit with "git commit -m "my change""',
+		],
+		id: 'level-13',
+		phase: 1,
+		subtitle: 'Genesis',
+		title: 'Commit Loop',
+		titleZh: '提交循环',
+		validation: (state) =>
+			Object.values(state.commits).length >= 2 &&
+			state.commandHistory.some((cmd: string) => cmd.includes('git commit')),
+	},
+	{
+		commands: ['git checkout -b', 'git commit'],
+		description:
+			'Isolated branches let you try ideas safely. Create a dedicated branch for experiments.',
+		goal: 'Create a branch named "dev" and make a commit on it.',
+		hints: ['Run "git checkout -b dev"', 'Make a change and commit it'],
+		id: 'level-14',
+		phase: 2,
+		subtitle: 'Multiverse',
+		title: 'Dev Branch',
+		titleZh: '开发分支',
+		validation: (state) => state.branches.dev !== undefined,
+	},
+	{
+		commands: ['git commit', 'git tag'],
+		description:
+			'Tags mark releases. A well-tagged history makes it easy to find important points later.',
+		goal: 'Create a tag named "v2.0" on the current commit.',
+		hints: ['Make sure you have at least one commit', 'Run "git tag v2.0"'],
+		id: 'level-15',
+		phase: 4,
+		subtitle: 'The Ensemble',
+		title: 'Release Marker',
+		titleZh: '发布标记',
+		validation: (state) => state.tags['v2.0'] !== undefined,
+	},
 ]
 
 export function getLevelById(id: string): Level | undefined {

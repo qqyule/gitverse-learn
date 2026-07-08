@@ -11,16 +11,19 @@ import {
 } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { SyllabusModal } from '@/components/home/SyllabusModal'
 import { PageTransition } from '@/components/layout/PageTransition'
 import { Button } from '@/components/ui/button'
 import { LanguageSwitch } from '@/components/ui/language-switch'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { communityLevels } from '@/data/community-levels'
+import { useUgcStore } from '@/store/ugcStore'
 
 export default function Index() {
 	const navigate = useNavigate()
 	const { t } = useTranslation()
+	const encodeShare = useUgcStore((s) => s.encodeShare)
 	const [showSyllabus, setShowSyllabus] = React.useState(false)
 
 	const features = [
@@ -234,6 +237,48 @@ export default function Index() {
 								<p className="text-muted-foreground text-sm">{feature.description}</p>
 							</motion.div>
 						))}
+					</div>
+				</div>
+			</section>
+
+			{/* Community Levels Section */}
+			<section className="bg-card/50 py-24">
+				<div className="container mx-auto px-6">
+					<motion.div
+						className="mb-16 text-center"
+						initial={{ opacity: 0, y: 20 }}
+						viewport={{ once: true }}
+						whileInView={{ opacity: 1, y: 0 }}
+					>
+						<h2 className="mb-4 font-bold text-3xl md:text-4xl">{t('home.community.title')}</h2>
+						<p className="mx-auto max-w-xl text-muted-foreground">{t('home.community.subtitle')}</p>
+					</motion.div>
+
+					<div className="grid gap-6 md:grid-cols-2">
+						{communityLevels.map((level) => (
+							<Link
+								className="group rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/50"
+								key={level.id}
+								to={`/shared?l=${encodeShare(level)}`}
+							>
+								<div className="mb-2 flex items-center justify-between">
+									<h3 className="font-semibold text-lg">{level.title}</h3>
+									<span className="rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
+										UGC
+									</span>
+								</div>
+								<p className="text-muted-foreground text-sm">{level.description}</p>
+								<p className="mt-3 text-muted-foreground text-xs">
+									@{level.author} · {t('home.community.play')}
+								</p>
+							</Link>
+						))}
+					</div>
+
+					<div className="mt-8 text-center">
+						<Button onClick={() => navigate('/editor')} variant="outline">
+							{t('home.community.create')}
+						</Button>
 					</div>
 				</div>
 			</section>

@@ -1,3 +1,5 @@
+import type { ValidationRule } from './level'
+
 export type GitHash = string
 
 export type FileStatus = 'unmodified' | 'modified' | 'staged' | 'deleted' | 'added'
@@ -64,17 +66,22 @@ export interface GitActions {
 export type GitStore = GitState & GitActions
 
 export interface Level {
+	author?: string
 	commands: string[]
 	description: string
 	goal: string
 	hints: string[]
 	id: string
+	isUgc?: boolean
 	phase: number
 	setup?: () => void
+	shareId?: string
 	subtitle: string
 	title: string
 	titleZh: string
 	validation: (state: GitState) => boolean
+	// 声明式校验规则（UGC 关卡必填；官方关卡可选，运行时优先于 validation）
+	validationRules?: ValidationRule[]
 }
 
 // Graph visualization types

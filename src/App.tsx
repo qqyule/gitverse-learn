@@ -5,9 +5,12 @@ import { Toaster as Sonner } from '@/components/ui/sonner'
 import { Toaster } from '@/components/ui/toaster'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import AccountPage from './pages/AccountPage'
+import EditorPage from './pages/EditorPage'
 import Index from './pages/Index'
+import LeaderboardPage from './pages/LeaderboardPage'
 import LearnPage from './pages/LearnPage'
 import NotFound from './pages/NotFound'
+import SharedLevelPage from './pages/SharedLevelPage'
 
 const queryClient = new QueryClient()
 
@@ -22,6 +25,9 @@ const App = () => (
 						<Route element={<Index />} path="/" />
 						<Route element={<LearnPage />} path="/learn/:levelId" />
 						<Route element={<AccountPage />} path="/account" />
+						<Route element={<EditorPage />} path="/editor" />
+						<Route element={<LeaderboardPage />} path="/leaderboard" />
+						<Route element={<SharedLevelPage />} path="/shared" />
 						{/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
 						<Route element={<NotFound />} path="*" />
 					</Routes>

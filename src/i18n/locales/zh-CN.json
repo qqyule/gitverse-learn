@@ -50,6 +50,12 @@
       "description": "从提交到复杂合并，开启你的学习之旅。很快成为 Git 专家。",
       "button": "开始旅程"
     },
+    "community": {
+      "create": "自己创建一个",
+      "play": "试玩",
+      "subtitle": "由社区创建的挑战，以链接形式分享，点开即可游玩。",
+      "title": "社区关卡"
+    },
     "footer": "为真正想理解 Git 的开发者打造"
   },
   "learn": {
@@ -294,5 +300,52 @@
       "done": "知道了！",
       "restart": "重新引导"
     }
+  },
+  "editor": {
+    "addRule": "添加规则",
+    "applyJson": "应用 JSON",
+    "author": "作者",
+    "clear": "清空",
+    "commands": "命令（每行一个）",
+    "description": "描述",
+    "draftSaved": "草稿已保存到本地。",
+    "export": "导出 JSON",
+    "goal": "目标",
+    "id": "关卡 ID",
+    "invalidJson": "无效的 JSON",
+    "jsonApplied": "JSON 已应用。",
+    "noRules": "还没有规则。至少添加一个来定义通关条件。",
+    "pageDescription": "创建并分享你自己的 Git 挑战。",
+    "pageTitle": "关卡编辑器",
+    "phase": "阶段",
+    "rules": "通关规则",
+    "rulesHint": "所有规则需同时满足（AND）。高级组合请用 JSON 模式。",
+    "saveDraft": "保存草稿",
+    "share": "复制分享链接",
+    "shareCopied": "分享链接已复制到剪贴板。",
+    "shareFailed": "无法复制分享链接。",
+    "subtitle": "副标题",
+    "title": "标题",
+    "titleZh": "标题（中文）",
+    "value": "值",
+    "visual": "可视化"
+  },
+  "leaderboard": {
+    "accuracy": "准确率",
+    "completed": "已完成",
+    "description": "按完成关卡数、速度与准确率排名的顶尖学习者。",
+    "soonNote": "实时聚合即将上线（依赖 M3 的云端后端）。",
+    "time": "用时",
+    "title": "排行榜",
+    "user": "用户"
+  },
+  "shared": {
+    "backToEditor": "返回编辑器",
+    "completed": "挑战完成！",
+    "edit": "打开编辑器",
+    "invalid": "无效的分享关卡",
+    "invalidDesc": "该分享链接已损坏或被篡改。",
+    "saveDraft": "保存到草稿",
+    "saved": "已保存"
   }
 }

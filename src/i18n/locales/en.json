@@ -50,6 +50,12 @@
       "description": "Start your journey from commits to complex merges. Become a Git expert in no time.",
       "button": "Begin Your Journey"
     },
+    "community": {
+      "create": "Create Your Own",
+      "play": "Play",
+      "subtitle": "Challenges built by the community, shared as links you can play instantly.",
+      "title": "Community Levels"
+    },
     "footer": "Built for developers who want to truly understand Git"
   },
   "learn": {
@@ -294,5 +300,52 @@
       "done": "Got it!",
       "restart": "Restart Tour"
     }
+  },
+  "editor": {
+    "addRule": "Add Rule",
+    "applyJson": "Apply JSON",
+    "author": "Author",
+    "clear": "Clear",
+    "commands": "Commands (one per line)",
+    "description": "Description",
+    "draftSaved": "Draft saved locally.",
+    "export": "Export JSON",
+    "goal": "Goal",
+    "id": "Level ID",
+    "invalidJson": "Invalid JSON",
+    "jsonApplied": "JSON applied.",
+    "noRules": "No rules yet. Add at least one to define completion.",
+    "pageDescription": "Create and share your own Git challenges.",
+    "pageTitle": "Level Editor",
+    "phase": "Phase",
+    "rules": "Completion Rules",
+    "rulesHint": "All rules must be satisfied (AND). Use JSON mode for advanced combinators.",
+    "saveDraft": "Save Draft",
+    "share": "Copy Share Link",
+    "shareCopied": "Share link copied to clipboard.",
+    "shareFailed": "Could not copy share link.",
+    "subtitle": "Subtitle",
+    "title": "Title",
+    "titleZh": "Title (中文)",
+    "value": "Value",
+    "visual": "Visual"
+  },
+  "leaderboard": {
+    "accuracy": "Accuracy",
+    "completed": "Completed",
+    "description": "Top learners by levels completed, speed, and accuracy.",
+    "soonNote": "Live aggregation is coming soon (requires the cloud backend from M3).",
+    "time": "Time",
+    "title": "Leaderboard",
+    "user": "User"
+  },
+  "shared": {
+    "backToEditor": "Back to Editor",
+    "completed": "Challenge complete!",
+    "edit": "Open Editor",
+    "invalid": "Invalid shared level",
+    "invalidDesc": "This share link is broken or tampered with.",
+    "saveDraft": "Save to Drafts",
+    "saved": "Saved"
   }
 }
