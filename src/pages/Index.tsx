@@ -89,7 +89,8 @@ export default function Index() {
 					))}
 
 					{/* Decorative git graph lines */}
-					<svg className="absolute inset-0 h-full w-full opacity-20">
+					<svg className="absolute inset-0 h-full w-full opacity-20" role="img">
+						<title>Decorative animated git graph</title>
 						<motion.path
 							animate={{ pathLength: 1 }}
 							d="M 100 200 Q 200 100 300 200 T 500 200"

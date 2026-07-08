@@ -74,9 +74,11 @@ export function GitGraphSvg({ className, onNodeClick }: GitGraphSvgProps) {
 	return (
 		<div className={cn('overflow-auto', className)}>
 			<svg
+				aria-label="Git commit graph visualization"
 				className="min-w-full"
 				height={layout.height}
 				ref={svgRef}
+				role="img"
 				style={{ willChange: 'contents' }}
 				width={layout.width}
 			>

@@ -62,10 +62,33 @@
     "checkedOut": "已切换",
     "headAt": "HEAD 现在位于 {{hash}}",
     "levelLocked": "请先完成前面的关卡",
+    "tamperDetected": "检测到进度数据被篡改，已重置以保证公平。",
     "tabs": {
       "terminal": "终端",
       "files": "文件"
     }
+  },
+  "terminal": {
+    "title": "终端",
+    "welcome": "欢迎使用 GitMaster 可视化终端！",
+    "tryLabel": "试试：",
+    "placeholder": "输入 git 命令...",
+    "focusLabel": "聚焦终端输入"
+  },
+  "notFound": {
+    "message": "哎呀！页面未找到",
+    "home": "返回首页"
+  },
+  "account": {
+    "title": "账户",
+    "description": "管理你的套餐与云同步。",
+    "localMode": "本地模式 —— 进度仅保存在当前设备。",
+    "cloudReady": "云同步已就绪",
+    "email": "邮箱",
+    "signIn": "登录",
+    "signInWithGithub": "使用 GitHub 继续",
+    "signInWithGoogle": "使用 Google 继续",
+    "signOut": "退出登录"
   },
   "sidebar": {
     "levels": "关卡列表",

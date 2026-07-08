@@ -200,4 +200,112 @@ describe('Level Validation Logic', () => {
 			expect(level.validation(state)).toBe(true)
 		})
 	})
+
+	describe('Level 3: Status Report', () => {
+		const level = levels.find((l) => l.id === 'level-3')!
+
+		it('should fail without git status and git log', () => {
+			const state = createMockState({ commandHistory: ['git commit -m "x"'] })
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass when git status and git log were used', () => {
+			const state = createMockState({ commandHistory: ['git status', 'git log'] })
+			expect(level.validation(state)).toBe(true)
+		})
+	})
+
+	describe('Level 5: Shadow Clones', () => {
+		const level = levels.find((l) => l.id === 'level-5')!
+
+		it('should fail if feature-b is missing', () => {
+			const state = createMockState({
+				branches: {
+					'feature-a': { color: '', headCommitHash: 'ca', name: 'feature-a' },
+					main: { color: '', headCommitHash: 'cm', name: 'main' },
+				},
+				commits: { ca: createCommit('ca', ['cm']), cm: createCommit('cm') },
+			})
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass if both branches are ahead of main', () => {
+			const state = createMockState({
+				branches: {
+					'feature-a': { color: '', headCommitHash: 'ca', name: 'feature-a' },
+					'feature-b': { color: '', headCommitHash: 'cb', name: 'feature-b' },
+					main: { color: '', headCommitHash: 'cm', name: 'main' },
+				},
+				commits: {
+					ca: createCommit('ca', ['cm']),
+					cb: createCommit('cb', ['cm']),
+					cm: createCommit('cm'),
+				},
+			})
+			expect(level.validation(state)).toBe(true)
+		})
+	})
+
+	describe('Level 9: Hard Landing', () => {
+		const level = levels.find((l) => l.id === 'level-9')!
+
+		it('should fail without reset --hard', () => {
+			const state = createMockState({ commandHistory: ['git commit'] })
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass with reset --hard command', () => {
+			const state = createMockState({ commandHistory: ['git reset --hard HEAD~1'] })
+			expect(level.validation(state)).toBe(true)
+		})
+	})
+
+	describe('Level 10: Selective Amnesia', () => {
+		const level = levels.find((l) => l.id === 'level-10')!
+
+		it('should fail for reset --soft or reset --hard', () => {
+			const state = createMockState({ commandHistory: ['git reset --soft HEAD~1'] })
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass for plain reset HEAD~1', () => {
+			const state = createMockState({ commandHistory: ['git reset HEAD~1'] })
+			expect(level.validation(state)).toBe(true)
+		})
+	})
+
+	describe('Level 11: Milestone', () => {
+		const level = levels.find((l) => l.id === 'level-11')!
+
+		it('should fail without the v1.0 tag', () => {
+			const state = createMockState({ tags: {} })
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass when v1.0 tag exists', () => {
+			const state = createMockState({ tags: { 'v1.0': 'c1' } })
+			expect(level.validation(state)).toBe(true)
+		})
+	})
+
+	describe('Level 12: The Journey Continues (M1 fix)', () => {
+		const level = levels.find((l) => l.id === 'level-12')!
+
+		it('should fail without next-chapter branch', () => {
+			const state = createMockState({
+				branches: { main: { color: '', headCommitHash: 'c1', name: 'main' } },
+			})
+			expect(level.validation(state)).toBe(false)
+		})
+
+		it('should pass when next-chapter branch exists', () => {
+			const state = createMockState({
+				branches: {
+					main: { color: '', headCommitHash: 'c1', name: 'main' },
+					'next-chapter': { color: '', headCommitHash: 'c2', name: 'next-chapter' },
+				},
+			})
+			expect(level.validation(state)).toBe(true)
+		})
+	})
 })

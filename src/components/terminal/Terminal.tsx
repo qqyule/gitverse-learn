@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, ChevronUp, Terminal as TerminalIcon } from 'lucide-react'
 import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { useGitStore } from '@/store/gitStore'
 
@@ -24,9 +25,10 @@ export function Terminal({
 	const [history, setHistory] = useState<{ command: string; output: string }[]>([])
 	const [historyIndex, setHistoryIndex] = useState(-1)
 	const inputRef = useRef<HTMLInputElement>(null)
-	const outputRef = useRef<HTMLDivElement>(null)
+	const outputRef = useRef<HTMLButtonElement>(null)
 
 	const { executeCommand } = useGitStore()
+	const { t } = useTranslation()
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -97,7 +99,7 @@ export function Terminal({
 			>
 				<div className="flex items-center gap-2">
 					<TerminalIcon className="h-4 w-4 text-primary" />
-					<span className="font-medium text-sm">Terminal</span>
+					<span className="font-medium text-sm">{t('terminal.title')}</span>
 				</div>
 				{isExpanded ? (
 					<ChevronDown className="h-4 w-4 text-muted-foreground" />
@@ -117,28 +119,22 @@ export function Terminal({
 						transition={{ duration: 0.2 }}
 					>
 						{/* Output */}
-						<div
-							aria-label="Focus terminal input"
-							className="h-48 space-y-2 overflow-y-auto p-4 font-mono text-sm"
+						<button
+							aria-label={t('terminal.focusLabel')}
+							className="h-48 space-y-2 overflow-y-auto p-4 text-left font-mono text-sm"
 							onClick={() => {
 								if (!window.getSelection()?.toString()) {
 									inputRef.current?.focus()
 								}
 							}}
-							onKeyDown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
-									inputRef.current?.focus()
-								}
-							}}
 							ref={outputRef}
-							role="button"
-							tabIndex={0}
+							type="button"
 						>
 							{history.length === 0 && (
 								<div className="text-muted-foreground">
-									<p>Welcome to GitMaster Visual Terminal!</p>
+									<p>{t('terminal.welcome')}</p>
 									<p className="mt-1">
-										Try: <span className="text-primary">git init</span>
+										{t('terminal.tryLabel')} <span className="text-primary">git init</span>
 									</p>
 								</div>
 							)}
@@ -155,7 +151,7 @@ export function Terminal({
 									)}
 								</div>
 							))}
-						</div>
+						</button>
 
 						{/* Input */}
 						<form className="border-border border-t" onSubmit={handleSubmit}>
@@ -169,7 +165,7 @@ export function Terminal({
 										onInputChange?.(e.target.value)
 									}}
 									onKeyDown={handleKeyDown}
-									placeholder="Type a git command..."
+									placeholder={t('terminal.placeholder')}
 									ref={inputRef}
 									spellCheck={false}
 									type="text"

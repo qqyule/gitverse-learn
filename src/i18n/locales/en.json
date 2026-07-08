@@ -62,10 +62,33 @@
     "checkedOut": "Checked out",
     "headAt": "HEAD is now at {{hash}}",
     "levelLocked": "Please complete previous levels first",
+    "tamperDetected": "Progress data looks tampered — progress was reset to keep things fair.",
     "tabs": {
       "terminal": "Terminal",
       "files": "Files"
     }
+  },
+  "terminal": {
+    "title": "Terminal",
+    "welcome": "Welcome to GitMaster Visual Terminal!",
+    "tryLabel": "Try:",
+    "placeholder": "Type a git command...",
+    "focusLabel": "Focus terminal input"
+  },
+  "notFound": {
+    "message": "Oops! Page not found",
+    "home": "Return to Home"
+  },
+  "account": {
+    "title": "Account",
+    "description": "Manage your plan and cloud sync.",
+    "localMode": "Local mode — progress is saved on this device only.",
+    "cloudReady": "Cloud sync ready",
+    "email": "Email",
+    "signIn": "Sign in",
+    "signInWithGithub": "Continue with GitHub",
+    "signInWithGoogle": "Continue with Google",
+    "signOut": "Sign out"
   },
   "sidebar": {
     "levels": "Levels",

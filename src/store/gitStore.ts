@@ -186,142 +186,160 @@ export const useGitStore = create<GitStore>()(
 		},
 
 		executeCommand: (command) => {
-			const parts = command.trim().split(/\s+/)
-			const cmd = parts[0]
-			const args = parts.slice(1)
-
-			if (cmd !== 'git') {
-				set((s) => {
-					s.lastOutput = `Command not found: ${cmd}`
-				})
+			// Guard: reject empty / whitespace-only input without touching state
+			const trimmed = command.trim()
+			if (!trimmed) {
 				return get().lastOutput
 			}
 
-			const gitCmd = args[0]
-			const gitArgs = args.slice(1)
+			// Guard: cap input length to avoid pathological parsing / memory blow-up
+			const MAX_CMD_LEN = 2000
+			const safeCommand = trimmed.length > MAX_CMD_LEN ? trimmed.slice(0, MAX_CMD_LEN) : trimmed
 
-			switch (gitCmd) {
-				case 'init':
-					get().init()
-					break
-				case 'add':
-					if (gitArgs[0] === '.') {
-						get().add('all')
-					} else {
-						get().add(gitArgs)
-					}
-					break
-				case 'commit':
-					if (gitArgs[0] === '-m' && gitArgs[1]) {
-						const message = gitArgs
-							.slice(1)
-							.join(' ')
-							.replace(/^["']|["']$/g, '')
-						get().commit(message)
-					} else {
-						set((s) => {
-							s.lastOutput = 'Usage: git commit -m \\"message\\"'
-						})
-					}
-					break
-				case 'checkout':
-					if (gitArgs[0] === '-b' && gitArgs[1]) {
-						get().branch(gitArgs[1])
-						get().checkout(gitArgs[1])
-					} else if (gitArgs[0]) {
-						get().checkout(gitArgs[0])
-					}
-					break
-				case 'branch':
-					if (gitArgs[0]) {
-						get().branch(gitArgs[0])
-					} else {
-						const branches = Object.keys(get().branches)
-						const current = get().HEAD.type === 'branch' ? get().HEAD.ref : null
-						set((s) => {
-							s.lastOutput = branches.map((b) => (b === current ? `* ${b}` : `  ${b}`)).join('\n')
-						})
-					}
-					break
-				case 'merge':
-					if (gitArgs[0]) {
-						get().merge(gitArgs[0])
-					}
-					break
-				case 'reset': {
-					const mode = gitArgs.includes('--hard') ? 'hard' : 'soft'
-					get().reset(mode)
-					break
-				}
-				case 'log': {
-					const logs = get().log()
+			try {
+				const parts = safeCommand.split(/\s+/)
+				const cmd = parts[0]
+				const args = parts.slice(1)
+
+				if (cmd !== 'git') {
 					set((s) => {
-						s.lastOutput = logs
-							.map(
-								(c) =>
-									`commit ${c.hash}\nAuthor: ${c.author}\nDate: ${new Date(
-										c.timestamp
-									).toLocaleString()}\n\n    ${c.message}`
-							)
-							.join('\n\n')
+						s.lastOutput = `Command not found: ${cmd}`
 					})
-					break
+					return get().lastOutput
 				}
-				case 'status': {
-					const status = get().status()
-					set((s) => {
-						let output = `On branch ${get().HEAD.ref}\n`
-						if (status.staged.length) {
-							output +=
-								'\nChanges to be committed:\n' +
-								status.staged.map((f) => `  staged: ${f}`).join('\n')
+
+				const gitCmd = args[0]
+				const gitArgs = args.slice(1)
+
+				switch (gitCmd) {
+					case 'init':
+						get().init()
+						break
+					case 'add':
+						if (gitArgs[0] === '.') {
+							get().add('all')
+						} else {
+							get().add(gitArgs)
 						}
-						if (status.modified.length) {
-							output +=
-								'\nChanges not staged:\n' +
-								status.modified.map((f) => `  modified: ${f}`).join('\n')
-						}
-						if (status.untracked.length) {
-							output += `\nUntracked files:\n${status.untracked.map((f) => `  ${f}`).join('\n')}`
-						}
-						if (!(status.staged.length || status.modified.length || status.untracked.length)) {
-							output += '\nnothing to commit, working tree clean'
-						}
-						s.lastOutput = output
-					})
-					break
-				}
-				case 'tag':
-					if (gitArgs[0]) {
-						// 创建新标签
-						const tagName = gitArgs[0]
-						const currentHash =
-							get().HEAD.type === 'branch'
-								? get().branches[get().HEAD.ref]?.headCommitHash
-								: get().HEAD.ref
-						if (currentHash) {
+						break
+					case 'commit':
+						if (gitArgs[0] === '-m' && gitArgs[1]) {
+							const message = gitArgs
+								.slice(1)
+								.join(' ')
+								.replace(/^["']|["']$/g, '')
+							get().commit(message)
+						} else {
 							set((s) => {
-								s.tags[tagName] = currentHash
-								s.lastOutput = `Created tag '${tagName}' at ${currentHash.slice(0, 7)}`
-								s.commandHistory.push(`git tag ${tagName}`)
+								s.lastOutput = 'Usage: git commit -m \\"message\\"'
 							})
 						}
-					} else {
-						// 列出所有标签
-						const tags = Object.keys(get().tags)
-						set((s) => {
-							s.lastOutput = tags.length > 0 ? tags.join('\n') : 'No tags found'
-							s.commandHistory.push('git tag')
-						})
+						break
+					case 'checkout':
+						if (gitArgs[0] === '-b' && gitArgs[1]) {
+							get().branch(gitArgs[1])
+							get().checkout(gitArgs[1])
+						} else if (gitArgs[0]) {
+							get().checkout(gitArgs[0])
+						}
+						break
+					case 'branch':
+						if (gitArgs[0]) {
+							get().branch(gitArgs[0])
+						} else {
+							const branches = Object.keys(get().branches)
+							const current = get().HEAD.type === 'branch' ? get().HEAD.ref : null
+							set((s) => {
+								s.lastOutput = branches.map((b) => (b === current ? `* ${b}` : `  ${b}`)).join('\n')
+							})
+						}
+						break
+					case 'merge':
+						if (gitArgs[0]) {
+							get().merge(gitArgs[0])
+						}
+						break
+					case 'reset': {
+						const mode = gitArgs.includes('--hard') ? 'hard' : 'soft'
+						get().reset(mode)
+						break
 					}
-					break
-				default:
-					set((s) => {
-						s.lastOutput = `git: '${gitCmd}' is not a git command`
-					})
-			}
+					case 'log': {
+						const logs = get().log()
+						set((s) => {
+							s.lastOutput = logs
+								.map(
+									(c) =>
+										`commit ${c.hash}\nAuthor: ${c.author}\nDate: ${new Date(
+											c.timestamp
+										).toLocaleString()}\n\n    ${c.message}`
+								)
+								.join('\n\n')
+						})
+						break
+					}
+					case 'status': {
+						const status = get().status()
+						set((s) => {
+							let output = `On branch ${get().HEAD.ref}\n`
+							if (status.staged.length) {
+								output +=
+									'\nChanges to be committed:\n' +
+									status.staged.map((f) => `  staged: ${f}`).join('\n')
+							}
+							if (status.modified.length) {
+								output +=
+									'\nChanges not staged:\n' +
+									status.modified.map((f) => `  modified: ${f}`).join('\n')
+							}
+							if (status.untracked.length) {
+								output += `\nUntracked files:\n${status.untracked.map((f) => `  ${f}`).join('\n')}`
+							}
+							if (!(status.staged.length || status.modified.length || status.untracked.length)) {
+								output += '\nnothing to commit, working tree clean'
+							}
+							s.lastOutput = output
+						})
+						break
+					}
+					case 'tag':
+						if (gitArgs[0]) {
+							// 创建新标签
+							const tagName = gitArgs[0]
+							const currentHash =
+								get().HEAD.type === 'branch'
+									? get().branches[get().HEAD.ref]?.headCommitHash
+									: get().HEAD.ref
+							if (currentHash) {
+								set((s) => {
+									s.tags[tagName] = currentHash
+									s.lastOutput = `Created tag '${tagName}' at ${currentHash.slice(0, 7)}`
+									s.commandHistory.push(`git tag ${tagName}`)
+								})
+							}
+						} else {
+							// 列出所有标签
+							const tags = Object.keys(get().tags)
+							set((s) => {
+								s.lastOutput = tags.length > 0 ? tags.join('\n') : 'No tags found'
+								s.commandHistory.push('git tag')
+							})
+						}
+						break
+					default:
+						set((s) => {
+							s.lastOutput = `git: '${gitCmd}' is not a git command`
+						})
+				}
 
-			return get().lastOutput
+				return get().lastOutput
+			} catch (err) {
+				const message = err instanceof Error ? err.message : String(err)
+				set((s) => {
+					s.lastOutput = `error: ${message}`
+				})
+				return get().lastOutput
+			}
 		},
 
 		getCurrentBranch: () => {

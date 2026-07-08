@@ -18,7 +18,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedVariables": "off",
         "noUnusedImports": "warn",
@@ -39,15 +39,15 @@
         "noShadow": "off"
       },
       "a11y": {
-        "useButtonType": "warn",
-        "noSvgWithoutTitle": "off",
+        "useButtonType": "error",
+        "noSvgWithoutTitle": "warn",
         "noRedundantAlt": "warn",
-        "noLabelWithoutControl": "off",
-        "useSemanticElements": "off",
-        "noStaticElementInteractions": "off",
-        "useKeyWithClickEvents": "off",
-        "useFocusableInteractive": "off",
-        "useAriaPropsForRole": "off"
+        "noLabelWithoutControl": "warn",
+        "useSemanticElements": "warn",
+        "noStaticElementInteractions": "warn",
+        "useKeyWithClickEvents": "warn",
+        "useFocusableInteractive": "warn",
+        "useAriaPropsForRole": "warn"
       },
       "complexity": {
         "noUselessFragments": "warn",
@@ -107,5 +107,19 @@
       }
     }
   },
-  "extends": ["ultracite/biome/core", "ultracite/biome/react"]
+  "extends": ["ultracite/biome/core", "ultracite/biome/react"],
+  "overrides": [
+    {
+      "includes": ["src/components/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off",
+            "useFocusableInteractive": "off",
+            "useAriaPropsForRole": "off"
+          }
+        }
+      }
+    }
+  ]
 }

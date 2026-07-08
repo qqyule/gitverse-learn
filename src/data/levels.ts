@@ -298,8 +298,9 @@ export const levels: Level[] = [
 		subtitle: 'The Ensemble',
 		title: 'The Journey Continues',
 		titleZh: '旅程继续',
-		validation: (state) =>
-			state.commandHistory.some((cmd: string) => cmd.includes('git reset --soft')),
+		// M1 fix: goal is to create the "next-chapter" branch, not to run reset --soft
+		// (the previous validation wrongly reused level-8's reset --soft check).
+		validation: (state) => state.branches['next-chapter'] !== undefined,
 	},
 ]
 

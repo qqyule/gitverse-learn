@@ -102,4 +102,69 @@ describe('gitStore', () => {
 
 		expect(state.commandHistory.some((c) => c.includes('git reset --soft'))).toBe(true)
 	})
+
+	describe('command robustness (M1)', () => {
+		const trickyInputs = [
+			'',
+			'   ',
+			'\t',
+			'\n',
+			'git',
+			'GIT',
+			'Git',
+			'git ',
+			'git  ',
+			'git\t',
+			'git status',
+			'git status   ',
+			'  git status',
+			'git commit',
+			'git commit -m',
+			'git commit -m ""',
+			'git checkout',
+			'git checkout nonexistent-branch-xyz',
+			'git branch',
+			'git branch main',
+			'git merge',
+			'git merge ghost',
+			'git reset',
+			'git reset --hard',
+			'git reset --hard HEAD~999',
+			'git tag',
+			'git log',
+			'notgit status',
+			'sudo git status',
+			'git; rm -rf /',
+			'git 😀 branch',
+			'git checkout 🚀',
+			'git "weird" "args"',
+			'git --weird-flag',
+			'git rebase',
+			'git rebase -i',
+			'git push',
+			'git pull',
+			'git stash',
+			'git cherry-pick',
+			'git init init init',
+		]
+
+		it.each(trickyInputs)('should not throw and return a string for input: %j', (input) => {
+			const store = useGitStore.getState()
+			let result: unknown
+			expect(() => {
+				result = store.executeCommand(input)
+			}).not.toThrow()
+			expect(typeof result).toBe('string')
+		})
+
+		it('should cap extremely long input', () => {
+			const store = useGitStore.getState()
+			const huge = `git ${'a'.repeat(5000)}`
+			let result: unknown
+			expect(() => {
+				result = store.executeCommand(huge)
+			}).not.toThrow()
+			expect(typeof result).toBe('string')
+		})
+	})
 })

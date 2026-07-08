@@ -45,7 +45,7 @@ function LearnPageContent() {
 
 	const gitState = useGitStore()
 	const { resetState, loadScenario } = gitState
-	const { markLevelCompleted, completedLevels } = useProgressStore()
+	const { markLevelCompleted, completedLevels, tamperDetected, resetProgress } = useProgressStore()
 	const { startTour } = useTour({
 		autoStart: true,
 		autoStartDelay: 1000,
@@ -183,6 +183,19 @@ function LearnPageContent() {
 			unsubscribe()
 		}
 	}, [levelId])
+
+	// Surface tamper detection: if localStorage progress was edited by hand,
+	// warn the user and reset to keep completion/leaderboard fair (M1 anti-cheat).
+	useEffect(() => {
+		if (tamperDetected) {
+			toast({
+				description: t('learn.tamperDetected'),
+				title: t('common.error'),
+				variant: 'destructive',
+			})
+			resetProgress()
+		}
+	}, [tamperDetected, toast, resetProgress, t])
 
 	// Enforce linear progression: if a level is reached without its predecessor
 	// being completed, send the user back to the first not-yet-completed level

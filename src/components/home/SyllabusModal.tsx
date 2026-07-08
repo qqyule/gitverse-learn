@@ -14,7 +14,7 @@ interface SyllabusModalProps {
 
 export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 	const { t } = useTranslation()
-	const overlayRef = useRef<HTMLDivElement>(null)
+	const overlayRef = useRef<HTMLButtonElement>(null)
 	const contentRef = useRef<HTMLDivElement>(null)
 	const listRef = useRef<HTMLDivElement>(null)
 	const [mounted, setMounted] = useState(false)
@@ -142,19 +142,13 @@ export function SyllabusModal({ isOpen, onClose }: SyllabusModalProps) {
 	return createPortal(
 		<div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
 			{/* Backdrop */}
-			<div
+			<button
 				aria-label="Close"
-				className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+				className="absolute inset-0 cursor-default bg-background/80 backdrop-blur-sm"
 				onClick={handleClose}
-				onKeyDown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						handleClose()
-					}
-				}}
 				ref={overlayRef}
-				role="button"
 				style={{ opacity: 0 }}
-				tabIndex={0}
+				type="button"
 			/>
 
 			{/* Modal Content */}
