@@ -20,8 +20,9 @@
     "description": "通过交互式可视化掌握 Git。实时观察分支生长、提交形成和合并发生。在实践中学习，而非阅读。",
     "startButton": "开始学习",
     "syllabusButton": "查看大纲",
+    "pricing": "定价",
     "stats": {
-      "levels": "12 个关卡",
+      "levels": "15 个关卡",
       "commands": "20+ 命令",
       "cli": "真实 CLI"
     },
@@ -94,7 +95,11 @@
     "signIn": "登录",
     "signInWithGithub": "使用 GitHub 继续",
     "signInWithGoogle": "使用 Google 继续",
-    "signOut": "退出登录"
+    "signOut": "退出登录",
+    "upgrade": "升级",
+    "downgrade": "降级",
+    "aiTutorUsage": "今日 AI 导师已用",
+    "draftsUsage": "已保存草稿"
   },
   "sidebar": {
     "levels": "关卡列表",
@@ -309,6 +314,8 @@
     "commands": "命令（每行一个）",
     "description": "描述",
     "draftSaved": "草稿已保存到本地。",
+    "draftsLimitDesc": "免费版最多可保存 {{limit}} 个草稿，升级后可保存更多。",
+    "draftsLimitTitle": "已达草稿上限",
     "export": "导出 JSON",
     "goal": "目标",
     "id": "关卡 ID",
@@ -338,6 +345,32 @@
     "time": "用时",
     "title": "排行榜",
     "user": "用户"
+  },
+  "pricing": {
+    "compareTitle": "方案对比",
+    "current": "当前方案",
+    "demoDowngraded": "已切回免费版。",
+    "demoMode": "演示模式 —— 支付尚未上线。升级仅作本地方案变更，用于测试。",
+    "demoUpgraded": "已应用演示升级（仅本地）。",
+    "description": "随着你的成长，解锁 GitMaster 更多能力。",
+    "downgrade": "降级",
+    "feature": "功能",
+    "features": {
+      "aiTutor": "AI 导师",
+      "apiAccess": "API 访问",
+      "cloudSync": "云同步",
+      "drafts": "保存草稿",
+      "leaderboard": "排行榜",
+      "masterLevels": "大师关卡",
+      "sharedLevels": "分享关卡",
+      "teamSeats": "团队席位",
+      "ugcEditor": "关卡编辑器",
+      "unlimitedSync": "无限同步"
+    },
+    "perDay": "次/天",
+    "perMonth": "/月",
+    "title": "方案与定价",
+    "upgrade": "升级"
   },
   "shared": {
     "backToEditor": "返回编辑器",

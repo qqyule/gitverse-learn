@@ -20,8 +20,9 @@
     "description": "Master Git through interactive visualization. Watch branches grow, commits form, and merges happen in real-time. Learn by doing, not reading.",
     "startButton": "Start Learning",
     "syllabusButton": "View Syllabus",
+    "pricing": "Pricing",
     "stats": {
-      "levels": "12 Levels",
+      "levels": "15 Levels",
       "commands": "20+ Commands",
       "cli": "Real CLI"
     },
@@ -94,7 +95,11 @@
     "signIn": "Sign in",
     "signInWithGithub": "Continue with GitHub",
     "signInWithGoogle": "Continue with Google",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "aiTutorUsage": "AI tutor used today",
+    "draftsUsage": "Saved drafts"
   },
   "sidebar": {
     "levels": "Levels",
@@ -309,6 +314,8 @@
     "commands": "Commands (one per line)",
     "description": "Description",
     "draftSaved": "Draft saved locally.",
+    "draftsLimitDesc": "Free plan allows {{limit}} saved drafts. Upgrade to save more.",
+    "draftsLimitTitle": "Draft limit reached",
     "export": "Export JSON",
     "goal": "Goal",
     "id": "Level ID",
@@ -338,6 +345,32 @@
     "time": "Time",
     "title": "Leaderboard",
     "user": "User"
+  },
+  "pricing": {
+    "compareTitle": "Compare plans",
+    "current": "Current plan",
+    "demoDowngraded": "Switched back to Free.",
+    "demoMode": "Demo mode — payments are not live. Upgrading applies a local plan change for testing only.",
+    "demoUpgraded": "Demo upgrade applied (local only).",
+    "description": "Unlock more of GitMaster as you grow.",
+    "downgrade": "Downgrade",
+    "feature": "Feature",
+    "features": {
+      "aiTutor": "AI tutor",
+      "apiAccess": "API access",
+      "cloudSync": "Cloud sync",
+      "drafts": "Saved drafts",
+      "leaderboard": "Leaderboard",
+      "masterLevels": "Master levels",
+      "sharedLevels": "Shared levels",
+      "teamSeats": "Team seats",
+      "ugcEditor": "Level editor",
+      "unlimitedSync": "Unlimited sync"
+    },
+    "perDay": "per day",
+    "perMonth": "/mo",
+    "title": "Plans & Pricing",
+    "upgrade": "Upgrade"
   },
   "shared": {
     "backToEditor": "Back to Editor",

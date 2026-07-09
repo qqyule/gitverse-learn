@@ -57,6 +57,9 @@ export default function Index() {
 		<PageTransition className="min-h-screen overflow-hidden bg-background">
 			{/* Header with theme/language toggle */}
 			<header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-end gap-2 p-4">
+				<Button onClick={() => navigate('/pricing')} size="sm" variant="ghost">
+					{t('home.pricing')}
+				</Button>
 				<LanguageSwitch />
 				<ThemeToggle />
 			</header>

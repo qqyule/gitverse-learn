@@ -10,6 +10,7 @@ import Index from './pages/Index'
 import LeaderboardPage from './pages/LeaderboardPage'
 import LearnPage from './pages/LearnPage'
 import NotFound from './pages/NotFound'
+import PricingPage from './pages/PricingPage'
 import SharedLevelPage from './pages/SharedLevelPage'
 
 const queryClient = new QueryClient()
@@ -26,6 +27,7 @@ const App = () => (
 						<Route element={<LearnPage />} path="/learn/:levelId" />
 						<Route element={<AccountPage />} path="/account" />
 						<Route element={<EditorPage />} path="/editor" />
+						<Route element={<PricingPage />} path="/pricing" />
 						<Route element={<LeaderboardPage />} path="/leaderboard" />
 						<Route element={<SharedLevelPage />} path="/shared" />
 						{/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import UpgradePrompt from '@/components/UpgradePrompt'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,6 +16,8 @@ import { toast } from '@/components/ui/sonner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { validateLevelSchema } from '@/lib/levelValidator'
+import { getQuota } from '@/lib/quota'
+import { useAccountStore } from '@/store/accountStore'
 import { useUgcStore } from '@/store/ugcStore'
 import type { UgcLevel, ValidationRule } from '@/types/level'
 
@@ -74,6 +77,10 @@ const EditorPage = () => {
 	const { t } = useTranslation()
 	const encodeShare = useUgcStore((s) => s.encodeShare)
 	const saveDraft = useUgcStore((s) => s.saveDraft)
+	const drafts = useUgcStore((s) => s.drafts)
+	const tier = useAccountStore((s) => s.profile?.tier ?? 'free')
+	const draftLimit = getQuota(tier).drafts
+	const draftLimitReached = tier === 'free' && drafts.length >= getQuota('free').drafts
 	const [form, setForm] = useState<UgcLevel>(blankForm())
 	const [jsonText, setJsonText] = useState('')
 	const [jsonError, setJsonError] = useState<string | null>(null)
@@ -153,6 +160,12 @@ const EditorPage = () => {
 			toast.error(result.errors.join('; '))
 			return
 		}
+		// M5 — free tier is capped on the number of saved drafts.
+		const isExisting = drafts.some((d) => d.id === result.data.id)
+		if (!isExisting && drafts.length >= draftLimit) {
+			toast.error(t('editor.draftsLimitDesc', { limit: draftLimit }))
+			return
+		}
 		saveDraft(result.data)
 		toast.success(t('editor.draftSaved'))
 	}
@@ -194,6 +207,14 @@ const EditorPage = () => {
 					<CardDescription>{t('editor.pageDescription')}</CardDescription>
 				</CardHeader>
 				<CardContent>
+					{draftLimitReached && (
+						<div className="mb-4">
+							<UpgradePrompt
+								description={t('editor.draftsLimitDesc', { limit: getQuota('free').drafts })}
+								title={t('editor.draftsLimitTitle')}
+							/>
+						</div>
+					)}
 					<Tabs
 						defaultValue="visual"
 						onValueChange={(value) => {
