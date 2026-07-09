@@ -3,6 +3,7 @@ import {
 	BookOpen,
 	GitBranch,
 	GitCommit,
+	Github,
 	GitMerge,
 	Play,
 	Sparkles,
@@ -57,6 +58,16 @@ export default function Index() {
 		<PageTransition className="min-h-screen overflow-hidden bg-background">
 			{/* Header with theme/language toggle */}
 			<header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-end gap-2 p-4">
+				<Button asChild size="sm" variant="ghost">
+					<a
+						aria-label="GitHub Repository"
+						href="https://github.com/qqyule/gitverse-learn"
+						rel="noopener noreferrer"
+						target="_blank"
+					>
+						<Github className="h-4 w-4" />
+					</a>
+				</Button>
 				<Button onClick={() => navigate('/api')} size="sm" variant="ghost">
 					{t('home.api')}
 				</Button>

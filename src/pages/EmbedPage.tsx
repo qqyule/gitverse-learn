@@ -28,7 +28,12 @@ const EmbedPage = () => {
 	const official = levels.find((l) => l.id === lessonId) ?? null
 	const shared = params.get('l') ? decodeShare(params.get('l')!) : null
 	const sharedLevel = shared?.ok ? shared.level : null
-	const runtimeShared: Level | null = sharedLevel ? toRuntimeLevel(sharedLevel) : null
+	let runtimeShared: Level | null = null
+	try {
+		runtimeShared = sharedLevel ? toRuntimeLevel(sharedLevel) : null
+	} catch {
+		runtimeShared = null
+	}
 	const level: Level | null = official ?? runtimeShared
 
 	const git = useGitStore()
@@ -40,7 +45,9 @@ const EmbedPage = () => {
 	useEffect(() => {
 		if (!level) return
 		document.title = `${level.title} · GitMaster`
-	}, [level])
+		resetState()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [level?.id])
 
 	if (!level) {
 		return (

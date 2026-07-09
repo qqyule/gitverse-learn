@@ -186,7 +186,11 @@ const EditorPage = () => {
 			return
 		}
 		const encoded = encodeShare(result.data)
-		const url = `${window.location.origin}/learn/shared?l=${encoded}`
+		const url = `${window.location.origin}/learn/shared?l=${encodeURIComponent(encoded)}`
+		if (!navigator.clipboard) {
+			toast.error(t('editor.shareFailed'))
+			return
+		}
 		navigator.clipboard
 			.writeText(url)
 			.then(() => toast.success(t('editor.shareCopied')))

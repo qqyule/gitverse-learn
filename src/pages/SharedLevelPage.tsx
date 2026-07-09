@@ -19,7 +19,12 @@ const SharedLevelPage = () => {
 	const encoded = params.get('l')
 	const decoded: ImportResult = encoded ? decodeShare(encoded) : { error: 'missing', ok: false }
 	const ugcLevel = decoded.ok ? decoded.level : null
-	const level: Level | null = ugcLevel ? toRuntimeLevel(ugcLevel) : null
+	let level: Level | null = null
+	try {
+		level = ugcLevel ? toRuntimeLevel(ugcLevel) : null
+	} catch {
+		level = null
+	}
 
 	const git = useGitStore()
 	const { resetState } = git
@@ -30,6 +35,7 @@ const SharedLevelPage = () => {
 	useEffect(() => {
 		if (!level) return
 		document.title = `${level.title} · GitMaster`
+		resetState()
 		const setMeta = (property: string, content: string) => {
 			let el = document.querySelector(`meta[property="${property}"]`)
 			if (!el) {
@@ -42,7 +48,8 @@ const SharedLevelPage = () => {
 		setMeta('og:title', level.title)
 		setMeta('og:description', level.description)
 		setMeta('og:type', 'website')
-	}, [level])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [level?.id])
 
 	if (!level) {
 		return (
@@ -127,6 +134,7 @@ const SharedLevelPage = () => {
 					<CardContent className="flex items-center justify-between py-4">
 						<span className="font-medium text-success">🎉 {t('shared.completed')}</span>
 						<Button
+							disabled={saved}
 							onClick={() => {
 								saveDraft(ugcLevel)
 								setSaved(true)

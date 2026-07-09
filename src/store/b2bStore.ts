@@ -109,3 +109,8 @@ export const selectOrgClassrooms = (s: B2BState): B2BClassroom[] =>
 /** Selector: assignments scoped to the active tenant. */
 export const selectOrgAssignments = (s: B2BState): B2BAssignment[] =>
 	s.assignments.filter((a) => a.orgId === s.currentOrgId)
+
+/** Selector: student progress scoped to the active tenant. */
+export const selectOrgProgress = (s: B2BState): B2BStudentProgress[] =>
+	s.progress.filter((p) => p.orgId === s.currentOrgId)
+
