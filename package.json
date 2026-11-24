@@ -58,7 +58,7 @@
     "driver.js": "^1.4.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.26",
-    "i18next": "^25.7.3",
+    "i18next": "^26.3.4",
     "immer": "^11.1.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
